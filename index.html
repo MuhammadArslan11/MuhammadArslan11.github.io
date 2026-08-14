@@ -1,609 +1,177 @@
-<!DOCTYPE HTML>
-<html>
-	<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Muhamamd Arslan</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="Free HTML5 Website Template by freehtml5.co" />
-	<meta name="keywords" content="free website templates, free html5, free template, free bootstrap, free website template, html5, css3, mobile first, responsive" />
-	<meta name="author" content="freehtml5.co" />
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Muhammad Arsalan — IT Support, Operations and practical AI.">
+<title>Muhammad Arsalan — IT Support / Operations / AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="loader" id="loader"><div><span class="loader-name">Muhammad Arsalan</span><span class="loader-status">INITIALIZING PORTFOLIO</span><div class="loader-line"><i></i></div></div></div>
 
-	
-  	<!-- Facebook and Twitter integration -->
-	<meta property="og:title" content=""/>
-	<meta property="og:image" content=""/>
-	<meta property="og:url" content=""/>
-	<meta property="og:site_name" content=""/>
-	<meta property="og:description" content=""/>
-	<meta name="twitter:title" content="" />
-	<meta name="twitter:image" content="" />
-	<meta name="twitter:url" content="" />
-	<meta name="twitter:card" content="" />
+<header class="topbar">
+  <a class="name" href="#home">Muhammad Arsalan</a>
+  <nav>
+    <a href="#experience">Experience</a>
+    <a href="#systems">Systems</a>
+    <a href="#achievements">Achievements</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <div class="top-actions">
+    <button id="mapToggle">Network</button>
+    <a href="assets/Muhammad-Arslan-Resume.pdf" download>Resume ↗</a>
+  </div>
+</header>
 
-	<link href="https://fonts.googleapis.com/css?family=Space+Mono" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css?family=Kaushan+Script" rel="stylesheet">
-	
-	<!-- Animate.css -->
-	<link rel="stylesheet" href="css/animate.css">
-	<!-- Icomoon Icon Fonts-->
-	<link rel="stylesheet" href="css/icomoon.css">
-	<!-- Bootstrap  -->
-	<link rel="stylesheet" href="css/bootstrap.css">
+<main>
+<section class="hero" id="home">
+  <div class="hero-copy">
+    <p class="eyebrow">IT SUPPORT / OPERATIONS / AI</p>
+    <h1>MUHAMMAD<br><span>ARSALAN</span></h1>
+    <p class="lead">I keep people, devices and technical operations moving — through structured support, practical troubleshooting, clear documentation and responsible use of AI.</p>
+    <div class="hero-buttons">
+      <button class="button primary" id="traceBtn">Trace the network <span>↓</span></button>
+      <a class="button secondary" href="assets/Muhammad-Arslan-Resume.pdf" download>View resume ↗</a>
+    </div>
+    <div class="hero-meta"><span>BASED IN SAUDI ARABIA</span><span>MASTER OF COMPUTER SCIENCE</span></div>
+  </div>
 
-	<!-- Theme style  -->
-	<link rel="stylesheet" href="css/style.css">
+  <div class="network" id="network">
+    <div class="network-label top">PROFESSIONAL NETWORK / 06 NODES</div>
+    <div class="grid"></div>
 
-	<!-- Modernizr JS -->
-	<script src="js/modernizr-2.6.2.min.js"></script>
-	<!-- FOR IE9 below -->
-	<!--[if lt IE 9]>
-	<script src="js/respond.min.js"></script>
-	<![endif]-->
+    <div class="network-rack" aria-label="Network equipment rack">
+      <div class="rack-head"><span>NETWORK CORE</span><span class="rack-online"><i></i> ONLINE</span></div>
+      <div class="rack-body">
+        <div class="rack-rail"></div><div class="rack-rail"></div>
+        <div class="rack-unit"><span>01</span><b>FIREWALL</b><i></i><i></i></div>
+        <div class="rack-unit"><span>02</span><b>ROUTER</b><i></i><i></i></div>
+        <div class="rack-unit"><span>03</span><b>CORE SWITCH</b><i></i><i></i></div>
+        <div class="rack-unit"><span>04</span><b>PATCH PANEL</b><i></i><i></i></div>
+        <div class="rack-empty"></div>
+        <div class="rack-empty short"></div>
+        <div class="rack-foot"></div>
+      </div>
+    </div>
 
-	</head>
-	<body>
-		
-	<div class="fh5co-loader"></div>
-	
-	<div id="page">	
-	<header id="fh5co-header" class="fh5co-cover js-fullheight" role="banner" style="background-image:url(images/cover_bg_3.jpg);" data-stellar-background-ratio="0.5">
-		<div class="overlay"></div>
-		<div class="container">
-			<div class="row">
-				<div class="col-md-8 col-md-offset-2 text-center">
-					<div class="display-t js-fullheight">
-						<div class="display-tc js-fullheight animate-box" data-animate-effect="fadeIn">
-							<div class="profile-thumb" style="background: url(images/user-3.jpg);"></div>
-							<h1><span>Muhammad Arsalan</span></h1>
+    <svg class="network-lines" viewBox="0 0 760 690" preserveAspectRatio="none" aria-hidden="true" pointer-events="none">
+      <defs>
+        <filter id="cableGlow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="2.2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs>
+      <!-- One dedicated cable route per numbered node. -->
+      <path class="cable" d="M245 105 H330 C352 105 352 82 378 82 H505"/>
+      <path class="cable" d="M245 205 H320 C345 205 345 184 378 184 H505"/>
+      <path class="cable" d="M245 305 H330 C355 305 355 286 378 286 H505"/>
+      <path class="cable" d="M245 405 H330 C355 405 355 388 378 388 H505"/>
+      <path class="cable" d="M245 505 H320 C345 505 345 490 378 490 H505"/>
+      <path class="cable" d="M245 605 H330 C355 605 355 592 378 592 H505"/>
+      <path class="pulse" d="M245 105 H330 C352 105 352 82 378 82 H505"/>
+      <path class="pulse" d="M245 205 H320 C345 205 345 184 378 184 H505"/>
+      <path class="pulse" d="M245 305 H330 C355 305 355 286 378 286 H505"/>
+      <path class="pulse" d="M245 405 H330 C355 405 355 388 378 388 H505"/>
+      <path class="pulse" d="M245 505 H320 C345 505 345 490 378 490 H505"/>
+      <path class="pulse" d="M245 605 H330 C355 605 355 592 378 592 H505"/>
+    </svg>
 
-							<h3><span>Web Developer / Graphics Designer</span></h3>
-							<p>
+    <button class="node node-01" data-node="about" aria-label="Open Identity panel"><span class="node-num">01</span><span class="node-copy"><strong>IDENTITY</strong><small>WHO I AM</small></span><i class="node-led"></i></button>
+    <button class="node node-02" data-node="experience" aria-label="Open Experience panel"><span class="node-num">02</span><span class="node-copy"><strong>EXPERIENCE</strong><small>CAREER PATH</small></span><i class="node-led"></i></button>
+    <button class="node node-03" data-node="systems" aria-label="Open Technical Systems panel"><span class="node-num">03</span><span class="node-copy"><strong>SYSTEMS</strong><small>TECHNICAL STACK</small></span><i class="node-led"></i></button>
+    <button class="node node-04" data-node="ai" aria-label="Open AI panel"><span class="node-num">04</span><span class="node-copy"><strong>AI NODE</strong><small>WORKING SMARTER</small></span><i class="node-led"></i></button>
+    <button class="node node-05" data-node="achievements" aria-label="Open Achievements panel"><span class="node-num">05</span><span class="node-copy"><strong>ACHIEVEMENTS</strong><small>PROOF OF GROWTH</small></span><i class="node-led"></i></button>
+    <button class="node node-06" data-node="contact" aria-label="Open Contact panel"><span class="node-num">06</span><span class="node-copy"><strong>CONTACT</strong><small>LET'S CONNECT</small></span><i class="node-led"></i></button>
+  </div>
+  <div class="trace-hint">SELECT A NODE TO TRACE <span>●</span></div>
+</section>
 
-								<ul class="fh5co-social-icons">
-									<li><a href="https://github.com/MuhammadArslan11"><i class="icon-github"></i></a></li>
-									<li><a href="https://www.facebook.com"><i class="icon-facebook2"></i></a></li>
-									<li><a href="https://www.linkedin.com/in/muhammadarsl33"><i class="icon-linkedin2"></i></a></li>
-									
-								</ul>
+<section class="intro section">
+  <div class="section-no">00 / ORIENTATION</div>
+  <div class="intro-grid">
+    <h2>A technical<br>portfolio with<br><em>a human side.</em></h2>
+    <div>
+      <p class="large">The network is the navigation. The page is the explanation.</p>
+      <p>I designed this experience to be different without making it difficult. Explore the connected nodes if you want the interactive layer, or simply scroll and read the complete story like a normal portfolio.</p>
+      <div class="mini-stats"><div><b>01</b><span>IT SUPPORT</span></div><div><b>02</b><span>OPERATIONS</span></div><div><b>03</b><span>AI PRACTICAL</span></div></div>
+    </div>
+  </div>
+</section>
 
-							</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</header>
+<section class="experience section" id="experience">
+  <div class="section-no">01 / EXPERIENCE</div>
+  <div class="section-head"><h2>Work that<br><em>builds context.</em></h2><button class="text-button" data-node="experience">OPEN NODE ↗</button></div>
+  <div class="timeline">
+    <article><div class="date">JAN 2025 — PRESENT</div><div><h3>Technical Data Officer</h3><b>Alpha Star Aviation Services</b><p>Maintain technical log papers, work orders and engineering documentation; update aircraft, engine and APU flight hours/cycles; coordinate with planning and maintenance teams; use CAMP and TRAX for technical records and planning.</p></div></article>
+    <article><div class="date">DEC 2023 — JUN 2024</div><div><h3>IT Support Officer</h3><b>Technic Mentor Soft Solution</b><p>Delivered Level 1/2 support remotely and onsite across Windows and macOS; handled hardware, software, printer and network issues; managed Active Directory accounts and access; supported Microsoft 365, Windows Server, DNS, DHCP, VPN and remote-support tools.</p></div></article>
+    <article><div class="date">DEC 2022 — SEP 2023</div><div><h3>ICT Teacher</h3><b>The City School — Paragon Campus</b><p>Delivered technology lessons for O-Level and A-Level students, supported Microsoft Office and web fundamentals, and guided students through practical technology use.</p></div></article>
+    <article><div class="date">JAN 2021 — NOV 2022</div><div><h3>ICT Teacher</h3><b>IISAT</b><p>Delivered ICT lessons, managed classroom technology, tracked student progress and integrated practical applications of ICT into learning.</p></div></article>
+    <article><div class="date">2018 — 2020</div><div><h3>Web & Graphic Designer</h3><b>Applitectures</b><p>Managed design projects and worked with Photoshop, Illustrator, InDesign, Adobe XD, HTML, CSS, JavaScript and React. This remains a supporting skill set rather than the core professional identity.</p></div></article>
+  </div>
+</section>
 
-	<div id="fh5co-about" class="animate-box">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
-					<h2>About Me</h2>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-4">
-					<ul class="info">
-						<li><span class="first-block">Full Name:</span><span class="second-block">Muhammad Arsalan</span></li>
-						<li><span class="first-block">Phone:</span><span class="second-block">00966 595190098</span></li>
-						<li><span class="first-block">Email:</span><span class="second-block">snnrehmani@gmail.com</span></li>
-						<li><span class="first-block">Website:</span><span class="second-block">muhammadarslan11.github.io</span></li>
-						<li><span class="first-block">Address:</span><span class="second-block">Hafsa bint Omar Near Exit 12, Ar-Rawdah, Al-Riyad KSA</span></li>
-					
-					</ul>
+<section class="systems section" id="systems">
+  <div class="section-no">02 / TECHNICAL SYSTEMS</div>
+  <div class="section-head"><h2>The tools<br>behind the<br><em>support.</em></h2><button class="text-button" data-node="systems">OPEN NODE ↗</button></div>
+  <div class="skill-grid">
+    <article><span>01</span><h3>IT SUPPORT</h3><p>Windows 10/11 · macOS · hardware/software troubleshooting · printers · Outlook · user support · remote assistance</p></article>
+    <article><span>02</span><h3>NETWORKING</h3><p>TCP/IP · subnetting · DNS · DHCP · VPN · Wi-Fi · network troubleshooting · Cisco Packet Tracer · Wireshark</p></article>
+    <article><span>03</span><h3>SYSTEMS</h3><p>Active Directory · user administration · password resets · Group Policy basics · Windows Server · VirtualBox</p></article>
+    <article><span>04</span><h3>MICROSOFT</h3><p>Microsoft 365 · Office · Outlook · Teams · technical documentation and end-user guidance</p></article>
+    <article><span>05</span><h3>AI / PRODUCTIVITY</h3><p>AI-assisted research · documentation · information organization · learning · workflow improvement · troubleshooting support</p></article>
+    <article class="secondary"><span>06</span><h3>SECONDARY</h3><p>Graphic Design · Adobe Creative Cloud · Figma · WordPress · React Native · Video Editing</p></article>
+  </div>
+</section>
 
-				</div>
+<section class="ai section">
+  <div class="section-no">03 / AI NODE</div>
+  <div class="ai-grid">
+    <div><h2>AI is a<br><em>tool,</em><br>not the job title.</h2></div>
+    <div><div class="terminal"><div class="terminal-head"><span>AI_WORKFLOW</span><i>ONLINE</i></div><div class="terminal-body"><p>&gt; STRUCTURE INFORMATION</p><p>&gt; ASSIST TECHNICAL RESEARCH</p><p>&gt; DRAFT DOCUMENTATION</p><p>&gt; ORGANIZE REPEATABLE TASKS</p><p>&gt; SUPPORT TROUBLESHOOTING</p><p>&gt; HUMAN REVIEW REQUIRED</p></div></div><p class="ai-copy">I use AI as a practical productivity layer around IT work — while keeping verification, judgement, security and responsibility with the person doing the work.</p></div>
+  </div>
+</section>
 
-				<div class="col-md-8">
-					<h2>Hello There!</h2>
-					<p>I’m Arslan, but people call me “Arsl.” I’m a developer and Graphics Designer, and I specialize in efficient CSS & HTML Java Script, jQuery, Java. I care deeply about building interfaces that are usable and pleasant for the most number of people possible. </p>
+<section class="achievements section" id="achievements">
+  <div class="section-no">04 / ACHIEVEMENTS</div>
+  <div class="section-head"><h2>Milestones<br><em>that matter.</em></h2><button class="text-button" data-node="achievements">OPEN NODE ↗</button></div>
+  <div class="achievement-grid">
+    <article><span>EDUCATION</span><h3>Master of Computer Science</h3><p>Superior University · 2022 · GPA 3.23 / 4.00</p></article>
+    <article><span>TECHNICAL</span><h3>Level 1 / Level 2 Support</h3><p>Hands-on support across Windows, macOS, Microsoft 365, Active Directory, hardware, software and network issues.</p></article>
+    <article><span>OPERATIONS</span><h3>Aviation Technical Environment</h3><p>Current work with technical records, work orders, aircraft documentation, planning coordination, CAMP and TRAX.</p></article>
+    <article><span>FOUNDATION</span><h3>Computer Science + Design</h3><p>A technical education combined with a Graphic Designer Diploma and practical creative technology experience.</p></article>
+  </div>
+</section>
 
-					<p>My professional life has been 100% driven by my passion for design and structure. I was sketching crazy detailed 3d models for fun when I was a kid, started building promo websites for small businesses while in College, then developed an app for my gaming guild in my university days. For three years, I’ve worked for an local platform in Lahore.</p>
-					<p>
-						
-						<ul class="fh5co-social-icons">
-							<li><a href="https://github.com/MuhammadArslan11"><i class="icon-github"></i></a></li>
-									<li><a href="https://www.facebook.com/"><i class="icon-facebook2"></i></a></li>
-									<li><a href="https://www.linkedin.com/in/muhammadarsl33"><i class="icon-linkedin2"></i></a></
-						</ul>
-					</p>
-				</div>
-			</div>
-		</div>
-	</div>
+<section class="education section">
+  <div class="section-no">05 / EDUCATION</div>
+  <div class="edu-grid">
+    <div><span>2022</span><h3>Master of Computer Science</h3><p>Superior University</p></div>
+    <div><span>2015</span><h3>Graphic Designer Diploma</h3><p>Muslim Hands College of Computer Science</p></div>
+  </div>
+</section>
 
-	<div id="fh5co-resume" class="fh5co-bg-color">
-		<div class="container">
-			<div class="row animate-box">
-				<div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
-					<h2>My Resume</h2>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-12 col-md-offset-0">
-					<ul class="timeline">
+<section class="contact section" id="contact">
+  <div class="section-no">06 / CONTACT</div>
+  <div class="contact-inner">
+    <h2>Let's keep the<br><em>system moving.</em></h2>
+    <p>For IT Support, Technical Support, IT Operations and related opportunities.</p>
+    <div class="contact-links">
+      <a href="mailto:m.arslanrafaqat@gmail.com"><span>Email</span>m.arslanrafaqat@gmail.com ↗</a>
+      <a href="https://www.linkedin.com/in/muhammadarsl33" target="_blank" rel="noopener"><span>LinkedIn</span>linkedin.com/in/muhammadarsl33 ↗</a>
+      <a href="https://github.com/MuhammadArslan11" target="_blank" rel="noopener"><span>GitHub</span>github.com/MuhammadArslan11 ↗</a>
+      <a href="assets/Muhammad-Arslan-Resume.pdf" download><span>Resume</span>Download PDF ↗</a>
+    </div>
+  </div>
+</section>
+</main>
 
+<div class="panel" id="panel" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="panelLabel">
+  <div class="panel-backdrop" id="panelBackdrop"></div>
+  <aside tabindex="-1"><div class="panel-top"><span id="panelLabel"></span><button id="panelClose" type="button" aria-label="Close information panel">Close ×</button></div><div id="panelBody"></div></aside>
+</div>
 
-						
-						<li class="timeline-heading text-center animate-box">
-							<div><h3>Education</h3></div>
-						</li>
-						<br>
-						<li class="timeline-inverted animate-box">
-							<div class="timeline-badge"><i class="icon-graduation-cap"></i></div>
-							<div class="timeline-panel">
-								<div class="timeline-heading">
-									<h3 class="timeline-title">Masters Computer Sciense</h3>
-									<span class="company">Superior University - 2020 - 2022</span>
-								</div>
-								<div class="timeline-body">
-									<p>The programme includes software engineering, system development, natural computation, mathematical foundations and artificial intelligence.</p>
-								</div>
-							</div>
-						</li>
-						<li class="animate-box timeline-unverted">
-							<div class="timeline-badge"><i class="icon-graduation-cap"></i></div>
-							<div class="timeline-panel">
-								<div class="timeline-heading">
-									<h3 class="timeline-title">Graduation</h3>
-									<span class="company">University Of Central Punjab </span>
-								</div>
-								<div class="timeline-body">
-									<p>Graduation in Computer Science</p>
-								</div>
-							</div>
-						</li>
-						
-						<li class="animate-box timeline-unverted">
-							<div class="timeline-badge"><i class="icon-graduation-cap"></i></div>
-							<div class="timeline-panel">
-								<div class="timeline-heading">
-									<h3 class="timeline-title">ICS</h3>
-									<span class="company">Elite College Cantt - 2016 - 2018</span>
-								</div>
-								<div class="timeline-body">
-									<p></p>
-								</div>
-							</div>
-						</li>
-						<li class="timeline-inverted animate-box">
-							<div class="timeline-badge"><i class="icon-graduation-cap"></i></div>
-							<div class="timeline-panel">
-								<div class="timeline-heading">
-									<h3 class="timeline-title">Graphics Design</h3>
-									<span class="company">Wazirabad - 2014</span>
-								</div>
-								<div class="timeline-body">
-									<p>Tools -> Adobe Photoshop , Adobe Illustrator , Corel Draw , In Page </p>
-								</div>
-							</div>
-						</li>
-
-					
-			    	</ul>
-				</div>
-			</div>
-		</div>
-	</div>
-	
-
-	<div id="fh5co-features" class="animate-box">
-		<div class="container">
-			<div class="services-padding">
-				<div class="row">
-					<div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
-						<h2>My Services</h2>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-4 text-center">
-						<div class="feature-left">
-							<span class="icon">
-								<i class="icon-paintbrush"></i>
-							</span>
-							<div class="feature-copy">
-								<h3>Web Design</h3>
-								<p> I am a Full Stack Web Developer. I work with Quality, Aesthetics, and Professionalism, I focus on listening & understanding your needs and requirements and developing reliable and outstanding solutions.</p>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-md-4 text-center">
-						<div class="feature-left">
-							<span class="icon">
-								<i class="icon-briefcase"></i>
-							</span>
-							<div class="feature-copy">
-								<h3>Branding</h3>
-								<p>I will Brand your product or services professionaly .</p>
-							</div>
-						</div>
-
-					</div>
-					<div class="col-md-4 text-center">
-						<div class="feature-left">
-							<span class="icon">
-								<i class="icon-paintbrush"></i>
-							</span>
-							<div class="feature-copy">
-								<h3>Graphics Design </h3>
-								<p>I can design logo banner and many more web graphics. I can also Retouch images like pimple remove with large techniques,tips and movies poster effect and many more image effect.</p>
-							</div>
-						</div>
-					</div>
-				</div>
-
-
-				<div class="row">
-					<div class="col-md-4 text-center">
-
-						<div class="feature-left">
-							<span class="icon">
-								<i class="icon-mobile"></i>
-							</span>
-							<div class="feature-copy">
-								<h3>Mobile App Development</h3>
-								<p>I am a Professional Android App Developer and I would love to develop any kind of custom Android App for you. I will provide a very responsive and attractive design along-with a bug-free code.</p>
-							</div>
-						</div>
-
-					</div>
-
-					<div class="col-md-4 text-center">
-						<div class="feature-left">
-							<span class="icon">
-								<i class="icon-genius"></i>
-							</span>
-							<div class="feature-copy">
-								<h3>Digital Marketing</h3>
-								<p>I will help you launch and grow your brand on Social Media while maintaining brand professionalism, consistency and performance delivery.</p>
-							</div>
-						</div>
-
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div id="fh5co-skills" class="animate-box">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
-					<h2>Skills</h2>
-				</div>
-			</div>
-			<div class="row row-pb-md">
-				<div class="col-md-3 col-sm-6 col-xs-12 text-center">
-					<div class="chart" data-percent="95"><span><strong>HTML5</strong>95%</span></div>
-				</div>
-				<div class="col-md-3 col-sm-6 col-xs-12 text-center">
-					<div class="chart" data-percent="93"><span><strong>CSS3</strong>93%</span></div>
-				</div>
-				<div class="col-md-3 col-sm-6 col-xs-12 text-center">
-					<div class="chart" data-percent="90"><span><strong>jQuery</strong>90%</span></div>
-				</div>
-
-				<div class="col-md-3 col-sm-6 col-xs-12 text-center">
-					<div class="chart" data-percent="89"><span><strong>React Native</strong>89%</span></div>
-				</div>
-				<div class="col-md-3 col-sm-6 col-xs-12 text-center">
-					<div class="chart" data-percent="85"><span><strong>MySQL</strong>85%</span></div>
-				</div>
-				<div class="col-md-3 col-sm-6 col-xs-12 text-center">
-					<div class="chart" data-percent="90"><span><strong>C++</strong>90%</span></div>
-				</div>
-				<div class="col-md-3 col-sm-6 col-xs-12 text-center">
-					<div class="chart" data-percent="85"><span><strong>UX/UI</strong>85%</span></div>
-				</div>
-				<div class="col-md-3 col-sm-6 col-xs-12 text-center">
-					<div class="chart" data-percent="90"><span><strong>JavaScript</strong>90%</span></div>
-				</div>
-				
-			</div>
-
-
-
-
-			<div class="row">
-				<div class="col-md-6">
-					<div class="progress-wrap">
-						<h3><span class="name-left">Adobe Photoshop</span><span class="value-right">95%</span></h3>
-						<div class="progress">
-						  <div class="progress-bar progress-bar-1 progress-bar-striped active" role="progressbar"
-						  aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style="width:90%">
-						  </div>
-						</div>
-					</div>
-					<div class="progress-wrap">
-						<h3><span class="name-left">Adobe Illustrator</span><span class="value-right">90%</span></h3>
-
-						<div class="progress">
-						  <div class="progress-bar progress-bar-2 progress-bar-striped active" role="progressbar"
-						  aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style="width:90%">
-						  </div>
-						</div>
-					</div>
-					<div class="progress-wrap">
-						<h3><span class="name-left">Corel Draw</span><span class="value-right">80%</span></h3>
-						<div class="progress">
-						  <div class="progress-bar progress-bar-3 progress-bar-striped active" role="progressbar"
-						  aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width:80%">
-						  </div>
-						</div>
-					</div>
-					<div class="progress-wrap">
-						<h3><span class="name-left">Video Editing</span><span class="value-right">85%</span></h3>
-						<div class="progress">
-						  <div class="progress-bar progress-bar-4 progress-bar-striped active" role="progressbar"
-						  aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" style="width:85%">
-						  </div>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-6">
-					<div class="progress-wrap">
-						<h3><span class="name-left">Wordpress</span><span class="value-right">100%</span></h3>
-						<div class="progress">
-						  <div class="progress-bar progress-bar-5 progress-bar-striped active" role="progressbar"
-						  aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
-						  </div>
-						</div>
-					</div>
-					<div class="progress-wrap">
-						<h3><span class="name-left">In Page</span><span class="value-right">70%</span></h3>
-						<div class="progress">
-						  <div class="progress-bar progress-bar-striped active" role="progressbar"
-						  aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:70%">
-						  </div>
-						</div>
-					</div>
-					<div class="progress-wrap">
-						<h3><span class="name-left">Figma</span><span class="value-right">85%</span></h3>
-						<div class="progress">
-						  <div class="progress-bar progress-bar-1 progress-bar-striped active" role="progressbar"
-						  aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" style="width:85%">
-						  </div>
-						</div>
-					</div>
-					<div class="progress-wrap">
-						<h3><span class="name-left">Packet Tracer</span><span class="value-right">75%</span></h3>
-						<div class="progress">
-						  <div class="progress-bar progress-bar-3 progress-bar-striped active" role="progressbar"
-						  aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width:75%">
-						  </div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div id="fh5co-work" class="fh5co-bg-dark">
-		<div class="container">
-			<div class="row animate-box">
-				<div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
-					<h2>Work</h2>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-3 text-center col-padding animate-box">
-					<a href="#" class="work" style="background-image: url(images/portfolio-1.jpg);">
-						<div class="desc">
-							<h3>Arsl Graphics</h3>
-							<span>Illustration</span>
-						</div>
-					</a>
-
-
-				</div>
-				<div class="col-md-3 text-center col-padding animate-box">
-					<a href="#" class="work" style="background-image: url(images/portfolio-2.jpg);">
-						<div class="desc">
-							<h3>Arsl Graphics</h3>
-							<span>Illustration</span>
-						</div>
-					</a>
-				</div>
-				<div class="col-md-3 text-center col-padding animate-box">
-					<a href="#" class="work" style="background-image: url(images/portfolio-3.png);">
-						<div class="desc">
-							<h3>Arsl Graphics</h3>
-							<span>Illustration</span>
-						</div>
-					</a>
-				</div>
-				<div class="col-md-3 text-center col-padding animate-box">
-					<a href="#" class="work" style="background-image: url(images/portfolio-4.jpg);">
-						<div class="desc">
-							<h3>Arsl Graphics</h3>
-							<span>Design</span>
-						</div>
-					</a>
-				</div>
-				<div class="col-md-3 text-center col-padding animate-box">
-					<a href="#" class="work" style="background-image: url(images/portfolio-5.jpg);">
-						<div class="desc">
-							<h3>Arsl Graphics</h3>
-							<span>Illustration</span>
-						</div>
-					</a>
-				</div>
-				<div class="col-md-3 text-center col-padding animate-box">
-					<a href="#" class="work" style="background-image: url(images/portfolio-6.jpg);">
-						<div class="desc">
-							<h3>Arsl Graphics</h3>
-							<span>Illustration</span>
-						</div>
-					</a>
-				</div>
-				<div class="col-md-3 text-center col-padding animate-box">
-					<a href="#" class="work" style="background-image: url(images/portfolio-7.jpg);">
-						<div class="desc">
-							<h3>Arsl Graphics</h3>
-							<span>Illustration</span>
-						</div>
-					</a>
-				</div>
-				<div class="col-md-3 text-center col-padding animate-box">
-					<a href="#" class="work" style="background-image: url(images/portfolio-8.png);">
-						<div class="desc">
-							<h3>Arsl Graphics</h3>
-							<span>Illustration</span>
-						</div>
-					</a>
-				</div>
-
-				<div class="col-md-3 text-center col-padding animate-box">
-					<a href="#" class="work" style="background-image: url(images/portfolio-9.jpg);">
-						<div class="desc">
-							<h3>Arsl Graphics</h3>
-							<span>Illustration</span>
-						</div>
-					</a>
-				</div>
-				<div class="col-md-3 text-center col-padding animate-box">
-					<a href="#" class="work" style="background-image: url(images/portfolio-10.jpg);">
-						<div class="desc">
-							<h3>Arsl Graphics</h3>
-							<span>Illustration</span>
-						</div>
-					</a>
-				</div>
-				<div class="col-md-3 text-center col-padding animate-box">
-					<a href="#" class="work" style="background-image: url(images/portfolio-11.png);">
-						<div class="desc">
-							<h3>Arsl Graphics</h3>
-							<span>Illustration</span>
-						</div>
-					</a>
-				</div>
-				<div class="col-md-3 text-center col-padding animate-box">
-					<a href="#" class="work" style="background-image: url(images/portfolio-12.jpg);">
-						<div class="desc">
-							<h3>Arsl Graphics</h3>
-							<span>Illustration</span>
-						</div>
-					</a>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div id="fh5co-blog">
-		<div class="container">
-			<div class="row animate-box">
-				<div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
-					<h2>Post on Medium</h2>
-					<p>FABAU</p>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-4">
-					<div class="fh5co-blog animate-box">
-						<a href="#" class="blog-bg" style="background-image: url(images/portfolio-1.jpg);"></a>
-						<div class="blog-text">
-							<span class="posted_on">2022</span>
-							<h3><a href="#">Vector Glass</a></h3>
-							<p>...</p>
-							<ul class="stuff">
-								<li><i class="icon-heart2"></i>249</li>
-								<li><i class="icon-eye2"></i>308</li>
-								<li><a href="#">Read More<i class="icon-arrow-right22"></i></a></li>
-							</ul>
-						</div> 
-					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="fh5co-blog animate-box">
-						<a href="#" class="blog-bg" style="background-image: url(images/portfolio-2.jpg);"></a>
-						<div class="blog-text">
-							<span class="posted_on">2022</span>
-							<h3><a href="#">Logo for Brand</a></h3>
-							<p>...</p>
-							<ul class="stuff">
-								<li><i class="icon-heart2"></i>249</li>
-								<li><i class="icon-eye2"></i>308</li>
-								<li><a href="#">Read More<i class="icon-arrow-right22"></i></a></li>
-							</ul>
-						</div> 
-					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="fh5co-blog animate-box">
-						<a href="#" class="blog-bg" style="background-image: url(images/portfolio-3.png);"></a>
-						<div class="blog-text">
-							<span class="posted_on">2022</span>
-							<h3><a href="#">Blinker Vector</a></h3>
-							<p>...</p>
-							<ul class="stuff">
-								<li><i class="icon-heart2"></i>249</li>
-								<li><i class="icon-eye2"></i>308</li>
-								<li><a href="#">Read More<i class="icon-arrow-right22"></i></a></li>
-							</ul>
-						</div> 
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	
-	<div id="fh5co-started" class="fh5co-bg-dark">
-		<div class="overlay"></div>
-		<div class="container">
-			<div class="row animate-box">
-				<div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
-					<h2>Hire Me!</h2>
-					<p>Feel free to contact me</p>
-					<p> I am looking forward to work for you </p>
-
-					<p><a href="https://www.linkedin.com/in/muhammadarsl33" class="btn btn-default btn-lg">Contact Us</a></p>
-				</div>
-			</div>
-		</div>
-	</div>
-
-
-
-	<br>
-	
-	
-	<div id="fh5co-footer">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-12">
-					<p>&copy; Muhammad Arsalan. All Rights Reserved. <br>Designed by <a href="https://www.linkedin.com/in/muhammadarsl33" target="_blank">M Arsalan</a> </p>
-				</div>
-			</div>
-		</div>
-	</div>
-
-
-	<div class="gototop js-top">
-		<a href="#" class="js-gotop"><i class="icon-arrow-up22"></i></a>
-	</div>
-	
-	<!-- jQuery -->
-	<script src="js/jquery.min.js"></script>
-	<!-- jQuery Easing -->
-	<script src="js/jquery.easing.1.3.js"></script>
-	<!-- Bootstrap -->
-	<script src="js/bootstrap.min.js"></script>
-	<!-- Waypoints -->
-	<script src="js/jquery.waypoints.min.js"></script>
-	<!-- Stellar Parallax -->
-	<script src="js/jquery.stellar.min.js"></script>
-	<!-- Easy PieChart -->
-	<script src="js/jquery.easypiechart.min.js"></script>
-	<!-- Google Map -->
-	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCefOgb1ZWqYtj7raVSmN4PL2WkTrc-KyA&sensor=false"></script>
-	<script src="js/google_map.js"></script>
-	
-	<!-- Main -->
-	<script src="js/main.js"></script>
-
-	</body>
+<footer><span>Muhammad Arsalan</span><span>STATIC PORTFOLIO / GITHUB PAGES</span></footer>
+<script src="script.js"></script>
+</body>
 </html>
-
-
