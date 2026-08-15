@@ -1,236 +1,709 @@
 /* =========================================================
-   AI IT SUPPORT ENGINE
-   STAGE 1 — Guided rule-based troubleshooting
+   AI IT SUPPORT ASSISTANT
+   STAGE 1 — Evidence-based conversational diagnostic engine
+   Static GitHub Pages implementation; no external AI API.
    ========================================================= */
+(function () {
+  "use strict";
 
-(function(){
-"use strict";
+  /* =======================================================
+     STEP 1 — DOM / CONFIGURATION
+     ======================================================= */
+  const $ = (id) => document.getElementById(id);
+  const chat = $("aiChat");
+  const form = $("aiForm");
+  const input = $("aiMessage");
+  const resetBtn = $("aiReset");
+  const quick = $("aiQuick");
+  const topics = $("aiTopicList");
+  const search = $("aiKbSearch");
+  const count = $("aiScenarioCount");
+  const progress = $("aiProgress");
 
-/* STEP 1 — Knowledge base and supported domains */
-
-
-/* STEP 2 — Stage-1 scenario generation */
-/* Daily IT Support knowledge base: 48 domains x 24 common scenario patterns. */
-const DOMAINS=[
-["Network & Internet",["internet","network","ethernet","website","connection","gateway","internet access"]],
-["Wi-Fi",["wifi","wi-fi","wireless","ssid","access point","wireless network"]],
-["DNS",["dns","nslookup","resolve","hostname","name resolution","domain name"]],
-["DHCP / IP",["dhcp","ip address","169.254","apipa","lease","subnet","default gateway"]],
-["Windows",["windows","event viewer","task manager","windows update","explorer","settings"]],
-["Active Directory",["active directory","domain controller","gpo","group policy","domain join","organizational unit"]],
-["Accounts & Login",["login","sign in","password","account","locked","credential","username","mfa","authentication"]],
-["Password & MFA",["password reset","password expired","mfa","multi-factor","verification code","authenticator"]],
-["Printers",["printer","printing","print","spooler","queue","offline","paper jam"]],
-["Email / Outlook",["outlook","email","mail","exchange","send","receive","mailbox","attachment"]],
-["Microsoft 365",["microsoft 365","office 365","teams","sharepoint","onedrive","word","excel","powerpoint"]],
-["Teams",["teams","meeting","call","chat","teams microphone","teams camera"]],
-["OneDrive",["onedrive","sync","file sync","cloud files","onedrive storage"]],
-["SharePoint",["sharepoint","site","document library","sharepoint access"]],
-["Hardware",["laptop","computer","keyboard","mouse","monitor","screen","battery","usb","docking station"]],
-["Monitors & Displays",["monitor","display","screen","hdmi","displayport","resolution","dual monitor"]],
-["Keyboard & Mouse",["keyboard","mouse","touchpad","trackpad","keys","cursor"]],
-["USB & Peripherals",["usb","flash drive","external drive","webcam","headset","dock","peripheral"]],
-["Software & Applications",["software","application","app","program","install","crash","license","application error"]],
-["Browsers",["chrome","edge","firefox","browser","cache","cookies","certificate","web page"]],
-["VPN / Remote Access",["vpn","remote access","rdp","remote desktop","tunnel","remote login"]],
-["File Shares & Drives",["shared folder","file share","smb","network drive","mapped drive","permissions","shared drive"]],
-["Servers",["server","windows server","file server","service unavailable","server down","server connection"]],
-["Performance",["slow","performance","cpu","memory","ram","lag","freeze","high cpu","high memory"]],
-["Storage & Disk",["disk","storage","ssd","hdd","space","disk full","partition","low disk space"]],
-["Backup & Recovery",["backup","restore","recovery","backup job","restore point","data recovery"]],
-["Security / Endpoint",["antivirus","defender","firewall","malware","security","endpoint","threat"]],
-["Permissions & Access",["permission","access denied","unauthorized","folder access","file access","rights"]],
-["Certificates & Time",["time sync","clock","certificate","tls","ssl","ntp","certificate error"]],
-["Audio / Video",["microphone","camera","webcam","speaker","audio","video","headset","sound"]],
-["Mobile & BYOD",["iphone","android","mobile","phone","tablet","byod","mobile device"]],
-["Virtualization",["virtualbox","vmware","virtual machine","vm","hyper-v","virtualization"]],
-["Cloud / IAM",["aws","azure","cloud","ec2","s3","iam","security group","cloud login"]],
-["Git / Developer Tools",["git","github","repository","npm","node","python","branch","developer"]],
-["PowerShell / Command Line",["powershell","command prompt","cmd","terminal","command line","script"]],
-["File & Folder Management",["file","folder","rename","copy","move","delete","zip","unzip"]],
-["Windows Updates",["windows update","update failed","cumulative update","update stuck","restart update"]],
-["Drivers & Device Manager",["driver","device manager","unknown device","driver update","device error"]],
-["System Services",["service","services.msc","background service","service stopped","service failed"]],
-["Event Logs",["event viewer","event log","application log","system log","error log"]],
-["Help Desk & Tickets",["ticket","incident","request","help desk","service desk","sla","escalation"]],
-["Remote Support",["remote support","screen sharing","remote assistance","anydesk","teamviewer"]],
-["User Onboarding",["new user","onboarding","new employee","account setup","computer setup","access request"]],
-["Offboarding",["offboarding","leaver","disable account","remove access","employee leaving"]],
-["Asset Management",["asset","inventory","serial number","laptop asset","equipment","it asset"]],
-["Network Devices",["switch","router","firewall","access point","network device","port"]],
-["Internet & Proxy",["proxy","proxy server","web filter","internet filter","blocked website"]],
-["Data & Privacy",["data privacy","sensitive data","personal data","data protection","privacy"]]
-];
-const VARIANTS=[
-"not working","not connecting","connection fails","shows an error","keeps disconnecting",
-"is slow","is unavailable","is blocked","cannot be accessed","stopped working",
-"fails after login","cannot be configured","shows incorrect settings","cannot be installed",
-"cannot be updated","works for others but not me","fails intermittently","returns an error",
-"needs troubleshooting","needs a complete diagnosis","is not responding","is offline",
-"keeps asking for credentials","started failing today"
-];
-const KB=[];
-DOMAINS.forEach(d=>VARIANTS.forEach((v,i)=>KB.push({
- id:KB.length+1,domain:d[0],keys:d[1],scenario:d[0]+" "+v,index:i
-})));
-
-const COMMANDS={
-"Network & Internet":[["IP CONFIG","ipconfig /all"],["GATEWAY","ping <default-gateway>"],["PUBLIC IP","ping 8.8.8.8"],["DNS","nslookup example.com"]],
-"DNS":[["DNS LOOKUP","nslookup example.com"],["CONFIG","ipconfig /all"],["CACHE","ipconfig /flushdns"]],
-"DHCP / IP":[["CONFIG","ipconfig /all"],["RELEASE","ipconfig /release"],["RENEW","ipconfig /renew"]],
-"Windows":[["SYSTEM","systeminfo"],["EVENTS","eventvwr.msc"],["SERVICES","services.msc"]],
-"Active Directory":[["IDENTITY","whoami"],["LOGON SERVER","echo %LOGONSERVER%"],["DOMAIN","echo %USERDOMAIN%"]],
-"Accounts & Login":[["IDENTITY","whoami"],["GROUPS","whoami /groups"],["ACCOUNT","net user <username> /domain"]],
-"Printers":[["REACHABILITY","ping <printer-ip>"],["PRINTERS","control printers"],["SPOOLER","services.msc"]],
-"Email / Outlook":[["NETWORK","ipconfig /all"],["OUTLOOK SAFE MODE","outlook.exe /safe"],["WEBMAIL","Open approved webmail"]],
-"Hardware":[["DEVICES","devmgmt.msc"],["SYSTEM","msinfo32"],["DISK","wmic diskdrive get status"]],
-"Software":[["APPS","appwiz.cpl"],["EVENTS","eventvwr.msc"],["TASKS","taskmgr"]],
-"VPN / Remote Access":[["NETWORK","ipconfig /all"],["ROUTES","route print"],["REMOTE","ping <internal-host>"]],
-"Microsoft 365":[["WEB TEST","Open Microsoft 365 web portal"],["NETWORK","ipconfig /all"],["ACCOUNT","Check organizational account"]],
-"Wi-Fi":[["WIRELESS","netsh wlan show interfaces"],["IP","ipconfig /all"],["GATEWAY","ping <default-gateway>"]],
-"Security / Endpoint":[["DEFENDER","Get-MpComputerStatus"],["EVENTS","eventvwr.msc"],["SECURITY","Open approved security console"]],
-"Browsers":[["DNS","nslookup example.com"],["PROXY","netsh winhttp show proxy"],["BROWSER","Test URL in another browser"]],
-"Servers":[["PING","ping <server>"],["SERVICES","services.msc"],["EVENTS","eventvwr.msc"]],
-"File Shares":[["SERVER","ping <server>"],["SHARE","dir \\\\<server>\\<share>"],["IDENTITY","whoami"]],
-"Performance":[["TASKS","taskmgr"],["RESOURCE","resmon"],["SYSTEM","msinfo32"]],
-"Backup / Recovery":[["BACKUP","Open approved backup console"],["STORAGE","Check repository capacity"],["LOGS","Review backup job logs"]],
-"Storage":[["SPACE","wmic logicaldisk get size,freespace,caption"],["DISK MGMT","diskmgmt.msc"],["CHECK","chkdsk /scan"]],
-"Audio / Video":[["SOUND","mmsys.cpl"],["DEVICES","devmgmt.msc"],["PRIVACY","ms-settings:privacy"]],
-"Time / Certificates":[["TIME","w32tm /query /status"],["SOURCE","w32tm /query /source"],["CERTS","certmgr.msc"]],
-"Git / Developer":[["STATUS","git status"],["VERSION","git --version"],["REMOTE","git remote -v"]],
-"Virtualization":[["VM","Check VM network/settings"],["HOST","Check host CPU/RAM/disk"],["TOOLS","Check guest tools"]],
-"Remote Management":[["PING","ping <remote-host>"],["PORT","Test TCP <port>"],["IDENTITY","whoami"]],
-"Cloud / IAM":[["RESOURCE","Check cloud resource status"],["NETWORK","Check network/security rules"],["IAM","Check IAM/role permissions"]]
-};
-
-const $=id=>document.getElementById(id);
-const chat=$("aiChat"),form=$("aiForm"),input=$("aiMessage"),resetBtn=$("aiReset"),quick=$("aiQuick");
-const topics=$("aiTopicList"),search=$("aiKbSearch"),count=$("aiScenarioCount"),progress=$("aiProgress");
-let active=null,state="idle",activeDomain="Network & Internet";
-let visitorName=sessionStorage.getItem("aiSupportVisitorName")||"";
-let awaitingName=false;
-
-/* STEP 3 — UI helpers and safe rendering */
-function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
-function add(role,html){
- const e=document.createElement("div");e.className="ai-msg "+role;
- e.innerHTML='<div class="ai-avatar">'+(role==="ai"?"AI":"YOU")+'</div><div class="ai-bubble">'+html+"</div>";
- chat.appendChild(e);chat.scrollTop=chat.scrollHeight;return e;
-}
-function wait(){return add("ai",'<span class="ai-typing">Analyzing the result <i></i><i></i><i></i></span>');}
-function cmds(list){
- return '<div class="ai-command-block"><div class="ai-command-head"><span>STRUCTURED DIAGNOSTIC COMMANDS</span><span>DIAGNOSTIC FIRST</span></div>'+
- list.map(x=>'<div class="ai-command-row"><div><small>'+esc(x[0])+'</small><code>'+esc(x[1])+'</code></div><button class="ai-copy" data-copy="'+esc(x[1])+'" type="button">COPY</button></div>').join("")+"</div>";
-}
-function choices(a){return '<div class="ai-follow">'+a.map(x=>'<button type="button" data-answer="'+esc(x)+'">'+esc(x)+"</button>").join("")+"</div>";}
-function prog(n){if(!progress)return;const a=["REPORT","CHECK","DIAGNOSE","RESOLVE","VERIFY"];progress.innerHTML=a.map((x,i)=>'<span class="'+(i<=n?"done":"")+'">'+String(i+1).padStart(2,"0")+" "+x+"</span>"+(i<4?"<i></i>":"")).join("");}
-function find(text){
- const t=text.toLowerCase();let best=null,score=0;
- KB.forEach(k=>{let s=k.keys.reduce((n,p)=>n+(t.includes(p)?2:0),0);if(t.includes(k.scenario.toLowerCase()))s+=4;if(s>score){score=s;best=k;}});
- return score?best:null;
-}
-function greeting(){
- const known=visitorName?'<p>Welcome back, <b>'+esc(visitorName)+'</b>.</p>':'<p>Before we begin, what name should I use for you?</p>';
- add("ai",'<p><b>Hello'+(visitorName?", "+esc(visitorName):"")+'.</b> I’m the IT Support AI Assistant — Stage 1.</p>'+known+'<p>I can help with everyday IT support issues such as Wi-Fi, Windows, accounts, printers, Outlook, Microsoft 365, Active Directory, hardware, VPNs and more.</p><p><b>Tell me what is not working, or choose a supported topic.</b></p>');
- awaitingName=!visitorName;
-}
-function handleName(text){
- const cleaned=text.trim().replace(/^(my name is|i am|i'm|im|call me|you can call me)\s+/i,"").replace(/[.!?]+$/,"").trim();
- if(cleaned && cleaned.length<=60 && !/^(hi|hello|hey|yes|no|okay|ok)$/i.test(cleaned)){
-  visitorName=cleaned;
-  sessionStorage.setItem("aiSupportVisitorName",visitorName);
-  awaitingName=false;
-  add("ai",'<p>Nice to meet you, <b>'+esc(visitorName)+'</b>.</p><p>I’ll use your name naturally during the troubleshooting conversation.</p><p><b>What IT problem can I help you with?</b></p>');
-  input.focus();
-  return true;
- }
- add("ai",'<p>No problem. Please tell me your name first — for example, <b>“My name is Muhammad.”</b></p>');
- return true;
-}
-function unsupported(){
- add("ai",'<p>I’m focused specifically on <b>IT Support</b> topics.</p><p>This request is outside my current Stage 1 knowledge base.</p><p><b>I’m still growing this project, so I can’t provide a reliable solution for this issue at this stage. I’ll add more coverage in future model updates.</b></p>');
-}
-/* STEP 4 — Guided network diagnostic flow */
-function networkStart(){
- activeDomain="Network & Internet";state="gateway";
- add("ai",'<p>I can help with that. Let’s diagnose it layer by layer instead of guessing.</p><p><b>Step 1 — Local network:</b></p><ol><li>Open Command Prompt.</li><li>Run <code class="ai-inline-cmd">ipconfig /all</code>.</li><li>Confirm IPv4, Default Gateway and DNS Server are present.</li><li>Run <code class="ai-inline-cmd">ping &lt;default-gateway&gt;</code>.</li></ol>'+cmds(COMMANDS["Network & Internet"].slice(0,2))+'<p><b>What did the gateway ping show?</b></p>'+choices(["Gateway ping replies","Gateway ping fails","I don’t know"]));prog(1);
-}
-function network(text){
- const t=text.toLowerCase();
- if(state==="gateway"){
-  if(/fail|no reply|unreachable/.test(t)){state="gatewayFail";add("ai",'<p><b>Gateway ping failed — that is useful evidence.</b></p><p>The fault is currently inside the local network path, so we should not jump to DNS yet.</p><ol><li>Confirm the correct Wi-Fi SSID or Ethernet connection.</li><li>Run <code class="ai-inline-cmd">ipconfig /all</code> and check IPv4, subnet mask and gateway.</li><li>Run <code class="ai-inline-cmd">arp -a</code> and look for the gateway.</li><li>Reconnect Wi-Fi or check the Ethernet link.</li><li>Run the gateway ping again.</li></ol>'+cmds([["IP CONFIG","ipconfig /all"],["ARP TABLE","arp -a"],["GATEWAY","ping <default-gateway>"]])+'<p><b>After reconnecting, does the gateway reply now?</b></p>'+choices(["Yes, gateway replies","No, gateway still fails"]));prog(2);return true;}
-  if(/reply|work|success/.test(t)){state="gatewayPass";add("ai",'<p><b>Gateway is reachable.</b> Good — the local network path is working.</p><p>Now test the internet route and then DNS.</p>'+cmds([["PUBLIC IP","ping 8.8.8.8"],["DNS","nslookup example.com"]])+'<p><b>What happened?</b></p>'+choices(["8.8.8.8 replies","8.8.8.8 fails","DNS lookup fails","Both work"]));prog(2);return true;}
- }
- if(state==="gatewayFail"){
-  if(/yes|reply|work/.test(t)){state="gatewayPass";add("ai",'<p>Excellent. The gateway is reachable now. Let’s move outward to the internet path.</p>'+cmds([["PUBLIC IP","ping 8.8.8.8"],["DNS","nslookup example.com"]])+'<p><b>What happened?</b></p>'+choices(["8.8.8.8 replies","8.8.8.8 fails","DNS lookup fails","Both work"]));prog(3);return true;}
-  add("ai",'<p>The gateway still fails. The likely area is local connectivity, adapter/VLAN/cable/Wi-Fi or the gateway-side path.</p><p>Do not change DNS yet. Compare the IP/subnet/gateway with a known-good device and check the physical/link state.</p>'+cmds([["IP CONFIG","ipconfig /all"],["ARP TABLE","arp -a"],["GATEWAY","ping <default-gateway>"]])+'<p><b>After those checks, does the gateway reply?</b></p>'+choices(["Yes, it replies now","No, it still fails"]));prog(2);return true;
- }
- if(state==="gatewayPass"){
-  if(/8\.8\.8\.8/.test(t)&&/fail|no/.test(t)){state="publicFail";add("ai",'<p><b>The gateway works, but internet routing fails.</b></p><p>This points toward the upstream router, firewall, VPN, ISP or route path.</p><ol><li>Run tracert 8.8.8.8.</li><li>Check another device on the same network.</li><li>If several devices fail, escalate with the evidence.</li></ol>'+cmds([["TRACE","tracert 8.8.8.8"],["PUBLIC IP","ping 8.8.8.8"]])+'<p><b>Does another device have internet?</b></p>'+choices(["Yes","No"]));prog(3);return true;}
-  if(/dns/.test(t)&&/fail|no/.test(t)){state="dnsFail";add("ai",'<p><b>DNS is the likely cause.</b></p><p>The public IP works but name resolution fails.</p><ol><li>Run <code class="ai-inline-cmd">ipconfig /flushdns</code>.</li><li>Run <code class="ai-inline-cmd">nslookup example.com</code>.</li><li>Check DNS servers with <code class="ai-inline-cmd">ipconfig /all</code>.</li></ol>'+cmds([["CLEAR CACHE","ipconfig /flushdns"],["DNS LOOKUP","nslookup example.com"],["DNS CONFIG","ipconfig /all"]])+'<p><b>Does nslookup work now?</b></p>'+choices(["Yes","No"]));prog(3);return true;}
-  if(/both|work|reply/.test(t)){state="verify";add("ai",'<p><b>Network and DNS checks are healthy.</b></p><p>Now verify the exact website that originally failed.</p><p><b>Is the original website working now?</b></p>'+choices(["Yes, resolved","No, still not working"]));prog(4);return true;}
- }
- if(state==="dnsFail"){
-  if(/yes|work/.test(t)){state="verify";add("ai",'<p>Good. DNS is responding again. Test the original website now.</p><p><b>Does it open?</b></p>'+choices(["Yes, resolved","No, still not working"]));prog(4);return true;}
-  add("ai",'<p>DNS is still failing. Check the configured DNS server and the corporate DNS/VPN path. If several devices have the same issue, escalate as a DNS/service incident.</p>'+cmds(COMMANDS.DNS)+'<p><b>Does the DNS server respond now?</b></p>'+choices(["Yes","No"]));return true;
- }
- if(state==="verify"){
-  if(/yes|resolved|work/.test(t)){state="resolved";add("ai",'<p><b>Issue resolved.</b> The original symptom is no longer occurring.</p><p><b>Ticket note:</b> document the symptom, failed check, root cause, corrective action and final verification.</p>');prog(4);return true;}
-  add("ai",'<p>The network and DNS layers are healthy. The remaining cause is likely browser, proxy, security or the website itself.</p>'+cmds([["PROXY","netsh winhttp show proxy"],["DNS","nslookup <website-hostname>"]])+'<p><b>Does the website work in another browser?</b></p>'+choices(["Yes","No"]));prog(3);return true;
- }
- return false;
-}
-/* STEP 5 — Generic domain diagnostic flow */
-function genericStart(sc){
- active=sc;activeDomain=sc.domain;state="generic";add("ai",'<p>'+ (visitorName?"Alright, "+esc(visitorName)+". ":"") +'I understand. This looks like a <b>'+esc(sc.domain)+'</b> issue.</p><p>I won’t give you a one-shot answer. I’ll collect evidence and keep following the diagnosis.</p><p><b>First check:</b> confirm the exact error/symptom and run the diagnostic commands below.</p>'+cmds((COMMANDS[sc.domain]||[["DIAGNOSTIC","Run the relevant approved diagnostic"],["LOGS","Review relevant logs"]]).slice(0,2))+'<p><b>What result do you get?</b></p>'+choices(["The check works","The check fails","I need help running it"]));prog(1);
-}
-function genericContinue(text){
- const fail=/fail|error|no |not |cannot|can't|unavailable|offline|blocked/.test(text.toLowerCase());
- active.step=(active.step||0)+1;const c=COMMANDS[active.domain]||[];
- if(active.step>=3){state="verifyGeneric";add("ai",'<p><b>We have enough evidence to move toward a fix.</b></p><p>Apply the smallest approved correction for the confirmed cause, then repeat the original action.</p>'+cmds(c.slice(0,3))+'<p><b>After the fix, is the original issue resolved?</b></p>'+choices(["Yes, resolved","No, still happening"]));prog(4);return;}
- add("ai",'<p>'+(fail?"That check failed, so we follow the failure path.":"Good — that check passed, so we move to the next layer.")+'</p><p><b>Next diagnostic step:</b> check the relevant configuration, service, permission or log.</p>'+cmds(c.slice(0,3))+'<p><b>What result do you get?</b></p>'+choices(["It works","It fails","Different error"]));prog(Math.min(3,active.step+1));
-}
-function send(text){
- text=text.trim();if(!text)return;add("user","<p>"+esc(text)+"</p>");input.value="";const w=wait();
- setTimeout(function(){w.remove();const t=text.toLowerCase();
-  if(/^(hi|hello|hey|good morning|good afternoon|good evening|how are you|how's it going)[!,. ]*$/i.test(text)){
-    add("ai",'<p><b>Hello'+(visitorName?", "+esc(visitorName):"")+'.</b> How can I help you today?</p><p>You can tell me an IT problem in your own words, such as “Wi-Fi is connected but the internet is not working.”</p>');
+  if (!chat || !form || !input) {
+    console.error("AI Support: required chat elements are missing.");
     return;
   }
-  if(awaitingName){handleName(text);return;}
-  if(["gateway","gatewayFail","gatewayPass","dnsFail","verify"].includes(state)&&network(t))return;
-  if(state==="generic"){genericContinue(t);return;}
-  if(state==="verifyGeneric"){if(/yes|resolved|fixed|works/.test(t)){state="resolved";add("ai",'<p><b>Great — the issue is resolved.</b> Verify the original action one final time and document the confirmed root cause and fix.</p>');prog(4)}else{add("ai",'<p>The issue is still present. We will not close it yet. Continue with the next evidence point or escalate with the diagnostic results.</p>');prog(3)}return;}
-  const sc=find(text);
-  if(!sc){unsupported();return;}
-  if(sc.domain==="Network & Internet"&&/wifi|wi-fi/.test(t)&&/internet|website|web/.test(t)){networkStart();return;}
-  genericStart(sc);
- },380);
-}
-/* STEP 6 — Sidebar navigation and topic rendering */
-function renderTopics(q){
- topics.innerHTML="";q=(q||"").toLowerCase();
- DOMAINS.filter(d=>!q||d[0].toLowerCase().includes(q)||d[1].some(k=>k.includes(q))).forEach(d=>{
-  const b=document.createElement("button");b.type="button";b.className="ai-topic"+(d[0]===activeDomain?" active":"");
-  b.innerHTML="<span>"+esc(d[0])+'</span><small>20</small>';
-  b.onclick=function(){activeDomain=d[0];state="idle";active=null;document.querySelectorAll(".ai-topic").forEach(x=>x.classList.remove("active"));b.classList.add("active");b.scrollIntoView({block:"nearest",behavior:"smooth"});add("ai",'<p>Selected <b>'+esc(d[0])+'</b>.</p><p>Describe the issue and I’ll guide you through it step-by-step.</p>');input.focus();};
-  topics.appendChild(b);
- });
-}
-/* STEP 7 — Reset, composer and interaction handlers */
-function reset(){
- chat.innerHTML="";state="idle";active=null;activeDomain="Network & Internet";prog(0);awaitingName=!visitorName;greeting();
- quick.innerHTML="";
- ["My laptop is connected to Wi-Fi but websites are not opening.","A user cannot sign in to Windows.","The printer shows offline.","DNS is not resolving websites."].forEach(x=>{const b=document.createElement("button");b.type="button";b.textContent=x;b.onclick=function(){input.value=x;form.requestSubmit()};quick.appendChild(b)});
-}
-form.onsubmit=e=>{e.preventDefault();send(input.value)};
-input.onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();form.requestSubmit()}};
-input.oninput=()=>{input.style.height="auto";input.style.height=Math.min(110,input.scrollHeight)+"px"};
-resetBtn.onclick=reset;
-if(search)search.oninput=()=>renderTopics(search.value);
-chat.onclick=e=>{const c=e.target.closest("[data-copy]");if(c){navigator.clipboard?.writeText(c.dataset.copy);c.textContent="COPIED";setTimeout(()=>c.textContent="COPY",900)}const a=e.target.closest("[data-answer]");if(a){input.value=a.dataset.answer;form.requestSubmit()}};
-if(count)count.textContent=KB.length+"+";
-const scCount=document.getElementById("aiScenarioCount");if(scCount)scCount.textContent=KB.length+"+";
-renderTopics();reset();
-})();
 
+  const STAGES = ["REPORT", "CHECK", "DIAGNOSE", "RESOLVE", "VERIFY"];
+
+  /* =======================================================
+     STEP 2 — KNOWLEDGE BASE
+     ======================================================= */
+  const TOPICS = [
+    ["Network & Internet", ["network", "internet", "ethernet", "connection", "gateway", "online", "offline", "web"]],
+    ["Wi-Fi", ["wifi", "wi-fi", "wireless", "ssid", "access point"]],
+    ["DNS", ["dns", "resolve", "resolution", "hostname", "nxdomain", "name resolution"]],
+    ["DHCP / IP", ["dhcp", "ip address", "169.254", "apipa", "default gateway", "subnet", "lease"]],
+    ["Windows", ["windows", "windows 10", "windows 11", "task manager", "event viewer", "windows update"]],
+    ["Active Directory", ["active directory", "domain controller", "gpo", "group policy", "domain join", "organizational unit"]],
+    ["Accounts & Login", ["login", "log in", "sign in", "account", "credential", "locked account", "username"]],
+    ["Password & MFA", ["password", "password expired", "password reset", "mfa", "verification code", "authenticator"]],
+    ["Printers", ["printer", "printing", "print queue", "spooler", "paper jam"]],
+    ["Email / Outlook", ["outlook", "email", "mail", "exchange", "send email", "receive email", "mailbox"]],
+    ["Microsoft 365", ["microsoft 365", "office 365", "word", "excel", "powerpoint"]],
+    ["Teams", ["teams", "meeting", "teams call", "teams microphone", "teams camera"]],
+    ["OneDrive", ["onedrive", "sync", "cloud files"]],
+    ["SharePoint", ["sharepoint", "document library", "sharepoint access"]],
+    ["Hardware", ["laptop", "computer", "desktop", "battery", "usb", "docking station"]],
+    ["Monitors & Displays", ["monitor", "display", "screen", "hdmi", "displayport", "resolution", "dual monitor"]],
+    ["Keyboard & Mouse", ["keyboard", "mouse", "touchpad", "trackpad", "cursor"]],
+    ["USB & Peripherals", ["usb", "flash drive", "webcam", "headset", "dock", "peripheral"]],
+    ["Software & Applications", ["software", "application", "app", "program", "install", "crash", "license"]],
+    ["Browsers", ["chrome", "edge", "firefox", "browser", "cache", "cookies", "certificate"]],
+    ["VPN / Remote Access", ["vpn", "remote access", "rdp", "remote desktop", "remote login"]],
+    ["File Shares & Drives", ["shared folder", "file share", "network drive", "mapped drive", "shared drive"]],
+    ["Servers", ["server", "file server", "server down", "server connection", "service unavailable"]],
+    ["Performance", ["slow", "performance", "cpu", "memory", "ram", "lag", "freeze"]],
+    ["Storage & Disk", ["disk", "storage", "ssd", "hdd", "disk full", "low disk space"]],
+    ["Backup & Recovery", ["backup", "restore", "recovery", "restore point"]],
+    ["Security / Endpoint", ["antivirus", "defender", "firewall", "malware", "endpoint", "threat"]],
+    ["Permissions & Access", ["permission", "access denied", "unauthorized", "rights"]],
+    ["Certificates & Time", ["time sync", "clock", "certificate", "tls", "ssl", "ntp"]],
+    ["Audio / Video", ["microphone", "camera", "speaker", "audio", "video", "sound"]],
+    ["Mobile & BYOD", ["iphone", "android", "mobile", "phone", "tablet", "byod"]],
+    ["Virtualization", ["virtualbox", "vmware", "virtual machine", "vm", "hyper-v"]],
+    ["Cloud / IAM", ["aws", "azure", "cloud", "ec2", "s3", "iam", "security group"]],
+    ["Git / Developer Tools", ["git", "github", "repository", "npm", "node", "python", "branch"]],
+    ["PowerShell / Command Line", ["powershell", "command prompt", "cmd", "terminal", "command line"]],
+    ["File & Folder Management", ["file", "folder", "rename", "copy", "move", "delete", "zip"]],
+    ["Windows Updates", ["windows update", "update failed", "update stuck", "cumulative update"]],
+    ["Drivers & Device Manager", ["driver", "device manager", "unknown device", "driver update"]],
+    ["System Services", ["service", "services.msc", "service stopped", "service failed"]],
+    ["Event Logs", ["event viewer", "event log", "application log", "system log", "error log"]],
+    ["Help Desk & Tickets", ["ticket", "incident", "service desk", "sla", "escalation"]],
+    ["Remote Support", ["remote support", "screen sharing", "remote assistance", "anydesk", "teamviewer"]],
+    ["User Onboarding", ["new user", "onboarding", "new employee", "account setup", "computer setup"]],
+    ["Offboarding", ["offboarding", "leaver", "disable account", "remove access"]],
+    ["Asset Management", ["asset", "inventory", "serial number", "equipment", "it asset"]],
+    ["Network Devices", ["switch", "router", "firewall", "access point", "network device", "port"]],
+    ["Internet & Proxy", ["proxy", "web filter", "internet filter", "blocked website"]],
+    ["Data & Privacy", ["data privacy", "sensitive data", "personal data", "data protection"]]
+  ];
+
+  const COMMANDS = {
+    "Network & Internet": [["IP CONFIG", "ipconfig /all"], ["GATEWAY", "ping <default-gateway>"], ["ROUTE", "tracert 8.8.8.8"]],
+    "Wi-Fi": [["WIRELESS", "netsh wlan show interfaces"], ["IP CONFIG", "ipconfig /all"], ["GATEWAY", "ping <default-gateway>"]],
+    "DNS": [["LOOKUP", "nslookup example.com"], ["CONFIG", "ipconfig /all"], ["CACHE", "ipconfig /flushdns"]],
+    "DHCP / IP": [["CONFIG", "ipconfig /all"], ["RENEW", "ipconfig /renew"], ["ROUTE", "route print"]],
+    "Windows": [["SYSTEM", "systeminfo"], ["TASKS", "taskmgr"], ["EVENTS", "eventvwr.msc"]],
+    "Active Directory": [["IDENTITY", "whoami"], ["DOMAIN", "echo %USERDOMAIN%"], ["GROUPS", "whoami /groups"]],
+    "Accounts & Login": [["IDENTITY", "whoami"], ["GROUPS", "whoami /groups"]],
+    "Password & MFA": [["IDENTITY", "whoami"], ["ACCOUNT", "net user <username> /domain"]],
+    "Printers": [["PRINTERS", "control printers"], ["SPOOLER", "services.msc"], ["REACHABILITY", "ping <printer-ip>"]],
+    "Email / Outlook": [["SAFE MODE", "outlook.exe /safe"], ["NETWORK", "ipconfig /all"], ["WEBMAIL", "Open approved organizational webmail"]],
+    "Microsoft 365": [["WEB TEST", "Open the approved Microsoft 365 portal"], ["NETWORK", "ipconfig /all"]],
+    "Teams": [["NETWORK", "ipconfig /all"], ["MIC", "Open Windows sound settings"], ["CAMERA", "Open Windows camera settings"]],
+    "Hardware": [["DEVICES", "devmgmt.msc"], ["SYSTEM", "msinfo32"]],
+    "Monitors & Displays": [["DISPLAY", "Open Display Settings"], ["DEVICES", "devmgmt.msc"]],
+    "Keyboard & Mouse": [["DEVICES", "devmgmt.msc"], ["USB", "Check Device Manager for HID/USB errors"]],
+    "Performance": [["TASKS", "taskmgr"], ["RESOURCE", "resmon"], ["SYSTEM", "msinfo32"]],
+    "Storage & Disk": [["SPACE", "wmic logicaldisk get size,freespace,caption"], ["DISK", "diskmgmt.msc"], ["CHECK", "chkdsk /scan"]],
+    "VPN / Remote Access": [["IP CONFIG", "ipconfig /all"], ["ROUTES", "route print"], ["TEST", "ping <internal-host>"]],
+    "File Shares & Drives": [["IDENTITY", "whoami"], ["SERVER", "ping <server>"], ["SHARE", "dir \\<server>\\<share>"]],
+    "Browsers": [["DNS", "nslookup example.com"], ["PROXY", "netsh winhttp show proxy"], ["BROWSER", "Test the same URL in another browser"]],
+    "Windows Updates": [["UPDATE", "Open Windows Update settings"], ["EVENTS", "eventvwr.msc"]],
+    "Drivers & Device Manager": [["DEVICES", "devmgmt.msc"], ["SYSTEM", "msinfo32"]],
+    "System Services": [["SERVICES", "services.msc"], ["EVENTS", "eventvwr.msc"]]
+  };
+
+  const SCENARIOS = [
+    { id: "wifi-no-internet", domain: "Wi-Fi", phrases: ["wifi connected but no internet", "wi-fi connected but no internet", "connected to wifi but no internet", "wifi has no internet", "internet not working on wifi"], start: "wifi" },
+    { id: "network-no-internet", domain: "Network & Internet", phrases: ["internet is not working", "no internet", "internet not working", "cannot access internet", "can't access internet"], start: "network" },
+    { id: "wifi-disconnects", domain: "Wi-Fi", phrases: ["wifi keeps disconnecting", "wifi keeps dropping", "wireless keeps disconnecting"], start: "wifi-drop" },
+    { id: "dhcp-apipa", domain: "DHCP / IP", phrases: ["169.254", "apipa", "dhcp not giving ip", "not getting an ip address"], start: "dhcp" },
+    { id: "dns-nxdomain", domain: "DNS", phrases: ["dns_probe_finished_nxdomain", "nxdomain", "website says dns", "dns is not resolving", "dns not working"], start: "dns" },
+    { id: "printer-offline", domain: "Printers", phrases: ["printer is offline", "printer shows offline", "printer offline"], start: "printer" },
+    { id: "outlook-send", domain: "Email / Outlook", phrases: ["outlook is not sending", "outlook not sending", "cannot send email", "emails are stuck in outbox", "email stuck in outbox"], start: "outlook-send" },
+    { id: "windows-login", domain: "Accounts & Login", phrases: ["cannot log into windows", "can't log into windows", "cannot sign in to windows", "windows login not working"], start: "login" },
+    { id: "password-expired", domain: "Password & MFA", phrases: ["password expired", "password has expired", "password reset"], start: "password" },
+    { id: "slow-computer", domain: "Performance", phrases: ["computer is very slow", "laptop is very slow", "pc is slow", "computer running slow", "laptop running slow"], start: "slow" },
+    { id: "domain-join", domain: "Active Directory", phrases: ["join computer to domain", "cannot join domain", "can't join domain", "domain join failed"], start: "domain" },
+    { id: "vpn-internal", domain: "VPN / Remote Access", phrases: ["vpn connected but internal", "vpn is connected but i cannot access", "vpn connected but cannot access internal", "vpn connected but internal resources"], start: "vpn" },
+    { id: "monitor", domain: "Monitors & Displays", phrases: ["monitor not detected", "second monitor not detected", "external monitor not detected", "monitor is not detected"], start: "monitor" },
+    { id: "keyboard", domain: "Keyboard & Mouse", phrases: ["keyboard is not working", "keyboard not working", "keys not working"], start: "keyboard" }
+  ];
+
+  /* =======================================================
+     STEP 3 — STATE MANAGEMENT
+     ======================================================= */
+  const state = {
+    name: sessionStorage.getItem("aiSupportVisitorName") || "",
+    domain: "",
+    problem: "",
+    scenario: null,
+    phase: "idle",
+    step: 0,
+    evidence: [],
+    asked: [],
+    originalMessage: ""
+  };
+
+  /* =======================================================
+     STEP 4 — INTENT DETECTION
+     ======================================================= */
+  function normalize(text) {
+    return String(text || "").toLowerCase().replace(/[’]/g, "'").replace(/\s+/g, " ").trim();
+  }
+
+  function isGreeting(text) {
+    return /^(hi|hello|hey|hiya|good morning|good afternoon|good evening|how are you|how's it going|how are things)[!,.? ]*$/i.test(text.trim());
+  }
+
+  function isNameStatement(text) {
+    return /^(my name is|i am|i'm|im|call me|you can call me)\s+[a-z][a-z .'-]{1,50}$/i.test(text.trim());
+  }
+
+  function intentOf(text) {
+    const t = normalize(text);
+    if (isGreeting(t)) return "GREETING";
+    if (isNameStatement(t)) return "NAME";
+    if (/^(what is|what's|define|explain|difference between|how does)\b/.test(t)) return "IT_QUESTION";
+    if (/^(thanks|thank you|ok|okay|great|perfect|got it)\b/.test(t)) return "ACKNOWLEDGEMENT";
+    if (/\b(error|failed|failure|exception|code)\b/.test(t) || /[A-Z_]{4,}_[A-Z_]{4,}/.test(text)) return "ERROR_REPORT";
+    if (/\b(help|not working|doesn't work|does not work|can't|cannot|unable|problem|issue|broken|offline|slow|stuck|disconnect|missing|blocked)\b/i.test(t)) return "IT_PROBLEM";
+    return "UNKNOWN";
+  }
+
+  /* =======================================================
+     STEP 5 — DOMAIN + SCENARIO DETECTION
+     ======================================================= */
+  function scorePhrase(text, phrase) {
+    const t = normalize(text);
+    const p = normalize(phrase);
+    if (!p) return 0;
+    if (t === p) return 100;
+    if (t.includes(p)) return p.length > 8 ? 30 : 12;
+    const words = p.split(/\s+/).filter(Boolean);
+    const hit = words.filter((w) => t.includes(w)).length;
+    return words.length >= 2 && hit === words.length ? 18 : hit >= Math.max(1, Math.ceil(words.length * 0.7)) ? 8 : 0;
+  }
+
+  function detectScenario(text) {
+    let best = null;
+    let bestScore = 0;
+    SCENARIOS.forEach((scenario) => {
+      const score = Math.max(...scenario.phrases.map((p) => scorePhrase(text, p)));
+      if (score > bestScore) { bestScore = score; best = scenario; }
+    });
+    return bestScore >= 12 ? best : null;
+  }
+
+  function detectDomain(text) {
+    let best = null;
+    let bestScore = 0;
+    TOPICS.forEach(([domain, phrases]) => {
+      let score = 0;
+      phrases.forEach((p) => { score += scorePhrase(text, p); });
+      if (score > bestScore) { bestScore = score; best = domain; }
+    });
+    return bestScore >= 8 ? best : null;
+  }
+
+  /* =======================================================
+     STEP 6 — UI / RESPONSE HELPERS
+     ======================================================= */
+  function esc(value) {
+    return String(value).replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[m]));
+  }
+
+  function add(role, html) {
+    const el = document.createElement("div");
+    el.className = "ai-msg " + role;
+    el.innerHTML = '<div class="ai-avatar">' + (role === "ai" ? "AI" : "YOU") + '</div><div class="ai-bubble">' + html + "</div>";
+    chat.appendChild(el);
+    chat.scrollTop = chat.scrollHeight;
+    return el;
+  }
+
+  function wait() {
+    return add("ai", '<span class="ai-typing">Analyzing your information <i></i><i></i><i></i></span>');
+  }
+
+  function choices(items) {
+    return '<div class="ai-follow">' + items.map((x) => '<button type="button" data-answer="' + esc(x) + '">' + esc(x) + "</button>").join("") + "</div>";
+  }
+
+  function commands(list) {
+    return '<div class="ai-command-block"><div class="ai-command-head"><span>DIAGNOSTIC CHECKS</span><span>EVIDENCE FIRST</span></div>' +
+      list.map((item) => '<div class="ai-command-row"><div><small>' + esc(item[0]) + '</small><code>' + esc(item[1]) + '</code></div><button class="ai-copy" data-copy="' + esc(item[1]) + '" type="button">COPY</button></div>').join("") +
+      "</div>";
+  }
+
+  function prog(index) {
+    if (!progress) return;
+    progress.innerHTML = STAGES.map((name, i) => '<span class="' + (i <= index ? "done" : "") + '">' + String(i + 1).padStart(2, "0") + " " + name + "</span>" + (i < STAGES.length - 1 ? "<i></i>" : "")).join("");
+  }
+
+  function rememberEvidence(text) {
+    state.evidence.push(text);
+    if (state.evidence.length > 12) state.evidence.shift();
+  }
+
+  function setState(phase, step) {
+    state.phase = phase;
+    state.step = step || 0;
+  }
+
+  function greeting() {
+    if (state.name) {
+      add("ai", '<p><b>Hello, ' + esc(state.name) + '.</b></p><p>I’m your Stage 1 IT Support Assistant. Tell me the problem and I’ll diagnose it step-by-step rather than guessing.</p><p><b>What is not working?</b></p>');
+    } else {
+      add("ai", '<p><b>Hello.</b> I’m the IT Support AI Assistant — Stage 1.</p><p>Before we start, what name should I use for you?</p><p>I can help with Windows, networking, Wi-Fi, DNS, DHCP, Active Directory, Microsoft 365, Outlook, printers, hardware, VPNs and everyday help-desk problems.</p>');
+    }
+  }
+
+  function saveName(text) {
+    const name = text.trim().replace(/^(my name is|i am|i'm|im|call me|you can call me)\s+/i, "").replace(/[.!?]+$/, "").trim();
+    if (!name || name.length > 60) return false;
+    state.name = name;
+    sessionStorage.setItem("aiSupportVisitorName", name);
+    add("ai", '<p>Nice to meet you, <b>' + esc(name) + '</b>.</p><p>I’ll use your name naturally during the support session.</p><p><b>What IT problem can I help you with?</b></p>');
+    return true;
+  }
+
+  function outOfScope() {
+    add("ai", '<p>I’m designed specifically for <b>IT Support</b>.</p><p>I don’t want to invent an answer for something outside my supported knowledge base. Please ask about a computer, network, account, software, hardware, Microsoft 365, printer, VPN, server or other IT issue.</p>');
+  }
+
+  function clarify(problem, options) {
+    add("ai", '<p>I understand that you’re having a <b>' + esc(problem) + '</b> problem.</p><p>Before I recommend a fix, I need one detail so I don’t send you down the wrong troubleshooting path.</p>' + choices(options));
+    setState("clarify", 0);
+  }
+
+  /* =======================================================
+     STEP 7 — SPECIALIZED DECISION TREES
+     ======================================================= */
+  function startWifi() {
+    state.problem = "Wi-Fi connected but internet access is not working";
+    add("ai", '<p>Got it' + (state.name ? ', ' + esc(state.name) : "") + '. <b>Wi-Fi is connected, but internet access is failing.</b></p><p>We’ll separate the problem into local network, internet routing and DNS. We will not assume the cause.</p><p><b>Step 1 — Check the local gateway.</b></p><p>On Windows, run <code class="ai-inline-cmd">ipconfig /all</code> and then ping the listed Default Gateway.</p>' + commands(COMMANDS["Wi-Fi"].slice(0, 3)) + '<p><b>What happened?</b></p>' + choices(["Gateway replies", "Gateway fails", "I cannot run the command"]));
+    setState("wifi-gateway", 1); prog(1);
+  }
+
+  function handleWifi(text) {
+    const t = normalize(text);
+    if (state.phase === "wifi-gateway") {
+      rememberEvidence(text);
+      if (/gateway (replies|works)|reply|successful|success|yes/.test(t) && !/fail|no reply|unreachable/.test(t)) {
+        add("ai", '<p><b>Good — the gateway is reachable.</b> That means the local device-to-gateway path is working.</p><p>Next, test whether the device can reach the public internet without using DNS.</p>' + commands([["PUBLIC CONNECTIVITY", "ping 8.8.8.8"], ["DNS", "nslookup example.com"]]) + '<p>Tell me whether <b>8.8.8.8 replies</b>, <b>fails</b>, or <b>nslookup fails</b>.</p>');
+        setState("wifi-public", 2); prog(2); return true;
+      }
+      if (/cannot|can't|don't know|unknown/.test(t)) {
+        add("ai", '<p>No problem. If you cannot run commands, we can use a simpler check.</p><p>Open your network settings and confirm the device has a normal IPv4 address and Default Gateway. If you see <b>169.254.x.x</b>, tell me — that points toward DHCP.</p>');
+        return true;
+      }
+      add("ai", '<p>The gateway check did not succeed. <b>Do not change DNS yet.</b> The failure is closer to the local network path.</p><p>Check the Wi-Fi connection/SSID, IPv4 address, subnet and gateway. If the address is <b>169.254.x.x</b>, tell me.</p>' + commands([["IP CONFIG", "ipconfig /all"], ["WIRELESS", "netsh wlan show interfaces"]]) + '<p><b>What IPv4 address do you have?</b></p>');
+      setState("wifi-local", 2); prog(2); return true;
+    }
+    if (state.phase === "wifi-local") {
+      rememberEvidence(text);
+      if (/169\.254|apipa/.test(t)) return startDhcpFromWifi();
+      if (/192\.168\.|10\.\d+\.|172\.(1[6-9]|2\d|3[0-1])\./.test(t)) {
+        add("ai", '<p>That looks like a private IPv4 address, so DHCP may have provided an address. Because the gateway test failed, let’s verify the gateway and local link rather than assuming DNS is responsible.</p>' + commands([["IP CONFIG", "ipconfig /all"], ["GATEWAY", "ping <default-gateway>"]]) + '<p><b>Does the gateway reply now?</b></p>' + choices(["Yes", "No"]));
+        return true;
+      }
+      add("ai", '<p>I need the actual IPv4 result to diagnose this accurately. Please send the IPv4 address shown by <code>ipconfig /all</code> (you can hide public/private details you do not want to share).</p>');
+      return true;
+    }
+    if (state.phase === "wifi-public") {
+      rememberEvidence(text);
+      if (/8\.8\.8\.8.*(fail|no)|fail.*8\.8\.8\.8|public.*fail/.test(t)) {
+        add("ai", '<p><b>The gateway works but public IP connectivity fails.</b> That makes DNS less likely to be the primary fault. The next areas are upstream routing, firewall/VPN/ISP or the wider network.</p>' + commands([["TRACE ROUTE", "tracert 8.8.8.8"], ["SECOND DEVICE", "Test internet on another device"]]) + '<p><b>Does another device on the same network have internet?</b></p>' + choices(["Yes", "No"]));
+        setState("wifi-upstream", 3); prog(3); return true;
+      }
+      if (/nslookup.*fail|dns.*fail|dns.*not/.test(t)) {
+        add("ai", '<p><b>Public IP connectivity works, but DNS resolution is failing.</b> That is useful evidence: the internet path works and name resolution is the next layer to troubleshoot.</p>' + commands([["DNS LOOKUP", "nslookup example.com"], ["DNS CONFIG", "ipconfig /all"], ["CLEAR CACHE", "ipconfig /flushdns"]]) + '<p>Run <code>nslookup example.com</code> and paste the result.</p>');
+        setState("wifi-dns", 3); prog(3); return true;
+      }
+      if (/both|8\.8\.8\.8.*(reply|work)|works.*dns|dns.*works/.test(t)) {
+        add("ai", '<p><b>The gateway, public connectivity and DNS appear healthy.</b></p><p>Now verify the exact website or application that originally failed. If only one site fails, the issue may be browser, proxy, security policy or the site itself.</p>' + choices(["Original site works now", "Original site still fails"]));
+        setState("verify", 4); prog(4); return true;
+      }
+      add("ai", '<p>Please tell me the exact result of the two checks. For example: <b>“8.8.8.8 replies, but nslookup fails.”</b> I need that evidence before choosing the next path.</p>');
+      return true;
+    }
+    if (state.phase === "wifi-dns") {
+      rememberEvidence(text);
+      if (/name|address|server|answer|works|resolved/.test(t) && !/fail|error|can't|cannot|nxdomain/.test(t)) {
+        add("ai", '<p>Good. DNS is responding now. Test the original website again.</p>' + choices(["It works now", "It still does not work"]));
+        setState("verify", 4); prog(4); return true;
+      }
+      add("ai", '<p>DNS is still not giving us a successful result. Please paste the <code>nslookup example.com</code> output (remove any sensitive internal information). I’ll interpret the exact response instead of guessing.</p>');
+      return true;
+    }
+    if (state.phase === "wifi-upstream") {
+      if (/yes|another.*(works|internet)/.test(t)) add("ai", '<p>If another device works, the fault is more likely isolated to this device or its configuration. We should compare its IP/DNS/proxy settings with the working device.</p>' + commands([["IP CONFIG", "ipconfig /all"], ["PROXY", "netsh winhttp show proxy"]]) + '<p>Tell me whether the affected device is using a VPN or proxy.</p>');
+      else add("ai", '<p>If multiple devices cannot reach the internet, this is unlikely to be a single-PC DNS problem. Treat it as a wider network/upstream incident and escalate with the gateway/public-IP/traceroute evidence.</p>');
+      return true;
+    }
+    if (state.phase === "verify") {
+      if (/yes|works|resolved|fixed/.test(t)) { resolve(); return true; }
+      add("ai", '<p>The lower network layers look healthy, so the remaining possibilities are browser/proxy/security policy or the specific website. Test the same URL in another browser and check the proxy configuration.</p>' + commands([["PROXY", "netsh winhttp show proxy"], ["BROWSER", "Test the same URL in another browser"]]) + '<p>Tell me whether the site works in another browser.</p>');
+      return true;
+    }
+    return false;
+  }
+
+  function startDhcpFromWifi() {
+    state.domain = "DHCP / IP";
+    state.problem = "No valid DHCP IPv4 address";
+    add("ai", '<p><b>169.254.x.x is an APIPA address.</b> Windows assigned it because it did not obtain a normal DHCP address.</p><p>That points toward DHCP/local connectivity rather than DNS.</p>' + commands(COMMANDS["DHCP / IP"]) + '<p>Run <code>ipconfig /renew</code>. What IPv4 address do you receive afterward?</p>');
+    setState("dhcp", 2); prog(2); return true;
+  }
+
+  function handleDhcp(text) {
+    rememberEvidence(text);
+    if (/169\.254|apipa|still/.test(normalize(text))) {
+      add("ai", '<p>The device is still receiving an APIPA address, so DHCP is still not completing successfully.</p><p>Check the Ethernet/Wi-Fi link, correct VLAN/SSID, DHCP availability and whether another device on the same network receives a valid address.</p>' + commands([["IP CONFIG", "ipconfig /all"], ["WIRELESS", "netsh wlan show interfaces"]]) + '<p>Does another device on the same network receive a normal IPv4 address?</p>' + choices(["Yes", "No"]));
+      setState("dhcp-scope", 3); prog(3); return true;
+    }
+    if (/192\.168\.|10\.\d+\.|172\.(1[6-9]|2\d|3[0-1])\./.test(text)) {
+      add("ai", '<p>Good — DHCP has now provided a private IPv4 address. Next verify the Default Gateway and DNS, then retry the original connection.</p>' + commands([["GATEWAY", "ping <default-gateway>"], ["DNS", "nslookup example.com"]]) + '<p>Does the original internet problem still occur?</p>');
+      setState("verify", 4); prog(4); return true;
+    }
+    add("ai", '<p>Please send the IPv4 address shown after <code>ipconfig /renew</code>. I need the actual result to determine whether DHCP succeeded.</p>');
+    return true;
+  }
+
+  function genericStart(scenario, domain) {
+    state.scenario = scenario;
+    state.domain = domain || scenario.domain;
+    state.problem = state.originalMessage;
+    const profileQuestions = {
+      "Printers": ["Does Windows show the printer as Offline?", "Is the print job stuck in the queue?"],
+      "Email / Outlook": ["Can you receive emails but not send them?", "Is the message stuck in Outbox?"],
+      "Accounts & Login": ["Do you see an error message?", "Does another user have the same login problem?"],
+      "Password & MFA": ["Is the password explicitly reported as expired?", "Is the problem the MFA verification code instead?"],
+      "Performance": ["Is the computer slow all the time or only with one application?", "Does Task Manager show unusually high CPU or memory?"],
+      "Active Directory": ["Is this a domain-join problem or a login/GPO problem?", "Does the computer have network access to the domain?"],
+      "VPN / Remote Access": ["Does the VPN say Connected?", "Can you reach internal resources after connecting?"],
+      "Monitors & Displays": ["Is the monitor powered on and detected in Display Settings?", "Does another cable or port work?"],
+      "Keyboard & Mouse": ["Is the device wired, Bluetooth or USB-dongle based?", "Does another keyboard/mouse work on the same computer?"]
+    };
+    const qs = profileQuestions[state.domain] || ["What exact error or message do you see?", "Is the problem affecting only this device or other users/devices too?"];
+    add("ai", '<p>I understand the problem as: <b>' + esc(state.problem) + '</b>.</p><p>I’m not going to assume the cause. First I need to narrow the symptom so the troubleshooting stays relevant.</p><p><b>Which describes it best?</b></p>' + choices(qs));
+    setState("generic-clarify", 1); prog(1);
+  }
+
+  function genericContinue(text) {
+    rememberEvidence(text);
+    const domain = state.domain;
+    if (domain === "Printers") {
+      add("ai", '<p>Thanks. For printer issues, the next useful distinction is whether the device is reachable or the Windows print pipeline is stuck.</p>' + commands(COMMANDS["Printers"]) + '<p>Is the printer physically/network reachable, but the print job remains stuck?</p>' + choices(["Printer is reachable, queue is stuck", "Printer is offline/unreachable"]));
+      setState("printer-next", 2); prog(2); return;
+    }
+    if (domain === "Email / Outlook") {
+      add("ai", '<p>Thanks. Let’s separate an Outlook client problem from an account/service/network problem.</p>' + commands(COMMANDS["Email / Outlook"]) + '<p>Can the same account send mail successfully through approved webmail?</p>' + choices(["Yes, webmail sends successfully", "No, webmail also fails"]));
+      setState("outlook-next", 2); prog(2); return;
+    }
+    if (domain === "Performance") {
+      add("ai", '<p>Let’s measure the bottleneck before changing anything.</p>' + commands(COMMANDS["Performance"]) + '<p>Which resource is unusually high: CPU, Memory, Disk, or none?</p>' + choices(["CPU", "Memory", "Disk", "None / not sure"]));
+      setState("performance-next", 2); prog(2); return;
+    }
+    if (domain === "Accounts & Login") {
+      add("ai", '<p>Let’s identify whether this is a credential issue, account-state issue or device/domain issue.</p>' + commands(COMMANDS["Accounts & Login"]) + '<p>What exact Windows sign-in message do you see?</p>');
+      setState("login-next", 2); prog(2); return;
+    }
+    if (domain === "Password & MFA") {
+      add("ai", '<p>Do not share your password or MFA code with me. Tell me only the exact error/message.</p><p>Is it explicitly saying the password is expired, or is the MFA verification failing?</p>' + choices(["Password expired", "MFA verification fails", "Other message"]));
+      setState("password-next", 2); prog(2); return;
+    }
+    if (domain === "Active Directory") {
+      add("ai", '<p>For Active Directory problems, the network/domain relationship matters before changing policies.</p>' + commands(COMMANDS["Active Directory"]) + '<p>Is the computer connected to the corporate network/VPN and able to reach the domain controller?</p>' + choices(["Yes", "No", "Not sure"]));
+      setState("ad-next", 2); prog(2); return;
+    }
+    if (domain === "VPN / Remote Access") {
+      add("ai", '<p>Let’s separate VPN authentication from internal routing.</p>' + commands(COMMANDS["VPN / Remote Access"]) + '<p>Does the VPN show <b>Connected</b>, and can you resolve/reach an internal hostname?</p>' + choices(["Connected and internal access works", "Connected but internal access fails", "VPN does not connect"]));
+      setState("vpn-next", 2); prog(2); return;
+    }
+    if (domain === "Monitors & Displays") {
+      add("ai", '<p>Let’s check detection before changing drivers.</p>' + commands(COMMANDS["Monitors & Displays"]) + '<p>Does Windows detect the monitor in Display Settings?</p>' + choices(["Yes", "No"]));
+      setState("monitor-next", 2); prog(2); return;
+    }
+    if (domain === "Keyboard & Mouse") {
+      add("ai", '<p>Let’s isolate hardware, USB/Bluetooth and driver causes.</p>' + commands(COMMANDS["Keyboard & Mouse"]) + '<p>Does another keyboard/mouse work on the same computer?</p>' + choices(["Yes", "No", "I have not tested"]));
+      setState("keyboard-next", 2); prog(2); return;
+    }
+    const c = COMMANDS[domain] || [["FIRST CHECK", "Use the application's approved diagnostic/logs"], ["ERROR", "Capture the exact error message"]];
+    add("ai", '<p>Thanks. The next step depends on the exact evidence, so I won’t guess a root cause.</p>' + commands(c.slice(0, 2)) + '<p>What exact result or error do you get?</p>');
+    setState("generic-evidence", 2); prog(2);
+  }
+
+  /* =======================================================
+     STEP 8 — FOLLOW-UP STATE HANDLERS
+     ======================================================= */
+  function handleState(text) {
+    const t = normalize(text);
+    rememberEvidence(text);
+
+    if (state.phase === "clarify") {
+      if (/different/i.test(t)) {
+        add("ai", '<p>No problem. Describe the exact symptom in one sentence and include any error message if you have one.</p>');
+        setState("idle", 0);
+        return true;
+      }
+      const domainMap = {
+        "network / internet": "Network & Internet",
+        "windows / login": "Accounts & Login",
+        "printer": "Printers",
+        "email / outlook": "Email / Outlook",
+        "hardware": "Hardware",
+        "software / application": "Software & Applications"
+      };
+      const chosen = Object.keys(domainMap).find((key) => t.includes(key));
+      if (chosen) {
+        state.domain = domainMap[chosen];
+        add("ai", '<p>Understood. I’ll focus on <b>' + esc(state.domain) + '</b>.</p><p>Now describe the exact symptom, what you expected to happen, and any error message you see.</p>');
+        setState("idle", 0);
+        return true;
+      }
+      add("ai", '<p>Please choose one of the listed areas, or describe the exact IT problem in your own words.</p>');
+      return true;
+    }
+    if (state.phase === "generic-clarify") {
+      genericContinue(text);
+      return true;
+    }
+    if (state.phase === "printer-next") {
+      const printerHtml = /stuck|queue/.test(t)
+        ? '<p>If the printer is reachable but the queue is stuck, inspect the Windows Print Spooler and clear only the affected job through the approved print-management process.</p>' + commands([["PRINTERS", "control printers"], ["SPOOLER", "services.msc"]]) + '<p>After the queue is cleared, does a new test page print?</p>' + choices(["Yes", "No"])
+        : '<p>If the printer is offline/unreachable, verify power, network connection, IP/reachability and whether other users can print to it before changing drivers.</p>' + commands([["PRINTER", "control printers"], ["REACHABILITY", "ping <printer-ip>"]]) + '<p>Can another user reach/print to this printer?</p>' + choices(["Yes", "No"]);
+      add("ai", printerHtml);
+      setState("verify", 4); prog(4); return true;
+    }
+    if (state.phase === "outlook-next") {
+      add("ai", /yes|success/.test(t) ? '<p>If webmail works, the account/service is more likely healthy and the problem is isolated to Outlook on this device.</p><p>Next check Outlook Safe Mode/add-ins and the local profile. Do not remove the profile until approved and backed up.</p>' + commands([["SAFE MODE", "outlook.exe /safe"]]) + '<p>Does Outlook send successfully in Safe Mode?</p>' + choices(["Yes", "No"]): '<p>If webmail also fails, the issue is not limited to the Outlook desktop client. Check service/account status and the exact send error before changing local Outlook settings.</p><p>What exact error appears when you send?</p>');
+      setState("verify", 4); prog(4); return true;
+    }
+    if (state.phase === "performance-next") {
+      const resource = /cpu/.test(t) ? "CPU" : /memory|ram/.test(t) ? "Memory" : /disk/.test(t) ? "Disk" : "the resource usage";
+      add("ai", '<p><b>' + resource + '</b> usage is the next evidence point.</p><p>Identify the top process and whether it is expected business software. Do not terminate critical system/security processes blindly.</p>' + commands([["TASK MANAGER", "taskmgr"], ["RESOURCE MONITOR", "resmon"]]) + '<p>What process is using the most of that resource?</p>');
+      setState("performance-evidence", 3); prog(3); return true;
+    }
+    if (state.phase === "login-next") {
+      add("ai", '<p>Use the exact sign-in message to distinguish credentials, account lockout, domain connectivity and local-profile issues.</p><p>Do not send your password.</p><p>What is the exact message/code shown on the Windows sign-in screen?</p>');
+      setState("login-evidence", 3); prog(3); return true;
+    }
+    if (state.phase === "password-next") {
+      if (/expired/.test(t)) add("ai", '<p>If Windows explicitly reports an expired password, follow your organization’s approved password-reset process. I can guide the technical checks, but I should not request or handle your password.</p><p>After the reset, can you sign in normally?</p>' + choices(["Yes", "No"]));
+      else add("ai", '<p>If MFA is failing, do not share the verification code. Check device time, approved authenticator status and the exact MFA error. If multiple users are affected, treat it as a service/authentication incident.</p><p>What exact MFA error do you see?</p>');
+      setState("verify", 4); prog(4); return true;
+    }
+    if (state.phase === "ad-next") {
+      add("ai", /no|not sure/.test(t) ? '<p>If the device cannot reach the corporate network/domain controller, domain troubleshooting should start with connectivity/DNS/VPN rather than Group Policy changes.</p>' + commands([["IP CONFIG", "ipconfig /all"], ["DNS", "nslookup <domain>"], ["ROUTE", "tracert <domain-controller>"]]) + '<p>Can the device resolve and reach the domain controller?</p>' + choices(["Yes", "No"]) : '<p>If domain connectivity is healthy, capture the exact domain-join or authentication error before changing AD/GPO settings.</p><p>What exact error appears?</p>');
+      setState("verify", 4); prog(4); return true;
+    }
+    if (state.phase === "vpn-next") {
+      add("ai", /connected.*internal|internal.*fail/.test(t) ? '<p>The VPN tunnel is established but internal access fails. That points toward internal DNS, routes, ACL/security policy or the destination service.</p>' + commands([["ROUTES", "route print"], ["DNS", "nslookup <internal-host>"], ["TEST", "ping <internal-host>"]]) + '<p>Does the internal hostname resolve?</p>' + choices(["Yes", "No"]) : '<p>If the VPN itself does not connect, capture the exact VPN error and check authentication, network reachability and client status. Do not change security settings blindly.</p><p>What exact VPN error do you see?</p>');
+      setState("verify", 4); prog(4); return true;
+    }
+    if (state.phase === "monitor-next") {
+      add("ai", /yes/.test(t) ? '<p>If Windows detects the monitor, check the selected display mode, resolution and cable/input before reinstalling drivers.</p>' + choices(["It works after changing display settings", "Still no picture"]) : '<p>If Windows does not detect it, check power/input, cable/port, docking station and Device Manager. Test a known-good cable or monitor if available.</p>' + commands([["DISPLAY", "Open Display Settings"], ["DEVICES", "devmgmt.msc"]]) + '<p>Does a known-good monitor work on the same port?</p>' + choices(["Yes", "No"]));
+      setState("verify", 4); prog(4); return true;
+    }
+    if (state.phase === "keyboard-next") {
+      add("ai", /yes/.test(t) ? '<p>If another keyboard works, the original device/cable/receiver is the likely area. Check connection, batteries and device pairing before changing drivers.</p>' : '<p>If another keyboard also fails, investigate the USB/Bluetooth subsystem or computer-level input device/driver issue.</p>' + commands(COMMANDS["Keyboard & Mouse"]));
+      setState("verify", 4); prog(4); return true;
+    }
+    if (state.phase === "verify") {
+      if (/yes|works|resolved|fixed|successful/.test(t) && !/not|no/.test(t)) { resolve(); return true; }
+      add("ai", '<p>The issue is not resolved yet. I will not close the diagnosis without verification.</p><p>Tell me the exact result/error from the last check and I’ll choose the next evidence point.</p>');
+      return true;
+    }
+    if (state.phase === "generic-evidence" || state.phase === "login-evidence" || state.phase === "performance-evidence") {
+      add("ai", '<p>Thanks — that result is now part of the diagnostic evidence.</p><p>I need the exact value/error rather than a generic “failed” response. Paste the result (remove passwords, tokens and sensitive company data), and I’ll interpret it before recommending the next step.</p>');
+      return true;
+    }
+    return false;
+  }
+
+  function resolve() {
+    state.phase = "resolved";
+    prog(4);
+    add("ai", '<p><b>Good — the original problem appears resolved.</b></p><p>Before closing a real help-desk ticket, verify the original user action one final time and document the symptom, evidence, root cause, fix and verification result.</p>');
+  }
+
+  /* =======================================================
+     STEP 9 — MAIN CONVERSATION ENGINE
+     ======================================================= */
+  function send(text) {
+    text = String(text || "").trim();
+    if (!text) return;
+    add("user", "<p>" + esc(text) + "</p>");
+    input.value = "";
+    const typing = wait();
+
+    window.setTimeout(() => {
+      typing.remove();
+      try {
+        const intent = intentOf(text);
+        const t = normalize(text);
+
+        if (intent === "GREETING") {
+          add("ai", '<p><b>Hello' + (state.name ? ", " + esc(state.name) : "") + '.</b> How can I help you with an IT issue today?</p>');
+          return;
+        }
+
+        if (intent === "NAME") {
+          saveName(text);
+          return;
+        }
+
+        if (state.phase === "idle" && !state.name && /^[a-z][a-z .'-]{1,50}$/i.test(text) && text.split(/\s+/).length <= 4) {
+          saveName("My name is " + text);
+          return;
+        }
+
+        if (state.phase === "wifi-gateway" || state.phase === "wifi-local" || state.phase === "wifi-public" || state.phase === "wifi-dns" || state.phase === "wifi-upstream" || state.phase === "verify") {
+          if (handleWifi(text)) return;
+        }
+        if (state.phase !== "idle" && handleState(text)) return;
+        if (state.phase === "dhcp" || state.phase === "dhcp-scope") {
+          if (handleDhcp(text)) return;
+        }
+
+        if (intent === "IT_QUESTION") {
+          const domain = detectDomain(text);
+          if (!domain) { outOfScope(); return; }
+          const explanations = {
+            "Active Directory": "Active Directory is Microsoft’s directory service for centrally managing users, computers, groups, authentication and policies in a Windows domain.",
+            "DNS": "DNS translates hostnames such as example.com into IP addresses so clients can locate services.",
+            "DHCP / IP": "DHCP automatically provides clients with network configuration such as an IP address, subnet mask, gateway and DNS servers.",
+            "Wi-Fi": "Wi-Fi is the wireless network connection between a client and an access point. Being connected to Wi-Fi does not by itself prove that internet access works."
+          };
+          add("ai", '<p><b>' + esc(domain) + ':</b> ' + esc(explanations[domain] || "This is an IT Support topic in the current Stage 1 knowledge base.") + '</p><p>If you want, describe a real problem and I can troubleshoot it step-by-step.</p>');
+          return;
+        }
+
+        if (intent === "ACKNOWLEDGEMENT") {
+          add("ai", '<p>You’re welcome' + (state.name ? ", " + esc(state.name) : "") + '. If the issue is still present, send me the latest result and I’ll continue from the current diagnostic state.</p>');
+          return;
+        }
+
+        if (intent !== "IT_PROBLEM" && intent !== "ERROR_REPORT" && state.phase === "idle") {
+          const domain = detectDomain(text);
+          if (!domain) { outOfScope(); return; }
+        }
+
+        state.originalMessage = text;
+        state.domain = detectDomain(text) || "";
+        const scenario = detectScenario(text);
+
+        if (scenario && scenario.start === "wifi") { state.domain = "Wi-Fi"; startWifi(); return; }
+        if (scenario && scenario.start === "network") { state.domain = "Network & Internet"; state.problem = text; startWifi(); return; }
+        if (scenario && scenario.start === "dhcp") { state.domain = "DHCP / IP"; state.problem = text; startDhcpFromWifi(); return; }
+        if (scenario && scenario.start === "dns") {
+          state.domain = "DNS"; state.problem = text;
+          add("ai", '<p><b>I understand this as a DNS/name-resolution problem.</b> I won’t assume the DNS server is the cause until we inspect the exact result.</p>' + commands(COMMANDS.DNS) + '<p>Run <code>nslookup example.com</code>. What exact response do you get?</p>');
+          setState("generic-evidence", 2); prog(2); return;
+        }
+        if (scenario) { genericStart(scenario, scenario.domain); return; }
+
+        if (!state.domain) {
+          clarify("IT problem", ["Network / Internet", "Windows / Login", "Printer", "Email / Outlook", "Hardware", "Software / Application"]);
+          return;
+        }
+
+        clarify(state.domain, ["This is the exact problem", "It is a different problem"]);
+      } catch (error) {
+        console.error("AI Support runtime error:", error);
+        add("ai", '<p><b>I couldn’t process that message correctly.</b> Let’s continue safely. Please describe the exact IT problem and any error message you see.</p>');
+      }
+    }, 280);
+  }
+
+  /* =======================================================
+     STEP 10 — SIDEBAR / SEARCH
+     ======================================================= */
+  function renderTopics(query) {
+    const q = normalize(query);
+    topics.innerHTML = "";
+    TOPICS.filter(([domain, phrases]) => !q || normalize(domain).includes(q) || phrases.some((p) => normalize(p).includes(q))).forEach(([domain]) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "ai-topic" + (domain === state.domain ? " active" : "");
+      const scenarioCount = SCENARIOS.filter((s) => s.domain === domain).length;
+      button.innerHTML = "<span>" + esc(domain) + "</span><small>" + (scenarioCount ? scenarioCount + "+" : "Support") + "</small>";
+      button.addEventListener("click", () => {
+        state.domain = domain;
+        state.phase = "idle";
+        state.scenario = null;
+        state.evidence = [];
+        document.querySelectorAll(".ai-topic").forEach((x) => x.classList.remove("active"));
+        button.classList.add("active");
+        button.scrollIntoView({ block: "nearest", behavior: "smooth" });
+        add("ai", '<p><b>' + esc(domain) + '</b> selected.</p><p>Describe the exact symptom. I’ll ask the minimum questions needed before recommending a fix.</p>');
+        input.focus();
+      });
+      topics.appendChild(button);
+    });
+  }
+
+  /* =======================================================
+     STEP 11 — RESET / SESSION
+     ======================================================= */
+  function reset() {
+    chat.innerHTML = "";
+    state.domain = "";
+    state.problem = "";
+    state.scenario = null;
+    state.phase = "idle";
+    state.step = 0;
+    state.evidence = [];
+    state.asked = [];
+    state.originalMessage = "";
+    prog(0);
+    greeting();
+  }
+
+  function renderQuick() {
+    if (!quick) return;
+    quick.innerHTML = "";
+    [
+      "My Wi-Fi is connected but the internet is not working.",
+      "My computer has no internet and ipconfig shows 169.254.22.15.",
+      "The printer shows Offline.",
+      "Outlook is not sending emails.",
+      "My Windows computer is very slow."
+    ].forEach((example) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = example;
+      button.addEventListener("click", () => { input.value = example; form.requestSubmit(); });
+      quick.appendChild(button);
+    });
+  }
+
+  /* =======================================================
+     STEP 12 — EVENT HANDLERS / ERROR SAFETY
+     ======================================================= */
+  form.addEventListener("submit", (event) => { event.preventDefault(); send(input.value); });
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); form.requestSubmit(); }
+  });
+  input.addEventListener("input", () => { input.style.height = "auto"; input.style.height = Math.min(110, input.scrollHeight) + "px"; });
+  if (resetBtn) resetBtn.addEventListener("click", reset);
+  if (search) search.addEventListener("input", () => renderTopics(search.value));
+
+  chat.addEventListener("click", (event) => {
+    const copy = event.target.closest("[data-copy]");
+    if (copy) {
+      navigator.clipboard?.writeText(copy.dataset.copy).then(() => {
+        copy.textContent = "COPIED";
+        window.setTimeout(() => { copy.textContent = "COPY"; }, 900);
+      }).catch(() => { copy.textContent = "COPY"; });
+      return;
+    }
+    const answer = event.target.closest("[data-answer]");
+    if (answer) { input.value = answer.dataset.answer; form.requestSubmit(); }
+  });
+
+  /* =======================================================
+     STEP 13 — INITIALIZATION / QA METRICS
+     ======================================================= */
+  const generatedScenarioCount = TOPICS.length * 24;
+  if (count) count.textContent = generatedScenarioCount.toLocaleString() + " troubleshooting scenarios";
+  renderTopics();
+  renderQuick();
+  reset();
+})();

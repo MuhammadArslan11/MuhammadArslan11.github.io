@@ -14,7 +14,7 @@ Static HTML/CSS/Vanilla JavaScript portfolio designed for GitHub Pages.
 
 
 ## V3.5 Stage 1 — 500+ Professional Upgrade
-1,152 Stage-1 IT support scenarios across 26 domains; stateful conversational diagnosis; explicit network gateway/DNS decision tree; structured commands; resolution verification; out-of-scope handling; responsive mobile UX.
+1,152 Stage-1 IT support scenarios across 48 domains; stateful conversational diagnosis; explicit network gateway/DNS decision tree; structured commands; resolution verification; out-of-scope handling; responsive mobile UX.
 
 
 ## V3.5 Stage 1 AI Fix
@@ -53,3 +53,20 @@ The AI Support section is now organized into separate files:
 - Added clearer visual separation between user messages and AI messages.
 - Fixed the AI JavaScript loading path and verified JavaScript syntax.
 - Updated portfolio education wording everywhere in the web project to **Masters in Computer Science**.
+
+## V3.5 Stage 1 — Evidence-Based Diagnostic Engine
+This build replaces the fragile one-shot keyword response flow with a structured conversational diagnostic engine:
+- Intent classification before troubleshooting.
+- Scenario and IT-domain scoring rather than direct `includes()` answers.
+- Specialized decision trees for common support problems.
+- Diagnostic evidence is retained during the session.
+- The assistant does not claim a root cause without user evidence.
+- Follow-up questions are used when the symptom is ambiguous.
+- Commands are presented as diagnostic checks, not as assumed fixes.
+- Passwords, MFA codes, API keys and other secrets are never requested.
+- The assistant stays within IT Support when a request is unrelated.
+- Runtime errors are caught and shown as a safe recovery message.
+- The code is divided into numbered implementation steps for maintenance.
+
+### Important Stage 1 limitation
+This portfolio remains a static GitHub Pages implementation. It does **not** contain a remote LLM/API, so it is not a general-purpose language model. The current engine is designed to be a safer, more relevant rule/decision-tree foundation. A future Stage 2 can connect an approved LLM API while preserving the same intent, evidence, safety and verification architecture.
