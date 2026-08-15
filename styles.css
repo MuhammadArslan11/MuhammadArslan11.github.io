@@ -1,8 +1,8 @@
-:root{--bg:#0b0d0c;--surface:#111512;--surface2:#151a16;--text:#eeeae0;--muted:#92998f;--faint:#5e665e;--line:#2a302b;--green:#9cad91;--gold:#c9ae78;--sans:"DM Sans",Arial,sans-serif;--serif:"Instrument Serif",Georgia,serif;--mono:"DM Mono",monospace;--max:1440px}*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:76px}body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);overflow-x:hidden}a,button{color:inherit;font:inherit}a{text-decoration:none}button{border:0;background:none;cursor:pointer}button:focus-visible,a:focus-visible{outline:1px solid var(--gold);outline-offset:5px}.loader{position:fixed;inset:0;background:#080a09;z-index:100;display:grid;place-items:center;transition:.7s}.loader.done{opacity:0;visibility:hidden}.loader>div{width:min(360px,80vw)}.loader-name{display:block;font-size:18px;font-weight:600}.loader-status{display:block;font:8px var(--mono);letter-spacing:.16em;color:var(--faint);margin:12px 0}.loader-line{height:1px;background:#273028}.loader-line i{display:block;height:1px;background:var(--gold);width:0;animation:load 1.4s ease forwards}@keyframes load{to{width:100%}}.topbar{height:76px;padding:0 4.5vw;display:flex;align-items:center;border-bottom:1px solid var(--line);position:fixed;top:0;left:0;right:0;z-index:50;background:#0b0d0ce8;backdrop-filter:blur(18px)}.name{font-size:15px;font-weight:600;letter-spacing:-.02em}.topbar nav{display:flex;gap:28px;margin-left:8vw}.topbar nav a,.top-actions button,.top-actions a{font:9px var(--mono);color:#969d95;text-transform:uppercase;letter-spacing:.08em}.topbar nav a:hover,.top-actions button:hover,.top-actions a:hover{color:var(--gold)}.top-actions{display:flex;gap:22px;margin-left:auto}.hero{min-height:100vh;padding:76px 4.5vw 0;display:grid;grid-template-columns:minmax(0,46%) minmax(0,54%);position:relative;overflow:hidden}
+:root{--bg:#0b0d0c;--surface:#111512;--surface2:#151a16;--text:#eeeae0;--muted:#92998f;--faint:#5e665e;--line:#2a302b;--green:#9cad91;--gold:#c9ae78;--'Manrope':'Manrope','Manrope','Manrope';--max:1440px--sans:'Manrope',sans-serif;--'Manrope':'Manrope',sans-serif;--mono:'IBM Plex Mono',monospace;}*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:76px}body{margin:0;background:var(--bg);color:var(--text);font-family:'Manrope',sans-serif;overflow-x:hidden}a,button{color:inherit;font:inherit}a{text-decoration:none}button{border:0;background:none;cursor:po'Manrope'}button:focus-visible,a:focus-visible{outline:1px solid var(--gold);outline-offset:5px}.loader{position:fixed;inset:0;background:#080a09;z-index:100;display:grid;place-items:center;transition:.7s}.loader.done{opacity:0;visibility:hidden}.loader>div{width:min(360px,80vw)}.loader-name{display:block;font-size:18px;font-weight:600}.loader-status{display:block;font:8px var(--mono);letter-spacing:.16em;color:var(--faint);margin:12px 0}.loader-line{height:1px;background:#273028}.loader-line i{display:block;height:1px;background:var(--gold);width:0;animation:load 1.4s ease forwards}@keyframes load{to{width:100%}}.topbar{height:76px;padding:0 4.5vw;display:flex;align-items:center;border-bottom:1px solid var(--line);position:fixed;top:0;left:0;right:0;z-index:50;background:#0b0d0ce8;backdrop-filter:blur(18px)}.name{font-size:15px;font-weight:600;letter-spacing:-.02em}.topbar nav{display:flex;gap:28px;margin-left:8vw}.topbar nav a,.top-actions button,.top-actions a{font:9px var(--mono);color:#969d95;text-transform:uppercase;letter-spacing:.08em}.topbar nav a:hover,.top-actions button:hover,.top-actions a:hover{color:var(--gold)}.top-actions{display:flex;gap:22px;margin-left:auto}.hero{min-height:100vh;padding:76px 4.5vw 0;display:grid;grid-template-columns:minmax(0,46%) minmax(0,54%);position:relative;overflow:hidden}
 .hero-copy{padding-top:15vh;position:relative;z-index:5;min-width:0;padding-right:4vw}
 .eyebrow,.section-no{font:9px var(--mono);letter-spacing:.18em;color:var(--gold);text-transform:uppercase}
 .hero h1{font-size:clamp(68px,7.2vw,112px);line-height:.86;letter-spacing:-.065em;margin:28px 0 34px;font-weight:600;max-width:100%;overflow-wrap:normal;white-space:normal}
-.hero h1 em,h2 em{font-family:var(--serif);font-weight:400;color:var(--green);letter-spacing:-.035em}
+.hero h1 em,h2 em{font-family:'Manrope',sans-serif;font-weight:400;color:var(--green);letter-spacing:-.035em}
 .lead{max-width:500px;color:var(--muted);font-size:15px;line-height:1.8}
 .hero-buttons{display:flex;gap:14px;margin-top:30px;flex-wrap:wrap}
 .button{padding:14px 18px;font:9px var(--mono);text-transform:uppercase;letter-spacing:.1em;border:1px solid #465048}
@@ -40,18 +40,18 @@
 
 /* V3 OVERVIEW FIX — physical rack / cable separation */
 .network{position:relative;isolation:isolate;min-height:600px;overflow:visible}
-.network > svg{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+.network > svg{position:absolute;inset:0;width:100%;height:100%;z-index:1;po'Manrope'-events:none}
 .network .rack-shell{position:absolute;z-index:2;left:50%;top:50%;transform:translate(-50%,-50%);width:min(310px,30vw);min-width:250px}
 .network .node{z-index:5}
 .rack-shell{background:linear-gradient(180deg,rgba(22,24,23,.98),rgba(12,14,13,.98));border:1px solid rgba(215,205,177,.24);box-shadow:0 24px 60px rgba(0,0,0,.34),inset 0 0 0 1px rgba(255,255,255,.025);border-radius:4px;padding:10px 12px 12px}
-.rack-topline{display:flex;justify-content:space-between;align-items:center;font:600 9px/1 var(--mono,monospace);letter-spacing:.16em;color:rgba(245,241,230,.55);padding:0 3px 9px}
+.rack-topline{display:flex;justify-content:space-between;align-items:center;font:600 9px/1 var(--mono,'IBM Plex Mono');letter-spacing:.16em;color:rgba(245,241,230,.55);padding:0 3px 9px}
 .rack-frame{position:relative;border:1px solid rgba(215,205,177,.16);background:#0b0d0c;padding:13px 18px 16px;box-shadow:inset 0 0 30px rgba(0,0,0,.65)}
 .rack-rail{position:absolute;top:9px;bottom:10px;width:3px;background:repeating-linear-gradient(to bottom,rgba(215,205,177,.30) 0 2px,transparent 2px 7px);opacity:.7}
 .rack-rail.left{left:7px}.rack-rail.right{right:7px}
 .rack-unit{height:50px;display:grid;grid-template-columns:25px 1fr 10px 10px;gap:8px;align-items:center;border:1px solid rgba(215,205,177,.13);border-radius:2px;background:linear-gradient(180deg,#171a18,#101210);padding:0 10px;margin-bottom:7px;box-shadow:inset 0 1px rgba(255,255,255,.025)}
 .rack-unit:last-of-type{margin-bottom:0}
-.rack-unit span{font:500 8px/1 var(--mono,monospace);color:rgba(245,241,230,.32)}
-.rack-unit b{font:650 9px/1.1 var(--sans,Arial,sans-serif);letter-spacing:.13em;color:rgba(245,241,230,.82)}
+.rack-unit span{font:500 8px/1 var(--mono,'IBM Plex Mono');color:rgba(245,241,230,.32)}
+.rack-unit b{font:650 9px/1.1 var(--sans,'Manrope',sans-'Manrope');letter-spacing:.13em;color:rgba(245,241,230,.82)}
 .rack-unit i{width:6px;height:6px;border-radius:50%;background:rgba(146,165,130,.72);box-shadow:0 0 8px rgba(146,165,130,.28)}
 .rack-base{height:10px;margin:12px 5px 0;border-top:1px solid rgba(215,205,177,.13);background:linear-gradient(90deg,transparent,rgba(215,205,177,.08),transparent)}
 /* Cables occupy their own visual plane; none should run across rack equipment. */
@@ -69,7 +69,7 @@
 
 /* V3 OVERVIEW — SIDE RACK / CLEAN CABLING */
 .network{position:relative;isolation:isolate;min-height:600px;overflow:visible}
-.network > svg{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;overflow:visible}
+.network > svg{position:absolute;inset:0;width:100%;height:100%;z-index:1;po'Manrope'-events:none;overflow:visible}
 .network .grid{z-index:0}
 .network .rack-shell{position:absolute;z-index:3;left:4%;top:50%;transform:translateY(-50%);width:190px;min-width:0}
 .network .node{z-index:5}
@@ -118,10 +118,10 @@
 }
 
 /* V3 TOPOLOGY REPAIR — six ordered rack-to-node connections */
-.hero h1 span{display:inline-block;color:var(--text);font-family:var(--sans);font-weight:600;letter-spacing:-.065em}
+.hero h1 span{display:inline-block;color:var(--text);font-family:'Manrope',sans-serif;font-weight:600;letter-spacing:-.065em}
 .network{position:relative;isolation:isolate;overflow:hidden;min-height:690px;height:calc(100vh - 76px)}
 .network .grid{z-index:0}
-.network-lines{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;overflow:visible}
+.network-lines{position:absolute;inset:0;width:100%;height:100%;z-index:2;po'Manrope'-events:none;overflow:visible}
 .network .cable{fill:none;stroke:#586259;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;opacity:.92}
 .network .pulse{fill:none;stroke:var(--gold);stroke-width:1.7;stroke-dasharray:7 19;stroke-linecap:round;vector-effect:non-scaling-stroke;animation:flow 1.8s linear infinite;opacity:.95}
 .network-rack{position:absolute;z-index:4;left:3.5%;top:50%;transform:translateY(-50%);width:238px;height:620px}
@@ -249,7 +249,7 @@
   position:relative;
   overflow:hidden;
   isolation:isolate;
-  cursor:pointer;
+  cursor:po'Manrope';
 }
 .button::after,
 .text-button::after,
@@ -322,3 +322,288 @@
   outline:2px solid #c9ae78;
   outline-offset:3px;
 }
+
+
+
+
+/* ============================================================
+   V3.3 TYPOGRAPHY SYSTEM
+   ONLY TWO FONTS:
+   Manrope       = primary reading/display font
+   IBM Plex Mono = technical labels, metadata and code-style text
+   ============================================================ */
+
+:root{
+  --font-primary:'Manrope',sans-serif;
+  --font-tech:'IBM Plex Mono',monospace;
+}
+
+html{
+  font-size:100%;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+body{
+  font-family:'Manrope',sans-serif;
+  font-size:16px;
+  line-height:1.65;
+}
+
+h1,h2,h3,h4,h5,h6{
+  font-family:'Manrope',sans-serif;
+  font-weight:700;
+  line-height:1.08;
+  letter-spacing:-.045em;
+  overflow-wrap:break-word;
+  word-break:normal;
+}
+
+.hero h1{
+  font-family:'Manrope',sans-serif;
+  font-weight:800;
+  font-size:clamp(56px,7vw,104px);
+  line-height:.94;
+  letter-spacing:-.055em;
+}
+
+.hero h1 em,
+.hero h1 span,
+h2 em{
+  font-family:'Manrope',sans-serif;
+  font-weight:500;
+}
+
+p,li,a,button,input,textarea,select,label{
+  font-family:'Manrope',sans-serif;
+}
+
+.eyebrow,.section-no,
+.loader-status,.network-label,
+.topbar nav a,.top-actions button,.top-actions a,
+.button,.hero-meta,.rack-head,.rack-unit span,.rack-unit b,
+.node span,.node small,.trace-hint,.date,
+.text-button,.skill-grid span,.achievement-grid span,
+.edu-grid span,.terminal-head,.terminal-body,
+.panel-top,.panel-kicker,.panel-row b,.panel-exp small,
+.contact-links span,footer{
+  font-family:'Manrope',sans-serif;
+}
+
+.lead{
+  font-size:16px;
+  line-height:1.75;
+}
+
+.intro p,.timeline p,.skill-grid p,.ai-copy,
+.achievement-grid p,.edu-grid p,.contact-inner>p,
+.panel-sub,.panel-row div,.panel-exp p{
+  font-size:14px;
+  line-height:1.75;
+}
+
+.intro .large{
+  font-size:20px;
+  line-height:1.55;
+}
+
+.timeline h3{
+  font-size:26px;
+  line-height:1.15;
+}
+
+.timeline b{
+  font-size:12px;
+}
+
+.skill-grid h3{
+  font-size:15px;
+  line-height:1.25;
+}
+
+.achievement-grid h3{
+  font-size:23px;
+  line-height:1.15;
+}
+
+.edu-grid h3{
+  font-size:26px;
+  line-height:1.15;
+}
+
+.contact-links a{
+  font-size:14px;
+}
+
+.panel-title{
+  font-family:'Manrope',sans-serif;
+  font-size:clamp(48px,7vw,68px);
+  line-height:.95;
+  letter-spacing:-.055em;
+}
+
+.panel-exp h3{
+  font-size:21px;
+  line-height:1.2;
+}
+
+@media(max-width:1000px){
+  .hero h1{
+    font-size:clamp(52px,11vw,82px);
+    line-height:.95;
+  }
+}
+
+@media(max-width:600px){
+  body{font-size:16px}
+  .hero h1{
+    font-size:clamp(45px,14vw,72px);
+    line-height:.96;
+    letter-spacing:-.045em;
+  }
+  .lead{font-size:16px}
+  .intro p,.timeline p,.skill-grid p,.ai-copy,
+  .achievement-grid p,.edu-grid p,.contact-inner>p,
+  .panel-sub,.panel-row div,.panel-exp p{
+    font-size:14px;
+  }
+}
+
+
+/* ============================================================
+   V3.4 — CLEAN TYPOGRAPHY / READABILITY
+   APPROVED FONTS ONLY:
+   • Manrope
+   • IBM Plex Mono
+   No italics. No additional font families.
+   ============================================================ */
+
+:root{
+  --font-main:'Manrope',sans-serif;
+  --font-tech:'IBM Plex Mono',monospace;
+}
+
+html{
+  font-size:100%;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;
+}
+
+body{
+  font-family:var(--font-main)!important;
+  font-style:normal!important;
+  font-size:16px;
+  line-height:1.65;
+}
+
+*,*::before,*::after{
+  font-style:normal!important;
+}
+
+h1,h2,h3,h4,h5,h6{
+  font-family:var(--font-main)!important;
+  font-style:normal!important;
+  font-weight:700;
+  line-height:1.12;
+  letter-spacing:-.035em;
+  overflow-wrap:break-word;
+  word-break:normal;
+}
+
+.hero h1{
+  font-family:var(--font-main)!important;
+  font-style:normal!important;
+  font-weight:800;
+  font-size:clamp(52px,7.2vw,104px);
+  line-height:.98;
+  letter-spacing:-.055em;
+}
+
+.hero h1 em,
+.hero h1 i,
+h2 em,h2 i,
+h3 em,h3 i{
+  font-family:var(--font-main)!important;
+  font-style:normal!important;
+  font-weight:inherit;
+}
+
+p,li,a,button,input,textarea,select,label{
+  font-family:var(--font-main)!important;
+  font-style:normal!important;
+}
+
+.eyebrow,.section-no,.loader-status,.network-label,
+.topbar nav a,.top-actions button,.top-actions a,
+.button,.hero-meta,.rack-head,.rack-unit span,.rack-unit b,
+.node span,.node small,.trace-hint,.date,.text-button,
+.skill-grid span,.achievement-grid span,.edu-grid span,
+.terminal-head,.terminal-body,.panel-top,.panel-kicker,
+.panel-row b,.panel-exp small,.contact-links span,footer{
+  font-family:var(--font-tech)!important;
+  font-style:normal!important;
+}
+
+/* Readable text sizes */
+.lead{font-size:17px;line-height:1.75}
+.intro p,.timeline p,.skill-grid p,.ai-copy,
+.achievement-grid p,.edu-grid p,.contact-inner>p,
+.panel-sub,.panel-row div,.panel-exp p{
+  font-size:15px;
+  line-height:1.72;
+}
+.intro .large{font-size:20px;line-height:1.55}
+.timeline h3{font-size:26px;line-height:1.18}
+.achievement-grid h3{font-size:23px;line-height:1.18}
+.edu-grid h3{font-size:26px;line-height:1.18}
+.skill-grid h3{font-size:15px;line-height:1.3}
+.panel-title{
+  font-family:var(--font-main)!important;
+  font-style:normal!important;
+  font-size:clamp(46px,7vw,68px);
+  line-height:1;
+  letter-spacing:-.045em;
+}
+.panel-exp h3{font-size:21px;line-height:1.25}
+
+/* Logo: always uppercase */
+.logo,.brand,.site-logo,.logo a,.brand a{
+  font-family:var(--font-main)!important;
+  font-style:normal!important;
+  text-transform:uppercase!important;
+  letter-spacing:.04em;
+}
+
+/* Technical labels remain readable but not tiny */
+.eyebrow,.section-no,.hero-meta,.date,.panel-kicker{
+  font-size:12px;
+  line-height:1.45;
+}
+
+/* Links/buttons should never collapse or overlap text */
+a,button{
+  line-height:1.35;
+  overflow-wrap:break-word;
+}
+button{white-space:normal}
+
+@media(max-width:900px){
+  .hero h1{font-size:clamp(48px,10vw,82px)}
+}
+@media(max-width:600px){
+  body{font-size:16px}
+  .hero h1{
+    font-size:clamp(42px,13vw,68px);
+    line-height:1;
+    letter-spacing:-.04em;
+  }
+  .lead{font-size:16px}
+  .intro p,.timeline p,.skill-grid p,.ai-copy,
+  .achievement-grid p,.edu-grid p,.contact-inner>p,
+  .panel-sub,.panel-row div,.panel-exp p{font-size:14px}
+}
+
+/* Prevent common visual overflow bugs */
+img,svg,video{max-width:100%;height:auto}
+section,.section,.panel{overflow-wrap:break-word}

@@ -1,0 +1,705 @@
+/* =========================================================
+   AI IT SUPPORT UI
+   STEP 1 — Layout, spacing and visual hierarchy
+   ========================================================= */
+
+.ai-support-section{
+  padding:72px 5% 78px;
+  position:relative;
+  scroll-margin-top:80px;
+}
+
+.ai-support-shell{
+  max-width:1200px;
+  margin:0 auto;
+}
+
+.ai-support-header{
+  display:flex;
+  justify-content:space-between;
+  gap:30px;
+  align-items:flex-end;
+  margin-bottom:28px;
+}
+
+.ai-kicker,
+.ai-panel-title{
+  font:600 .68rem var(--mono);
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--gold);
+}
+
+.ai-support-header h2{
+  margin:8px 0;
+  font-size:clamp(2rem,4.2vw,3.8rem);
+  line-height:.98;
+  letter-spacing:-.045em;
+}
+
+.ai-lead{
+  margin:0;
+  opacity:.68;
+  max-width:650px;
+  font-size:.86rem;
+  line-height:1.7;
+}
+
+.ai-status{
+  border:1px solid rgba(156,173,145,.38);
+  background:rgba(156,173,145,.06);
+  padding:9px 13px;
+  font:600 .62rem var(--mono);
+  letter-spacing:.1em;
+  white-space:nowrap;
+  color:var(--green);
+}
+
+.ai-status i{
+  display:inline-block;
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--green);
+  margin-right:7px;
+  box-shadow:0 0 10px var(--green);
+  animation:aiPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes aiPulse{
+  0%,100%{opacity:.45}
+  50%{opacity:1}
+}
+
+/* =========================================================
+   STEP 2 — Workspace and scrollable topic navigation
+   ========================================================= */
+
+.ai-workspace{
+  display:grid;
+  grid-template-columns:250px minmax(0,1fr);
+  gap:14px;
+  align-items:stretch;
+}
+
+.ai-panel{
+  border:1px solid rgba(127,127,127,.24);
+  background:linear-gradient(180deg,rgba(127,127,127,.055),rgba(127,127,127,.025));
+  min-width:0;
+}
+
+.ai-sidebar{
+  padding:16px;
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+}
+
+.ai-topic-list{
+  display:grid;
+  gap:5px;
+  margin-top:13px;
+  max-height:405px;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  scrollbar-width:thin;
+  scrollbar-color:#586258 transparent;
+  padding-right:4px;
+}
+
+.ai-topic-list::-webkit-scrollbar{
+  width:5px;
+}
+.ai-topic-list::-webkit-scrollbar-track{
+  background:transparent;
+}
+.ai-topic-list::-webkit-scrollbar-thumb{
+  background:#586258;
+  border-radius:10px;
+}
+.ai-topic-list::-webkit-scrollbar-thumb:hover{
+  background:var(--gold);
+}
+
+.ai-topic{
+  width:100%;
+  min-height:42px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  text-align:left;
+  border:1px solid transparent;
+  border-radius:2px;
+  background:transparent;
+  color:inherit;
+  padding:9px 10px;
+  font-size:.73rem;
+  line-height:1.25;
+  cursor:pointer;
+  opacity:.68;
+  transition:background .16s ease,border-color .16s ease,color .16s ease,transform .08s ease;
+  touch-action:manipulation;
+}
+
+.ai-topic span{
+  min-width:0;
+}
+.ai-topic small{
+  flex:0 0 auto;
+  font:600 .58rem var(--mono);
+  color:#737c73;
+  border:1px solid rgba(127,127,127,.2);
+  padding:3px 5px;
+}
+
+.ai-topic:hover{
+  opacity:1;
+  border-color:rgba(201,174,120,.32);
+  background:rgba(201,174,120,.055);
+}
+
+.ai-topic.active{
+  opacity:1;
+  color:#e9e6dc;
+  border-color:rgba(156,173,145,.48);
+  background:rgba(156,173,145,.09);
+  box-shadow:inset 2px 0 var(--green);
+}
+
+.ai-topic:active{
+  transform:translateY(1px);
+}
+
+.ai-coverage{
+  margin-top:14px;
+  padding-top:13px;
+  border-top:1px solid rgba(127,127,127,.18);
+  display:grid;
+  gap:4px;
+  font-size:.68rem;
+  line-height:1.45;
+}
+
+.ai-coverage b{
+  color:var(--green);
+}
+.ai-coverage span{
+  opacity:.5;
+}
+
+/* =========================================================
+   STEP 3 — Chat panel
+   ========================================================= */
+
+.ai-chat-panel{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+
+.ai-chat-top{
+  min-height:62px;
+  padding:14px 18px;
+  border-bottom:1px solid rgba(127,127,127,.18);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:14px;
+}
+
+.ai-chat-top div{
+  display:grid;
+  gap:4px;
+  font:600 .67rem var(--mono);
+  letter-spacing:.08em;
+}
+
+.ai-chat-top span{
+  font:400 .62rem var(--mono);
+  letter-spacing:.02em;
+  opacity:.5;
+}
+
+.ai-reset,
+.ai-quick button,
+.ai-follow button,
+.ai-copy{
+  border:1px solid rgba(156,173,145,.28);
+  background:rgba(156,173,145,.035);
+  color:inherit;
+  cursor:pointer;
+  transition:background .16s ease,border-color .16s ease,color .16s ease,transform .08s ease;
+  touch-action:manipulation;
+}
+
+.ai-reset{
+  min-height:38px;
+  padding:7px 12px;
+  font:600 .62rem var(--mono);
+  text-transform:uppercase;
+  letter-spacing:.07em;
+  white-space:nowrap;
+}
+
+.ai-reset:hover,
+.ai-quick button:hover,
+.ai-follow button:hover,
+.ai-copy:hover{
+  color:var(--gold);
+  border-color:rgba(201,174,120,.65);
+  background:rgba(201,174,120,.07);
+}
+
+.ai-reset:active,
+.ai-quick button:active,
+.ai-follow button:active,
+.ai-copy:active{
+  transform:translateY(1px);
+}
+
+.ai-chat{
+  height:400px;
+  overflow-y:auto;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  overscroll-behavior:contain;
+  scrollbar-width:thin;
+  scrollbar-color:#586258 transparent;
+}
+
+.ai-chat::-webkit-scrollbar{
+  width:5px;
+}
+.ai-chat::-webkit-scrollbar-thumb{
+  background:#586258;
+  border-radius:10px;
+}
+
+.ai-msg{
+  max-width:82%;
+  display:flex;
+  gap:9px;
+  animation:aiIn .22s ease;
+}
+
+.ai-msg.user{
+  margin-left:auto;
+  flex-direction:row-reverse;
+}
+
+.ai-avatar{
+  width:28px;
+  height:28px;
+  flex:0 0 28px;
+  border:1px solid rgba(156,173,145,.35);
+  display:grid;
+  place-items:center;
+  font:600 .58rem var(--mono);
+  color:var(--green);
+}
+
+.ai-bubble{
+  border:1px solid rgba(127,127,127,.22);
+  background:rgba(127,127,127,.025);
+  padding:11px 13px;
+  line-height:1.58;
+  font-size:.79rem;
+}
+
+.ai-msg.user .ai-bubble{
+  border-color:rgba(201,174,120,.3);
+  background:rgba(201,174,120,.07);
+}
+
+.ai-bubble p{
+  margin:0 0 8px;
+}
+.ai-bubble p:last-child{
+  margin-bottom:0;
+}
+.ai-bubble ol{
+  margin:8px 0 0;
+  padding-left:20px;
+}
+.ai-bubble li{
+  margin:5px 0;
+}
+
+.ai-cmd,
+.ai-inline-cmd{
+  font-family:var(--mono);
+  font-size:.7rem;
+  border:1px solid rgba(127,127,127,.25);
+  background:rgba(0,0,0,.18);
+  padding:4px 6px;
+  display:inline-block;
+  margin:2px 2px 0 0;
+}
+
+.ai-follow{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:10px;
+}
+
+.ai-follow button{
+  min-height:36px;
+  padding:7px 10px;
+  font-size:.67rem;
+}
+
+.ai-typing{
+  opacity:.55;
+  font-size:.72rem;
+  letter-spacing:.03em;
+}
+
+.ai-quick{
+  padding:9px 18px;
+  display:flex;
+  gap:6px;
+  align-items:center;
+  flex-wrap:wrap;
+  border-top:1px solid rgba(127,127,127,.15);
+}
+
+.ai-quick span{
+  font:600 .62rem var(--mono);
+  color:#747d74;
+}
+
+.ai-quick button{
+  min-height:34px;
+  padding:6px 9px;
+  font-size:.65rem;
+}
+
+.ai-composer{
+  display:flex;
+  gap:7px;
+  padding:12px 18px;
+  border-top:1px solid rgba(127,127,127,.18);
+}
+
+.ai-composer input{
+  flex:1;
+  min-width:0;
+  min-height:44px;
+  background:rgba(0,0,0,.14);
+  color:inherit;
+  border:1px solid rgba(127,127,127,.3);
+  border-radius:2px;
+  padding:11px 12px;
+  font:inherit;
+  outline:none;
+  transition:border-color .16s ease,background .16s ease,box-shadow .16s ease;
+}
+
+.ai-composer input::placeholder{
+  color:#737b73;
+}
+
+.ai-composer input:focus{
+  border-color:rgba(156,173,145,.7);
+  background:rgba(156,173,145,.035);
+  box-shadow:0 0 0 2px rgba(156,173,145,.08);
+}
+
+.ai-composer button{
+  min-width:82px;
+  min-height:44px;
+  border:1px solid var(--green);
+  border-radius:2px;
+  padding:0 17px;
+  cursor:pointer;
+  background:var(--green);
+  color:#10130f;
+  font:700 .66rem var(--mono);
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  transition:transform .08s ease,background .16s ease,border-color .16s ease;
+  touch-action:manipulation;
+}
+
+.ai-composer button:hover{
+  background:#c3d2ba;
+  border-color:#c3d2ba;
+}
+.ai-composer button:active{
+  transform:translateY(1px);
+}
+
+.ai-disclaimer{
+  font-size:.58rem;
+  opacity:.42;
+  padding:0 18px 12px;
+}
+
+/* =========================================================
+   STEP 3A — Clear user / assistant message separation
+   ========================================================= */
+
+.ai-msg.ai .ai-avatar{
+  color:var(--green);
+  border-color:rgba(156,173,145,.48);
+  background:rgba(156,173,145,.07);
+}
+
+.ai-msg.ai .ai-bubble{
+  background:rgba(156,173,145,.045);
+  border-color:rgba(156,173,145,.24);
+  border-left:2px solid rgba(156,173,145,.58);
+}
+
+.ai-msg.user .ai-avatar{
+  color:var(--gold);
+  border-color:rgba(201,174,120,.5);
+  background:rgba(201,174,120,.08);
+}
+
+.ai-msg.user .ai-bubble{
+  background:rgba(201,174,120,.095);
+  border-color:rgba(201,174,120,.38);
+  border-right:2px solid rgba(201,174,120,.65);
+}
+
+.ai-command-block{
+  margin-top:10px;
+  border:1px solid rgba(127,127,127,.2);
+  background:rgba(0,0,0,.12);
+}
+
+.ai-command-head{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding:7px 9px;
+  border-bottom:1px solid rgba(127,127,127,.16);
+  font:600 .55rem var(--mono);
+  letter-spacing:.06em;
+  color:#7e877e;
+}
+
+.ai-command-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:8px 9px;
+  border-bottom:1px solid rgba(127,127,127,.11);
+}
+
+.ai-command-row:last-child{
+  border-bottom:0;
+}
+
+.ai-command-row > div{
+  min-width:0;
+}
+
+.ai-command-row small{
+  display:block;
+  font:600 .52rem var(--mono);
+  color:#7c857c;
+  margin-bottom:3px;
+}
+
+.ai-command-row code{
+  font:400 .68rem var(--mono);
+  overflow-wrap:anywhere;
+}
+
+.ai-copy{
+  flex:0 0 auto;
+  min-height:30px;
+  padding:5px 8px;
+  font:600 .52rem var(--mono);
+  letter-spacing:.05em;
+}
+
+.ai-typing i{
+  display:inline-block;
+  width:4px;
+  height:4px;
+  margin-left:3px;
+  border-radius:50%;
+  background:currentColor;
+  animation:aiDot 1s infinite ease-in-out;
+}
+.ai-typing i:nth-child(2){animation-delay:.15s}
+.ai-typing i:nth-child(3){animation-delay:.3s}
+@keyframes aiDot{
+  0%,70%,100%{opacity:.25;transform:translateY(0)}
+  35%{opacity:1;transform:translateY(-2px)}
+}
+
+/* =========================================================
+   STEP 4 — Development roadmap
+   ========================================================= */
+
+.ai-roadmap{
+  margin-top:14px;
+  border:1px solid rgba(127,127,127,.24);
+  padding:16px;
+}
+
+.ai-roadmap-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:16px;
+  margin-bottom:10px;
+}
+
+.ai-roadmap-status{
+  font:600 .58rem var(--mono);
+  letter-spacing:.08em;
+  color:var(--green);
+  border:1px solid rgba(156,173,145,.32);
+  padding:5px 7px;
+}
+
+.ai-roadmap-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+}
+
+.ai-stage{
+  position:relative;
+  min-height:0;
+  padding:13px;
+  border:1px solid rgba(127,127,127,.18);
+  display:grid;
+  grid-template-columns:auto 1fr;
+  column-gap:10px;
+  align-items:start;
+  background:rgba(127,127,127,.018);
+}
+
+.ai-stage b{
+  grid-row:span 2;
+  font:600 .75rem var(--mono);
+  color:#6e776e;
+}
+
+.ai-stage strong{
+  font-size:.75rem;
+  line-height:1.25;
+}
+
+.ai-stage span{
+  grid-column:2;
+  font-size:.65rem;
+  line-height:1.5;
+  opacity:.55;
+  margin-top:3px;
+}
+
+.ai-stage.current{
+  border-color:rgba(156,173,145,.55);
+  background:rgba(156,173,145,.065);
+}
+
+.ai-stage.current b,
+.ai-stage.current strong{
+  color:var(--green);
+}
+
+.ai-stage.current::after{
+  content:"CURRENT";
+  position:absolute;
+  top:9px;
+  right:9px;
+  font:600 .5rem var(--mono);
+  letter-spacing:.08em;
+  color:var(--green);
+}
+
+.ai-stage.planned::after{
+  content:"PLANNED";
+  position:absolute;
+  top:9px;
+  right:9px;
+  font:600 .5rem var(--mono);
+  letter-spacing:.08em;
+  color:#777f77;
+}
+
+/* =========================================================
+   STEP 5 — Shared interaction and keyboard accessibility
+   ========================================================= */
+
+.ai-support-section button:focus-visible,
+.ai-support-section input:focus-visible{
+  outline:2px solid var(--gold);
+  outline-offset:2px;
+}
+
+@keyframes aiIn{
+  from{opacity:0;transform:translateY(5px)}
+  to{opacity:1;transform:none}
+}
+
+/* =========================================================
+   STEP 6 — Responsive layout
+   ========================================================= */
+
+@media(max-width:820px){
+  .ai-support-section{
+    padding:58px 5% 62px;
+  }
+  .ai-support-header{
+    display:block;
+    margin-bottom:22px;
+  }
+  .ai-status{
+    display:inline-block;
+    margin-top:14px;
+  }
+  .ai-workspace{
+    grid-template-columns:1fr;
+  }
+  .ai-topic-list{
+    max-height:190px;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .ai-chat{
+    height:380px;
+  }
+  .ai-roadmap-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:520px){
+  .ai-topic-list{
+    grid-template-columns:1fr;
+    max-height:220px;
+  }
+  .ai-msg{
+    max-width:94%;
+  }
+  .ai-chat{
+    height:350px;
+    padding:15px;
+  }
+  .ai-chat-top{
+    padding:12px 14px;
+  }
+  .ai-quick,
+  .ai-composer{
+    padding-left:14px;
+    padding-right:14px;
+  }
+  .ai-composer button{
+    min-width:66px;
+    padding:0 12px;
+  }
+}
+
