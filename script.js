@@ -1,9 +1,9 @@
 const data={
-about:{label:"01 / IDENTITY",title:"Muhammad<br><em>Arsalan.</em>",sub:"IT Support professional with a Masters in Computer Science and hands-on experience across technical support, systems, documentation and aviation operations.",rows:[["FOCUS","IT SUPPORT / OPERATIONS / AI"],["EDUCATION","Masters in Computer Science"],["APPROACH","TROUBLESHOOT → RESOLVE → DOCUMENT"],["LOCATION","SAUDI ARABIA"]]},
+about:{label:"01 / IDENTITY",title:"Muhammad<br><em>Arsalan.</em>",sub:"IT Support professional with a Master's in Computer Science and hands-on experience across technical support, systems, documentation and aviation operations.",rows:[["FOCUS","IT SUPPORT / OPERATIONS / AI"],["EDUCATION","Master's in Computer Science"],["APPROACH","TROUBLESHOOT → RESOLVE → DOCUMENT"],["LOCATION","SAUDI ARABIA"]]},
 experience:{label:"02 / EXPERIENCE",title:"Career<br><em>path.</em>",sub:"Technical support, education and aviation documentation have each added a different layer to my professional toolkit.",exp:[["JAN 2025 — PRESENT","Technical Data Officer","Alpha Star Aviation Services","Technical logs, work orders, aircraft documentation, flight hours/cycles, planning coordination, CAMP and TRAX."],["DEC 2023 — JUN 2024","IT Support Officer","Technic Mentor Soft Solution","Level 1/2 support, Windows/macOS, Active Directory, Microsoft 365, hardware/software, printers, Windows Server, DNS, DHCP, VPN and remote support."],["DEC 2022 — SEP 2023","ICT Teacher","The City School — Paragon Campus","Technology education, Microsoft Office, HTML/CSS basics and practical user guidance."],["JAN 2021 — NOV 2022","ICT Teacher","IISAT","ICT teaching, classroom technology and academic technology support."],["2018 — 2020","Web & Graphic Designer","Applitectures","Design projects plus HTML, CSS, JavaScript, React and Adobe tools."]]},
 systems:{label:"03 / SYSTEMS",title:"Technical<br><em>systems.</em>",sub:"The practical technologies that support my IT-focused work.",rows:[["IT SUPPORT","Windows 10/11 · macOS · hardware/software troubleshooting · printers · Outlook · remote assistance"],["NETWORKING","TCP/IP · subnetting · DNS · DHCP · VPN · Wi-Fi · network troubleshooting · Packet Tracer · Wireshark"],["SYSTEMS","Active Directory · user administration · password resets · Group Policy basics · Windows Server · VirtualBox"],["MICROSOFT","Microsoft 365 · Office · Outlook · Teams"],["SECONDARY","Graphic Design · Adobe Creative Cloud · Figma · WordPress · React Native · Video Editing"]]},
 ai:{label:"04 / AI NODE",title:"AI as a<br><em>working tool.</em>",sub:"I use AI as a practical productivity layer around IT work — not as an inflated job title.",rows:[["RESEARCH","Assist technical research and learning"],["DOCUMENTATION","Structure, draft and improve technical documentation"],["PRODUCTIVITY","Organize repetitive information-heavy tasks"],["TROUBLESHOOTING","Support structured investigation and idea generation"],["RULE","AI ASSISTS. HUMAN JUDGEMENT DECIDES."]]},
-achievements:{label:"05 / ACHIEVEMENTS",title:"Proof of<br><em>growth.</em>",sub:"Real milestones from my education and professional development.",rows:[["EDUCATION","Masters in Computer Science · Superior University · 2022 · GPA 3.23 / 4.00"],["TECHNICAL","Hands-on Level 1/2 IT support across Windows, macOS, Microsoft 365, Active Directory, hardware and network issues"],["OPERATIONS","Current aviation technical documentation and planning environment using CAMP and TRAX"],["FOUNDATION","Computer Science education plus Graphic Designer Diploma and practical creative technology experience"]]},
+achievements:{label:"05 / ACHIEVEMENTS",title:"Proof of<br><em>growth.</em>",sub:"Real milestones from my education and professional development.",rows:[["EDUCATION","Master's in Computer Science · Superior University · 2022 · GPA 3.23 / 4.00"],["TECHNICAL","Hands-on Level 1/2 IT support across Windows, macOS, Microsoft 365, Active Directory, hardware and network issues"],["OPERATIONS","Current aviation technical documentation and planning environment using CAMP and TRAX"],["FOUNDATION","Computer Science education plus Graphic Designer Diploma and practical creative technology experience"]]},
 contact:{label:"06 / CONTACT",title:"Let's<br><em>connect.</em>",sub:"For IT Support, Technical Support, IT Operations and related opportunities.",contact:true}
 };
 const panel=document.getElementById("panel"),body=document.getElementById("panelBody"),label=document.getElementById("panelLabel"),panelAside=panel.querySelector("aside");
@@ -28,3 +28,41 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")closePanel()});
 document.getElementById("traceBtn").addEventListener("click",()=>document.getElementById("network").scrollIntoView({behavior:"smooth",block:"center"}));
 document.getElementById("mapToggle").addEventListener("click",()=>document.getElementById("network").scrollIntoView({behavior:"smooth",block:"center"}));
 setTimeout(()=>document.getElementById("loader").classList.add("done"),1600);
+
+
+/* =========================================================
+   GLOBAL THEME CONTROLLER — V3.5
+   ========================================================= */
+(function initTheme(){
+  const root=document.documentElement;
+  const toggle=document.getElementById("themeToggle");
+  const saved=localStorage.getItem("portfolio-theme");
+  const system=window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  const initial=saved==="light" || saved==="dark" ? saved : system;
+
+  function applyTheme(theme, persist){
+    const safeTheme=theme==="light" ? "light" : "dark";
+    root.setAttribute("data-theme",safeTheme);
+    if(persist) localStorage.setItem("portfolio-theme",safeTheme);
+    if(!toggle) return;
+    const isLight=safeTheme==="light";
+    toggle.setAttribute("aria-pressed",String(isLight));
+    toggle.setAttribute("aria-label",isLight ? "Switch to dark theme" : "Switch to light theme");
+    const icon=toggle.querySelector(".theme-icon");
+    const label=toggle.querySelector(".theme-label");
+    if(icon) icon.textContent=isLight ? "☀" : "☾";
+    if(label) label.textContent=isLight ? "Light" : "Dark";
+  }
+
+  applyTheme(initial,false);
+  if(toggle) toggle.addEventListener("click",()=>{
+    applyTheme(root.getAttribute("data-theme")==="dark" ? "light" : "dark",true);
+  });
+
+  if(!saved && window.matchMedia){
+    const media=window.matchMedia("(prefers-color-scheme: light)");
+    const sync=e=>applyTheme(e.matches ? "light" : "dark",false);
+    if(media.addEventListener) media.addEventListener("change",sync);
+    else if(media.addListener) media.addListener(sync);
+  }
+})();

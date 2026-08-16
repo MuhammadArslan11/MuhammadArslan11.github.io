@@ -1,5 +1,7 @@
 /* =========================================================
    AI IT SUPPORT ASSISTANT
+   V3.9 — INTELLIGENCE / RELEVANCE / LOCAL CHAT STORAGE SPRINT
+
    STAGE 1 — Evidence-based conversational diagnostic engine
    Static GitHub Pages implementation; no external AI API.
    ========================================================= */
@@ -128,7 +130,6 @@
      STEP 3 — STATE MANAGEMENT
      ======================================================= */
   const state = {
-    name: sessionStorage.getItem("aiSupportVisitorName") || "",
     domain: "",
     problem: "",
     scenario: null,
@@ -138,6 +139,103 @@
     asked: [],
     originalMessage: ""
   };
+
+  /* =======================================================
+     PERSISTENT STATIC CHAT LOG
+     GitHub Pages cannot write a server-side file, so the assistant
+     stores session history locally in the visitor's browser.
+     The same JSON can also be exported by the user.
+     ======================================================= */
+  const CHAT_STORE_KEY = "muhammadArsalanAiSupportChatV1";
+
+  function chatSnapshot() {
+    return {
+      version: 1,
+      savedAt: new Date().toISOString(),
+      domain: state.domain || "",
+      phase: state.phase || "idle",
+      step: state.step || 0,
+      problem: state.problem || "",
+      originalMessage: state.originalMessage || "",
+      evidence: state.evidence.slice(-12),
+      scenarioId: state.scenario?.id || null,
+      messages: Array.from(chat.querySelectorAll(".ai-msg")).map((el) => ({
+        role: el.classList.contains("user") ? "user" : "ai",
+        text: (el.querySelector(".ai-bubble")?.innerText || "").trim()
+      }))
+    };
+  }
+
+  function persistChat() {
+    try {
+      localStorage.setItem(CHAT_STORE_KEY, JSON.stringify(chatSnapshot()));
+    } catch (error) {
+      console.warn("AI Support: local chat storage unavailable.", error);
+    }
+  }
+
+  function restoreChat() {
+    try {
+      const raw = localStorage.getItem(CHAT_STORE_KEY);
+      if (!raw) return false;
+      const saved = JSON.parse(raw);
+      if (!saved || !Array.isArray(saved.messages) || !saved.messages.length) return false;
+      saved.messages.slice(-80).forEach((m) => {
+        if (!m || !m.text) return;
+        add(m.role === "user" ? "user" : "ai", "<p>" + esc(m.text).replace(/\\n/g, "<br>") + "</p>", false);
+      });
+      state.domain = saved.domain || "";
+      state.phase = saved.phase || "idle";
+      state.step = saved.step || 0;
+      state.problem = saved.problem || "";
+      state.originalMessage = saved.originalMessage || "";
+      state.evidence = Array.isArray(saved.evidence) ? saved.evidence.slice(-12) : [];
+      state.scenario = SCENARIOS.find((item) => item.id === saved.scenarioId) || null;
+      return true;
+    } catch (error) {
+      localStorage.removeItem(CHAT_STORE_KEY);
+      return false;
+    }
+  }
+
+  function exportChat() {
+  const nodes = Array.from(chat.querySelectorAll(".ai-msg"));
+  const now = new Date();
+  const stamp = now.toLocaleString();
+
+  const transcript = nodes.length ? nodes.map((el) => {
+    const role = el.classList.contains("user") ? "YOU" : "IT SUPPORT AI ASSISTANT";
+    const bubble = el.querySelector(".ai-bubble");
+    const text = bubble ? (bubble.innerText || bubble.textContent || "").trim() : (el.innerText || "").trim();
+    return `<section class="pdf-message ${role === "YOU" ? "pdf-user" : "pdf-ai"}">
+      <div class="pdf-role">${role}</div><div class="pdf-text">${escapeHtml(text)}</div>
+    </section>`;
+  }).filter(Boolean).join("") : `<section class="pdf-message pdf-ai"><div class="pdf-role">IT SUPPORT AI ASSISTANT</div><div class="pdf-text">No conversation has been recorded yet.</div></section>`;
+
+  const popup = window.open("", "_blank");
+  if (!popup) { alert("Please allow pop-ups to create the PDF."); return; }
+
+  popup.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>IT Support AI Assistant — Chat Report</title>
+<style>
+@page{size:A4;margin:15mm}*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;color:#17202a}
+.header{padding:24px 26px;border-radius:14px;background:linear-gradient(135deg,#10212b,#1d5568);color:#fff}
+.eyebrow{font-size:10px;letter-spacing:2px;text-transform:uppercase;opacity:.8}h1{margin:7px 0 4px;font-size:24px}
+.subtitle{font-size:12px;opacity:.9}.meta{margin-top:15px;padding-top:11px;border-top:1px solid rgba(255,255,255,.25);font-size:10px;line-height:1.7}
+.intro{margin:16px 0;padding:12px 14px;background:#f3f7f9;border-left:4px solid #2e8ba8;border-radius:7px;font-size:11px;line-height:1.6}
+.pdf-message{margin:11px 0;padding:12px 14px;border-radius:9px;page-break-inside:avoid}
+.pdf-user{background:#edf6fa;border-left:4px solid #2e8ba8}.pdf-ai{background:#f7f7f7;border-left:4px solid #6c7880}
+.pdf-role{font-size:8px;font-weight:700;letter-spacing:1.1px;margin-bottom:6px;color:#48606a}.pdf-text{white-space:pre-wrap;font-size:10.5px;line-height:1.6}
+.footer{margin-top:20px;padding-top:9px;border-top:1px solid #d8e0e4;color:#6b7479;font-size:8.5px;line-height:1.6}
+</style></head><body>
+<header class="header"><div class="eyebrow">Technical Support Record</div><h1>IT Support AI Assistant</h1>
+<div class="subtitle">AI-assisted Stage 1 IT troubleshooting conversation</div>
+<div class="meta"><strong>Website:</strong> Muhammad Arsalan Portfolio<br><strong>URL:</strong> ${escapeHtml(location.href)}<br><strong>Generated:</strong> ${escapeHtml(stamp)}<br><strong>Messages:</strong> ${nodes.length}</div></header>
+<div class="intro">A formatted record of this troubleshooting session. The assistant uses the current Stage 1 knowledge base and the evidence provided during the conversation.</div>
+${transcript}
+<footer class="footer">Muhammad Arsalan Portfolio · IT Support AI Assistant · Browser-generated report<br>This report is generated locally. Conversation data is not sent to a server.</footer>
+</body></html>`);
+  popup.document.close(); popup.focus(); setTimeout(() => popup.print(), 350);
+}
 
   /* =======================================================
      STEP 4 — INTENT DETECTION
@@ -150,14 +248,9 @@
     return /^(hi|hello|hey|hiya|good morning|good afternoon|good evening|how are you|how's it going|how are things)[!,.? ]*$/i.test(text.trim());
   }
 
-  function isNameStatement(text) {
-    return /^(my name is|i am|i'm|im|call me|you can call me)\s+[a-z][a-z .'-]{1,50}$/i.test(text.trim());
-  }
-
   function intentOf(text) {
     const t = normalize(text);
     if (isGreeting(t)) return "GREETING";
-    if (isNameStatement(t)) return "NAME";
     if (/^(what is|what's|define|explain|difference between|how does)\b/.test(t)) return "IT_QUESTION";
     if (/^(thanks|thank you|ok|okay|great|perfect|got it)\b/.test(t)) return "ACKNOWLEDGEMENT";
     if (/\b(error|failed|failure|exception|code)\b/.test(t) || /[A-Z_]{4,}_[A-Z_]{4,}/.test(text)) return "ERROR_REPORT";
@@ -207,12 +300,13 @@
     return String(value).replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[m]));
   }
 
-  function add(role, html) {
+  function add(role, html, persist = true) {
     const el = document.createElement("div");
     el.className = "ai-msg " + role;
     el.innerHTML = '<div class="ai-avatar">' + (role === "ai" ? "AI" : "YOU") + '</div><div class="ai-bubble">' + html + "</div>";
     chat.appendChild(el);
     chat.scrollTop = chat.scrollHeight;
+    if (persist) persistChat();
     return el;
   }
 
@@ -246,24 +340,11 @@
   }
 
   function greeting() {
-    if (state.name) {
-      add("ai", '<p><b>Hello, ' + esc(state.name) + '.</b></p><p>I’m your Stage 1 IT Support Assistant. Tell me the problem and I’ll diagnose it step-by-step rather than guessing.</p><p><b>What is not working?</b></p>');
-    } else {
-      add("ai", '<p><b>Hello.</b> I’m the IT Support AI Assistant — Stage 1.</p><p>Before we start, what name should I use for you?</p><p>I can help with Windows, networking, Wi-Fi, DNS, DHCP, Active Directory, Microsoft 365, Outlook, printers, hardware, VPNs and everyday help-desk problems.</p>');
-    }
-  }
-
-  function saveName(text) {
-    const name = text.trim().replace(/^(my name is|i am|i'm|im|call me|you can call me)\s+/i, "").replace(/[.!?]+$/, "").trim();
-    if (!name || name.length > 60) return false;
-    state.name = name;
-    sessionStorage.setItem("aiSupportVisitorName", name);
-    add("ai", '<p>Nice to meet you, <b>' + esc(name) + '</b>.</p><p>I’ll use your name naturally during the support session.</p><p><b>What IT problem can I help you with?</b></p>');
-    return true;
+    add("ai", '<p><b>IT Support AI Assistant — Stage 1.</b></p><p>Describe the IT problem, the exact error/message, and what you already tested. I’ll stay within the current knowledge base, use the evidence you provide, and avoid unrelated troubleshooting.</p><p><b>What is not working?</b></p>');
   }
 
   function outOfScope() {
-    add("ai", '<p>I’m designed specifically for <b>IT Support</b>.</p><p>I don’t want to invent an answer for something outside my supported knowledge base. Please ask about a computer, network, account, software, hardware, Microsoft 365, printer, VPN, server or other IT issue.</p>');
+    add("ai", '<p><b>This request is outside the current Stage 1 IT Support knowledge base.</b></p><p>I won’t invent a solution or introduce an unrelated support path. Ask about one of the supported IT areas shown in the assistant, or describe the exact IT symptom/error.</p>');
   }
 
   function clarify(problem, options) {
@@ -276,7 +357,7 @@
      ======================================================= */
   function startWifi() {
     state.problem = "Wi-Fi connected but internet access is not working";
-    add("ai", '<p>Got it' + (state.name ? ', ' + esc(state.name) : "") + '. <b>Wi-Fi is connected, but internet access is failing.</b></p><p>We’ll separate the problem into local network, internet routing and DNS. We will not assume the cause.</p><p><b>Step 1 — Check the local gateway.</b></p><p>On Windows, run <code class="ai-inline-cmd">ipconfig /all</code> and then ping the listed Default Gateway.</p>' + commands(COMMANDS["Wi-Fi"].slice(0, 3)) + '<p><b>What happened?</b></p>' + choices(["Gateway replies", "Gateway fails", "I cannot run the command"]));
+    add("ai", '<p>Got it. <b>Wi-Fi is connected, but internet access is failing.</b></p><p>We’ll separate the problem into local network, internet routing and DNS. We will not assume the cause.</p><p><b>Step 1 — Check the local gateway.</b></p><p>On Windows, run <code class="ai-inline-cmd">ipconfig /all</code> and then ping the listed Default Gateway.</p>' + commands(COMMANDS["Wi-Fi"].slice(0, 3)) + '<p><b>What happened?</b></p>' + choices(["Gateway replies", "Gateway fails", "I cannot run the command"]));
     setState("wifi-gateway", 1); prog(1);
   }
 
@@ -523,6 +604,16 @@
     add("ai", '<p><b>Good — the original problem appears resolved.</b></p><p>Before closing a real help-desk ticket, verify the original user action one final time and document the symptom, evidence, root cause, fix and verification result.</p>');
   }
 
+  function relevantSupportMatch(text) {
+    const scenario = detectScenario(text);
+    const domain = detectDomain(text);
+    return { scenario, domain, confident: Boolean(scenario || domain) };
+  }
+
+  function focusedUnknown(text) {
+    add("ai", '<p><b>I need a more specific IT symptom.</b></p><p>Please include the affected system/device, what is failing, and the exact error or result if available. I’ll keep the response limited to the Stage 1 knowledge base instead of guessing or introducing unrelated solutions.</p>');
+  }
+
   /* =======================================================
      STEP 9 — MAIN CONVERSATION ENGINE
      ======================================================= */
@@ -540,19 +631,10 @@
         const t = normalize(text);
 
         if (intent === "GREETING") {
-          add("ai", '<p><b>Hello' + (state.name ? ", " + esc(state.name) : "") + '.</b> How can I help you with an IT issue today?</p>');
+          add("ai", '<p><b>Describe the IT problem.</b> I’ll keep the diagnosis focused on the current knowledge base and the evidence you provide.</p>');
           return;
         }
 
-        if (intent === "NAME") {
-          saveName(text);
-          return;
-        }
-
-        if (state.phase === "idle" && !state.name && /^[a-z][a-z .'-]{1,50}$/i.test(text) && text.split(/\s+/).length <= 4) {
-          saveName("My name is " + text);
-          return;
-        }
 
         if (state.phase === "wifi-gateway" || state.phase === "wifi-local" || state.phase === "wifi-public" || state.phase === "wifi-dns" || state.phase === "wifi-upstream" || state.phase === "verify") {
           if (handleWifi(text)) return;
@@ -576,13 +658,16 @@
         }
 
         if (intent === "ACKNOWLEDGEMENT") {
-          add("ai", '<p>You’re welcome' + (state.name ? ", " + esc(state.name) : "") + '. If the issue is still present, send me the latest result and I’ll continue from the current diagnostic state.</p>');
+          add("ai", '<p>You’re welcome' +  + '. If the issue is still present, send me the latest result and I’ll continue from the current diagnostic state.</p>');
           return;
         }
 
-        if (intent !== "IT_PROBLEM" && intent !== "ERROR_REPORT" && state.phase === "idle") {
-          const domain = detectDomain(text);
-          if (!domain) { outOfScope(); return; }
+        if (state.phase === "idle") {
+          const match = relevantSupportMatch(text);
+          if (!match.confident && intent !== "IT_PROBLEM" && intent !== "ERROR_REPORT") {
+            focusedUnknown(text);
+            return;
+          }
         }
 
         state.originalMessage = text;
@@ -644,6 +729,7 @@
      ======================================================= */
   function reset() {
     chat.innerHTML = "";
+    try { localStorage.removeItem(CHAT_STORE_KEY); } catch (e) {}
     state.domain = "";
     state.problem = "";
     state.scenario = null;
@@ -682,7 +768,27 @@
     if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); form.requestSubmit(); }
   });
   input.addEventListener("input", () => { input.style.height = "auto"; input.style.height = Math.min(110, input.scrollHeight) + "px"; });
+  /* Mobile keyboard support: keep the latest response and composer visible
+     without forcing the whole page to jump. */
+  function keepChatLatest() {
+    requestAnimationFrame(() => { chat.scrollTop = chat.scrollHeight; });
+  }
+  if (window.visualViewport) {
+    const syncViewport = () => {
+      document.documentElement.style.setProperty("--ai-vh", window.visualViewport.height + "px");
+    };
+    window.visualViewport.addEventListener("resize", syncViewport);
+    window.visualViewport.addEventListener("scroll", syncViewport);
+    syncViewport();
+  }
+  input.addEventListener("focus", () => {
+    setTimeout(keepChatLatest, 180);
+  });
+  window.addEventListener("resize", keepChatLatest);
+
   if (resetBtn) resetBtn.addEventListener("click", reset);
+  const exportBtn = $("aiExport");
+  if (exportBtn) exportBtn.addEventListener("click", exportChat);
   if (search) search.addEventListener("input", () => renderTopics(search.value));
 
   chat.addEventListener("click", (event) => {
@@ -705,5 +811,9 @@
   if (count) count.textContent = generatedScenarioCount.toLocaleString() + " troubleshooting scenarios";
   renderTopics();
   renderQuick();
-  reset();
+  if (!restoreChat()) reset();
 })();
+
+function escapeHtml(value) {
+  return String(value).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+}
