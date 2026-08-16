@@ -199,43 +199,82 @@
   }
 
   function exportChat() {
-  const nodes = Array.from(chat.querySelectorAll(".ai-msg"));
-  const now = new Date();
-  const stamp = now.toLocaleString();
+    const nodes = Array.from(chat.querySelectorAll('.ai-msg'));
+    if (!nodes.length) {
+      alert('Start a conversation before downloading the chat PDF.');
+      return;
+    }
+    if (!window.jspdf || typeof window.jspdf.jsPDF !== 'function') {
+      alert('The PDF engine could not load. Please check your internet connection and try again.');
+      return;
+    }
 
-  const transcript = nodes.length ? nodes.map((el) => {
-    const role = el.classList.contains("user") ? "YOU" : "IT SUPPORT AI ASSISTANT";
-    const bubble = el.querySelector(".ai-bubble");
-    const text = bubble ? (bubble.innerText || bubble.textContent || "").trim() : (el.innerText || "").trim();
-    return `<section class="pdf-message ${role === "YOU" ? "pdf-user" : "pdf-ai"}">
-      <div class="pdf-role">${role}</div><div class="pdf-text">${escapeHtml(text)}</div>
-    </section>`;
-  }).filter(Boolean).join("") : `<section class="pdf-message pdf-ai"><div class="pdf-role">IT SUPPORT AI ASSISTANT</div><div class="pdf-text">No conversation has been recorded yet.</div></section>`;
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit: 'mm', format: 'a4', compress: true });
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    const margin = 15;
+    const contentW = pageW - margin * 2;
+    let y = margin;
+    const stamp = new Date().toLocaleString();
 
-  const popup = window.open("", "_blank");
-  if (!popup) { alert("Please allow pop-ups to create the PDF."); return; }
+    doc.setProperties({
+      title: 'IT Support AI Assistant — Chat Report',
+      subject: 'Stage 1 IT Support troubleshooting conversation',
+      author: 'Muhammad Arsalan Portfolio',
+      creator: 'Muhammad Arsalan Portfolio'
+    });
 
-  popup.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>IT Support AI Assistant — Chat Report</title>
-<style>
-@page{size:A4;margin:15mm}*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;color:#17202a}
-.header{padding:24px 26px;border-radius:14px;background:linear-gradient(135deg,#10212b,#1d5568);color:#fff}
-.eyebrow{font-size:10px;letter-spacing:2px;text-transform:uppercase;opacity:.8}h1{margin:7px 0 4px;font-size:24px}
-.subtitle{font-size:12px;opacity:.9}.meta{margin-top:15px;padding-top:11px;border-top:1px solid rgba(255,255,255,.25);font-size:10px;line-height:1.7}
-.intro{margin:16px 0;padding:12px 14px;background:#f3f7f9;border-left:4px solid #2e8ba8;border-radius:7px;font-size:11px;line-height:1.6}
-.pdf-message{margin:11px 0;padding:12px 14px;border-radius:9px;page-break-inside:avoid}
-.pdf-user{background:#edf6fa;border-left:4px solid #2e8ba8}.pdf-ai{background:#f7f7f7;border-left:4px solid #6c7880}
-.pdf-role{font-size:8px;font-weight:700;letter-spacing:1.1px;margin-bottom:6px;color:#48606a}.pdf-text{white-space:pre-wrap;font-size:10.5px;line-height:1.6}
-.footer{margin-top:20px;padding-top:9px;border-top:1px solid #d8e0e4;color:#6b7479;font-size:8.5px;line-height:1.6}
-</style></head><body>
-<header class="header"><div class="eyebrow">Technical Support Record</div><h1>IT Support AI Assistant</h1>
-<div class="subtitle">AI-assisted Stage 1 IT troubleshooting conversation</div>
-<div class="meta"><strong>Website:</strong> Muhammad Arsalan Portfolio<br><strong>URL:</strong> ${escapeHtml(location.href)}<br><strong>Generated:</strong> ${escapeHtml(stamp)}<br><strong>Messages:</strong> ${nodes.length}</div></header>
-<div class="intro">A formatted record of this troubleshooting session. The assistant uses the current Stage 1 knowledge base and the evidence provided during the conversation.</div>
-${transcript}
-<footer class="footer">Muhammad Arsalan Portfolio · IT Support AI Assistant · Browser-generated report<br>This report is generated locally. Conversation data is not sent to a server.</footer>
-</body></html>`);
-  popup.document.close(); popup.focus(); setTimeout(() => popup.print(), 350);
-}
+    function newPageIfNeeded(height) {
+      if (y + height > pageH - 17) { doc.addPage(); y = margin; return true; }
+      return false;
+    }
+    function addHeader() {
+      doc.setFillColor(16,33,43); doc.roundedRect(margin,y,contentW,38,4,4,'F');
+      doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(8);
+      doc.text('TECHNICAL SUPPORT RECORD', margin+7, y+8);
+      doc.setFontSize(20); doc.text('IT Support AI Assistant', margin+7, y+18);
+      doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.text('AI-assisted Stage 1 IT troubleshooting conversation', margin+7, y+25);
+      doc.setDrawColor(75,125,145); doc.line(margin+7,y+28,margin+contentW-7,y+28);
+      doc.setFontSize(7.5); doc.text('Muhammad Arsalan Portfolio  •  ' + stamp, margin+7, y+34);
+      y += 46;
+    }
+    function footer(pageNumber) {
+      doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(105,116,122);
+      doc.line(margin,pageH-12,pageW-margin,pageH-12);
+      doc.text('Muhammad Arsalan Portfolio  •  IT Support AI Assistant  •  Browser-generated report', margin, pageH-7);
+      doc.text(String(pageNumber), pageW-margin, pageH-7, {align:'right'});
+    }
+
+    addHeader();
+    doc.setFillColor(242,247,249); doc.roundedRect(margin,y,contentW,20,3,3,'F');
+    doc.setTextColor(55,70,78); doc.setFont('helvetica','normal'); doc.setFontSize(8.5);
+    doc.text('Website: ' + location.href, margin+6, y+8);
+    doc.text('Messages: ' + nodes.length + '   •   Generated: ' + stamp, margin+6, y+14);
+    y += 27;
+
+    nodes.forEach((el, index) => {
+      const isUser = el.classList.contains('user');
+      const role = isUser ? 'YOU' : 'IT SUPPORT AI ASSISTANT';
+      const bubble = el.querySelector('.ai-bubble');
+      const text = (bubble ? bubble.innerText : el.innerText || '').replace(/\u00a0/g,' ').trim();
+      const lines = doc.splitTextToSize(text || '—', contentW-14);
+      const boxH = Math.max(18, lines.length*4.5 + 14);
+      if (newPageIfNeeded(boxH+8)) addHeader();
+      doc.setFillColor(isUser ? 237 : 247, isUser ? 246 : 247, isUser ? 250 : 247);
+      doc.setDrawColor(isUser ? 46 : 108, isUser ? 139 : 120, isUser ? 168 : 128);
+      doc.roundedRect(margin,y,contentW,boxH,3,3,'FD');
+      doc.setTextColor(isUser ? 46 : 72, isUser ? 94 : 83, isUser ? 108 : 90);
+      doc.setFont('helvetica','bold'); doc.setFontSize(7.5); doc.text(role,margin+6,y+7);
+      doc.setTextColor(30,35,38); doc.setFont('helvetica','normal'); doc.setFontSize(9);
+      doc.text(lines,margin+6,y+14,{lineHeightFactor:1.35});
+      y += boxH + 8;
+    });
+    const pages = doc.getNumberOfPages();
+    for(let page=1;page<=pages;page++){ doc.setPage(page); footer(page); }
+    const date = new Date().toISOString().slice(0,10);
+    doc.save('Muhammad-Arsalan-IT-Support-Chat-' + date + '.pdf');
+  }
 
   /* =======================================================
      STEP 4 — INTENT DETECTION

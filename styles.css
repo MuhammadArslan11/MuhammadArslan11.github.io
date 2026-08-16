@@ -1267,3 +1267,52 @@ footer{
   .ai-topic,.ai-quick button,.ai-follow button,.ai-reset,.ai-copy,
   .ai-composer button{touch-action:manipulation}
 }
+
+
+/* =========================================================
+   V3.9.3 — FINAL THEME STABILITY / GITHUB PAGES
+   Single source of truth for the final cascade.
+   ========================================================= */
+html{background:var(--theme-bg,var(--bg));}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --theme-bg:#0b0d0c;--theme-surface:#111512;--theme-surface-2:#151a16;
+  --theme-text:#eeeae0;--theme-muted:#92998f;--theme-faint:#5e665e;
+  --theme-line:#2a302b;--theme-accent:#9cad91;--theme-accent-2:#c9ae78;
+  --theme-grid:rgba(255,255,255,.07);--theme-shadow:rgba(0,0,0,.28);
+  --control-bg:#161b17;--control-border:#526057;--control-text:#e7ebe4;
+  --panel-bg:#111713;--panel-border:#465149;--panel-text:#e8ece5;
+}
+html[data-theme="light"]{
+  color-scheme:light;
+  --theme-bg:#f5f4ef;--theme-surface:#ffffff;--theme-surface-2:#eeeee8;
+  --theme-text:#171a17;--theme-muted:#5f665f;--theme-faint:#7c837c;
+  --theme-line:#d7d9d2;--theme-accent:#48644d;--theme-accent-2:#876a32;
+  --theme-grid:rgba(20,30,20,.08);--theme-shadow:rgba(25,30,25,.12);
+  --control-bg:#ffffff;--control-border:#a6afa7;--control-text:#172019;
+  --panel-bg:#ffffff;--panel-border:#c2cbc3;--panel-text:#18211b;
+}
+body,.topbar,.section,.network,footer,.panel,.systems,.terminal,.edu-grid>div,
+.network-rack .rack-head,.network-rack .rack-body,.rack-unit,.panel aside{
+  background-color:var(--theme-bg);color:var(--theme-text);
+  border-color:var(--theme-line);
+}
+.topbar{background:color-mix(in srgb,var(--theme-bg) 92%,transparent);}
+.systems,.skill-grid .secondary{background:var(--theme-surface-2);}
+.terminal{background:var(--theme-surface);}
+.panel aside{background:var(--panel-bg);color:var(--panel-text);}
+.panel-backdrop{background:color-mix(in srgb,var(--theme-bg) 88%,#000);}
+.section,.section *{border-color:var(--theme-line);}
+.hero h1,.section h2,.timeline h3,.skill-grid h3,.achievement-grid h3,.edu-grid h3,
+.panel-title,.panel-exp h3,.panel-row div,.contact-links a{color:var(--theme-text);}
+.lead,.intro p,.intro .large,.timeline p,.skill-grid p,.achievement-grid p,.edu-grid p,
+.contact-inner>p,.ai-copy,.panel-sub,.panel-exp p,.panel-row div{color:var(--theme-muted);}
+.eyebrow,.section-no,.section-head,.date,.skill-grid span,.achievement-grid span,.edu-grid span,
+.panel-kicker,.panel-row b,.panel-exp small{color:var(--theme-accent-2);}
+.node,.node strong{color:var(--theme-text);background:transparent;}
+.node span,.node small,.network-label,.hero-meta,.trace-hint{color:var(--theme-muted);}
+.node:before{background:var(--theme-bg);border-color:var(--theme-muted);}
+.button,.text-button,#mapToggle,#panelClose,.theme-toggle{color:var(--control-text);background:var(--control-bg);border-color:var(--control-border);}
+.button.primary{color:#fff;background:var(--theme-accent);border-color:var(--theme-accent);}
+.button.secondary{color:var(--theme-accent-2);background:var(--theme-bg);border-color:var(--theme-accent-2);}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important;}}

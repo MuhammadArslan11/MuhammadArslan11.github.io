@@ -12,8 +12,8 @@
 
 
 <script>(function(){try{var t=localStorage.getItem("portfolio-theme");if(!t&&window.matchMedia)t=window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";document.documentElement.setAttribute("data-theme",t==="light"?"light":"dark")}catch(e){document.documentElement.setAttribute("data-theme","dark")}})();</script>
-<link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="ai-support.css">
+<link rel="stylesheet" href="styles.css?v=3.9.3">
+  <link rel="stylesheet" href="ai-support.css?v=3.9.3">
 <style>.ai-nav-link{white-space:nowrap}</style></head>
 <body>
 <div class="loader" id="loader"><div><span class="loader-name">MUHAMMAD ARSALAN</span><span class="loader-status">INITIALIZING PORTFOLIO</span><div class="loader-line"><i></i></div></div></div>
@@ -179,7 +179,7 @@
 </div>
 
 <footer><span>MUHAMMAD ARSALAN</span><span>STATIC PORTFOLIO / GITHUB PAGES</span></footer>
-<script src="script.js"></script>
+<script src="script.js?v=3.9.3"></script>
 
 <!-- V3.5 AI IT SUPPORT ASSISTANT — STAGE 1 PROFESSIONAL -->
 <!-- AI IT SUPPORT — STEP 1: UI / STEP 2: CHAT / STEP 3: ROADMAP -->
@@ -215,7 +215,7 @@
       <main class="ai-panel ai-chat-panel">
         <div class="ai-chat-top">
           <div><strong>AI SUPPORT ENGINE</strong><span>Structured IT troubleshooting</span></div>
-          <button id="aiExport" class="ai-reset" type="button" class="ai-export-btn" aria-label="Download chat as PDF">DOWNLOAD PDF</button><button id="aiReset" class="ai-reset" type="button">New issue</button>
+          <button id="aiExport" class="ai-reset ai-export-btn" type="button" aria-label="Download chat as PDF">DOWNLOAD PDF</button><button id="aiReset" class="ai-reset" type="button">New issue</button>
         </div>
 
         <div id="aiChat" class="ai-chat" aria-live="polite"></div>
@@ -261,4 +261,5 @@
 </section>
 
 
-<script src="ai-support.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@4.2.1/dist/jspdf.umd.min.js" defer></script>
+<script src="ai-support.js?v=3.9.3" defer></script>

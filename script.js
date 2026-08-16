@@ -1,3 +1,6 @@
+/* V3.9.3 — Theme boot: run before other UI work and never let theme errors break the site. */
+(function(){try{var r=document.documentElement,s=localStorage.getItem("portfolio-theme"),m=window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches;var t=s==="light"||s==="dark"?s:(m?"light":"dark");r.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();
+
 const data={
 about:{label:"01 / IDENTITY",title:"Muhammad<br><em>Arsalan.</em>",sub:"IT Support professional with a Master's in Computer Science and hands-on experience across technical support, systems, documentation and aviation operations.",rows:[["FOCUS","IT SUPPORT / OPERATIONS / AI"],["EDUCATION","Master's in Computer Science"],["APPROACH","TROUBLESHOOT → RESOLVE → DOCUMENT"],["LOCATION","SAUDI ARABIA"]]},
 experience:{label:"02 / EXPERIENCE",title:"Career<br><em>path.</em>",sub:"Technical support, education and aviation documentation have each added a different layer to my professional toolkit.",exp:[["JAN 2025 — PRESENT","Technical Data Officer","Alpha Star Aviation Services","Technical logs, work orders, aircraft documentation, flight hours/cycles, planning coordination, CAMP and TRAX."],["DEC 2023 — JUN 2024","IT Support Officer","Technic Mentor Soft Solution","Level 1/2 support, Windows/macOS, Active Directory, Microsoft 365, hardware/software, printers, Windows Server, DNS, DHCP, VPN and remote support."],["DEC 2022 — SEP 2023","ICT Teacher","The City School — Paragon Campus","Technology education, Microsoft Office, HTML/CSS basics and practical user guidance."],["JAN 2021 — NOV 2022","ICT Teacher","IISAT","ICT teaching, classroom technology and academic technology support."],["2018 — 2020","Web & Graphic Designer","Applitectures","Design projects plus HTML, CSS, JavaScript, React and Adobe tools."]]},
@@ -22,11 +25,11 @@ function openNode(key){
 }
 function closePanel(){panel.classList.remove("open");panel.setAttribute("aria-hidden","true");document.body.style.overflow="";document.querySelectorAll(".node").forEach(n=>n.classList.remove("active"));if(lastTrigger && typeof lastTrigger.focus==="function")lastTrigger.focus();}
 document.querySelectorAll("[data-node]").forEach(el=>el.addEventListener("click",()=>openNode(el.dataset.node)));
-document.getElementById("panelClose").addEventListener("click",closePanel);
-document.getElementById("panelBackdrop").addEventListener("click",closePanel);
+document.getElementById("panelClose")?.addEventListener("click",closePanel);
+document.getElementById("panelBackdrop")?.addEventListener("click",closePanel);
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closePanel()});
-document.getElementById("traceBtn").addEventListener("click",()=>document.getElementById("network").scrollIntoView({behavior:"smooth",block:"center"}));
-document.getElementById("mapToggle").addEventListener("click",()=>document.getElementById("network").scrollIntoView({behavior:"smooth",block:"center"}));
+document.getElementById("traceBtn")?.addEventListener("click",()=>document.getElementById("network")?.scrollIntoView({behavior:"smooth",block:"center"}));
+document.getElementById("mapToggle")?.addEventListener("click",()=>document.getElementById("network")?.scrollIntoView({behavior:"smooth",block:"center"}));
 setTimeout(()=>document.getElementById("loader").classList.add("done"),1600);
 
 
