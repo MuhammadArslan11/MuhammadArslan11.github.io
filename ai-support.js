@@ -1,6 +1,6 @@
 /* =========================================================
    AI IT SUPPORT ASSISTANT
-   V3.9 — INTELLIGENCE / RELEVANCE / LOCAL CHAT STORAGE SPRINT
+   V4.0 — STABLE / CONTEXT-AWARE / LOCAL CHAT + PDF
 
    STAGE 1 — Evidence-based conversational diagnostic engine
    Static GitHub Pages implementation; no external AI API.
@@ -144,7 +144,7 @@
      PERSISTENT STATIC CHAT LOG
      GitHub Pages cannot write a server-side file, so the assistant
      stores session history locally in the visitor's browser.
-     The same JSON can also be exported by the user.
+     Chat state is stored locally so troubleshooting can continue after refresh.
      ======================================================= */
   const CHAT_STORE_KEY = "muhammadArsalanAiSupportChatV1";
 
@@ -199,81 +199,190 @@
   }
 
   function exportChat() {
-    const nodes = Array.from(chat.querySelectorAll('.ai-msg'));
+    const nodes = Array.from(chat.querySelectorAll(".ai-msg")).filter((el) => !el.querySelector(".ai-typing"));
     if (!nodes.length) {
-      alert('Start a conversation before downloading the chat PDF.');
-      return;
-    }
-    if (!window.jspdf || typeof window.jspdf.jsPDF !== 'function') {
-      alert('The PDF engine could not load. Please check your internet connection and try again.');
+      alert("Start a conversation before downloading the chat PDF.");
       return;
     }
 
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({ unit: 'mm', format: 'a4', compress: true });
-    const pageW = doc.internal.pageSize.getWidth();
-    const pageH = doc.internal.pageSize.getHeight();
-    const margin = 15;
-    const contentW = pageW - margin * 2;
-    let y = margin;
-    const stamp = new Date().toLocaleString();
-
-    doc.setProperties({
-      title: 'IT Support AI Assistant — Chat Report',
-      subject: 'Stage 1 IT Support troubleshooting conversation',
-      author: 'Muhammad Arsalan Portfolio',
-      creator: 'Muhammad Arsalan Portfolio'
-    });
-
-    function newPageIfNeeded(height) {
-      if (y + height > pageH - 17) { doc.addPage(); y = margin; return true; }
-      return false;
-    }
-    function addHeader() {
-      doc.setFillColor(16,33,43); doc.roundedRect(margin,y,contentW,38,4,4,'F');
-      doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(8);
-      doc.text('TECHNICAL SUPPORT RECORD', margin+7, y+8);
-      doc.setFontSize(20); doc.text('IT Support AI Assistant', margin+7, y+18);
-      doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.text('AI-assisted Stage 1 IT troubleshooting conversation', margin+7, y+25);
-      doc.setDrawColor(75,125,145); doc.line(margin+7,y+28,margin+contentW-7,y+28);
-      doc.setFontSize(7.5); doc.text('Muhammad Arsalan Portfolio  •  ' + stamp, margin+7, y+34);
-      y += 46;
-    }
-    function footer(pageNumber) {
-      doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(105,116,122);
-      doc.line(margin,pageH-12,pageW-margin,pageH-12);
-      doc.text('Muhammad Arsalan Portfolio  •  IT Support AI Assistant  •  Browser-generated report', margin, pageH-7);
-      doc.text(String(pageNumber), pageW-margin, pageH-7, {align:'right'});
+    const exportBtn = $("aiExport");
+    const originalLabel = exportBtn ? exportBtn.textContent : "";
+    if (exportBtn) {
+      exportBtn.disabled = true;
+      exportBtn.textContent = "PREPARING...";
     }
 
-    addHeader();
-    doc.setFillColor(242,247,249); doc.roundedRect(margin,y,contentW,20,3,3,'F');
-    doc.setTextColor(55,70,78); doc.setFont('helvetica','normal'); doc.setFontSize(8.5);
-    doc.text('Website: ' + location.href, margin+6, y+8);
-    doc.text('Messages: ' + nodes.length + '   •   Generated: ' + stamp, margin+6, y+14);
-    y += 27;
+    const transcript = nodes.map((el) => {
+      const isUser = el.classList.contains("user");
+      const bubble = el.querySelector(".ai-bubble");
+      return {
+        isUser,
+        role: isUser ? "YOU" : "IT SUPPORT AI ASSISTANT",
+        text: (bubble ? bubble.innerText : el.innerText || "").replace(/\u00a0/g, " ").trim()
+      };
+    }).filter((item) => item.text);
 
-    nodes.forEach((el, index) => {
-      const isUser = el.classList.contains('user');
-      const role = isUser ? 'YOU' : 'IT SUPPORT AI ASSISTANT';
-      const bubble = el.querySelector('.ai-bubble');
-      const text = (bubble ? bubble.innerText : el.innerText || '').replace(/\u00a0/g,' ').trim();
-      const lines = doc.splitTextToSize(text || '—', contentW-14);
-      const boxH = Math.max(18, lines.length*4.5 + 14);
-      if (newPageIfNeeded(boxH+8)) addHeader();
-      doc.setFillColor(isUser ? 237 : 247, isUser ? 246 : 247, isUser ? 250 : 247);
-      doc.setDrawColor(isUser ? 46 : 108, isUser ? 139 : 120, isUser ? 168 : 128);
-      doc.roundedRect(margin,y,contentW,boxH,3,3,'FD');
-      doc.setTextColor(isUser ? 46 : 72, isUser ? 94 : 83, isUser ? 108 : 90);
-      doc.setFont('helvetica','bold'); doc.setFontSize(7.5); doc.text(role,margin+6,y+7);
-      doc.setTextColor(30,35,38); doc.setFont('helvetica','normal'); doc.setFontSize(9);
-      doc.text(lines,margin+6,y+14,{lineHeightFactor:1.35});
-      y += boxH + 8;
-    });
-    const pages = doc.getNumberOfPages();
-    for(let page=1;page<=pages;page++){ doc.setPage(page); footer(page); }
-    const date = new Date().toISOString().slice(0,10);
-    doc.save('Muhammad-Arsalan-IT-Support-Chat-' + date + '.pdf');
+    function finishExport() {
+      if (exportBtn) {
+        exportBtn.disabled = false;
+        exportBtn.textContent = originalLabel || "DOWNLOAD PDF";
+      }
+    }
+
+    function printableFallback() {
+      const stamp = new Date().toLocaleString();
+      const rows = transcript.map((item) =>
+        '<section class="msg ' + (item.isUser ? "user" : "ai") + '"><b>' +
+        esc(item.role) + '</b><div>' + esc(item.text).replace(/\n/g, "<br>") + '</div></section>'
+      ).join("");
+
+      const popup = window.open("", "_blank");
+      if (!popup) {
+        alert("The PDF engine is unavailable and the print window was blocked. Allow pop-ups and try again.");
+        finishExport();
+        return;
+      }
+      popup.document.write('<!doctype html><html><head><meta charset="utf-8"><title>IT Support AI Assistant — Chat Report</title><style>' +
+        '@page{size:A4;margin:15mm}*{box-sizing:border-box}body{font-family:Arial,sans-serif;color:#17202a;margin:0}' +
+        '.head{background:#10212b;color:#fff;padding:22px;border-radius:12px}.head h1{margin:5px 0;font-size:24px}' +
+        '.meta{font-size:11px;line-height:1.6;opacity:.9}.msg{margin:12px 0;padding:12px 14px;border-radius:9px;page-break-inside:avoid}' +
+        '.msg b{font-size:9px;letter-spacing:1px}.msg div{font-size:11px;line-height:1.55;margin-top:6px;white-space:normal}' +
+        '.user{background:#edf6fa;border-left:4px solid #2e8ba8}.ai{background:#f5f5f5;border-left:4px solid #6c7880}' +
+        '.foot{margin-top:20px;border-top:1px solid #ccd3d6;padding-top:8px;font-size:9px;color:#6b7479}' +
+        '</style></head><body><header class="head"><small>TECHNICAL SUPPORT RECORD</small><h1>IT Support AI Assistant</h1>' +
+        '<div class="meta">Muhammad Arsalan Portfolio<br>' + esc(location.href) + '<br>Generated: ' + esc(stamp) +
+        '<br>Messages: ' + transcript.length + '</div></header>' + rows +
+        '<div class="foot">Muhammad Arsalan Portfolio · Browser-generated troubleshooting report</div></body></html>');
+      popup.document.close();
+      popup.focus();
+      window.setTimeout(() => {
+        popup.print();
+        finishExport();
+      }, 300);
+    }
+
+    try {
+      if (!window.jspdf || typeof window.jspdf.jsPDF !== "function") {
+        printableFallback();
+        return;
+      }
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit: "mm", format: "a4", compress: true });
+      const pageW = doc.internal.pageSize.getWidth();
+      const pageH = doc.internal.pageSize.getHeight();
+      const margin = 15;
+      const contentW = pageW - margin * 2;
+      const footerY = pageH - 7;
+      const bottomLimit = pageH - 18;
+      const stamp = new Date().toLocaleString();
+      let y = margin;
+
+      doc.setProperties({
+        title: "IT Support AI Assistant — Chat Report",
+        subject: "Stage 1 IT Support troubleshooting conversation",
+        author: "Muhammad Arsalan Portfolio",
+        creator: "Muhammad Arsalan Portfolio"
+      });
+
+      function header() {
+        doc.setFillColor(16, 33, 43);
+        doc.roundedRect(margin, y, contentW, 38, 4, 4, "F");
+        doc.setTextColor(255, 255, 255);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(8);
+        doc.text("TECHNICAL SUPPORT RECORD", margin + 7, y + 8);
+        doc.setFontSize(20);
+        doc.text("IT Support AI Assistant", margin + 7, y + 18);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8.5);
+        doc.text("Muhammad Arsalan Portfolio", margin + 7, y + 25);
+        doc.setFontSize(7.2);
+        doc.text("Generated: " + stamp + "   |   Messages: " + transcript.length, margin + 7, y + 33);
+        y += 45;
+
+        doc.setFillColor(242, 247, 249);
+        const urlLines = doc.splitTextToSize("Website: " + location.href, contentW - 12);
+        const metaH = Math.max(13, urlLines.length * 4 + 7);
+        doc.roundedRect(margin, y, contentW, metaH, 3, 3, "F");
+        doc.setTextColor(55, 70, 78);
+        doc.setFontSize(7.5);
+        doc.text(urlLines, margin + 6, y + 7);
+        y += metaH + 7;
+      }
+
+      function nextPage() {
+        doc.addPage();
+        y = margin;
+        header();
+      }
+
+      header();
+
+      transcript.forEach((item) => {
+        const role = item.role;
+        const allLines = doc.splitTextToSize(item.text || "—", contentW - 14);
+        let offset = 0;
+
+        while (offset < allLines.length) {
+          const available = bottomLimit - y;
+          const maxLines = Math.max(1, Math.floor((available - 16) / 4.6));
+          if (maxLines < 2) {
+            nextPage();
+            continue;
+          }
+
+          const lines = allLines.slice(offset, offset + maxLines);
+          const boxH = Math.max(18, lines.length * 4.6 + 14);
+
+          if (y + boxH > bottomLimit) {
+            nextPage();
+            continue;
+          }
+
+          if (item.isUser) {
+            doc.setFillColor(237, 246, 250);
+            doc.setDrawColor(46, 139, 168);
+          } else {
+            doc.setFillColor(247, 247, 247);
+            doc.setDrawColor(108, 120, 128);
+          }
+
+          doc.roundedRect(margin, y, contentW, boxH, 3, 3, "FD");
+          doc.setTextColor(72, 83, 90);
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(7.5);
+          doc.text(role, margin + 6, y + 7);
+
+          doc.setTextColor(30, 35, 38);
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(9);
+          doc.text(lines, margin + 6, y + 14, { lineHeightFactor: 1.35 });
+
+          y += boxH + 7;
+          offset += lines.length;
+        }
+      });
+
+      const pages = doc.getNumberOfPages();
+      for (let page = 1; page <= pages; page++) {
+        doc.setPage(page);
+        doc.setDrawColor(210, 216, 219);
+        doc.line(margin, pageH - 12, pageW - margin, pageH - 12);
+        doc.setTextColor(105, 116, 122);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(7);
+        doc.text("Muhammad Arsalan Portfolio  •  IT Support AI Assistant", margin, footerY);
+        doc.text("Page " + page + " / " + pages, pageW - margin, footerY, { align: "right" });
+      }
+
+      const date = new Date().toISOString().slice(0, 10);
+      doc.save("Muhammad-Arsalan-IT-Support-Chat-" + date + ".pdf");
+      finishExport();
+    } catch (error) {
+      console.error("AI Support PDF export failed:", error);
+      printableFallback();
+    }
   }
 
   /* =======================================================
@@ -350,7 +459,7 @@
   }
 
   function wait() {
-    return add("ai", '<span class="ai-typing">Analyzing your information <i></i><i></i><i></i></span>');
+    return add("ai", '<span class="ai-typing">Analyzing your information <i></i><i></i><i></i></span>', false);
   }
 
   function choices(items) {
@@ -376,10 +485,11 @@
   function setState(phase, step) {
     state.phase = phase;
     state.step = step || 0;
+    persistChat();
   }
 
   function greeting() {
-    add("ai", '<p><b>IT Support AI Assistant — Stage 1.</b></p><p>Describe the IT problem, the exact error/message, and what you already tested. I’ll stay within the current knowledge base, use the evidence you provide, and avoid unrelated troubleshooting.</p><p><b>What is not working?</b></p>');
+    add("ai", '<p><b>IT Support AI Assistant</b></p><p>Describe the problem or paste the exact error. I’ll troubleshoot it step-by-step and stay inside the current Stage 1 knowledge base.</p>');
   }
 
   function outOfScope() {
@@ -626,12 +736,26 @@
       setState("verify", 4); prog(4); return true;
     }
     if (state.phase === "verify") {
-      if (/yes|works|resolved|fixed|successful/.test(t) && !/not|no/.test(t)) { resolve(); return true; }
-      add("ai", '<p>The issue is not resolved yet. I will not close the diagnosis without verification.</p><p>Tell me the exact result/error from the last check and I’ll choose the next evidence point.</p>');
+      if (/yes|works|resolved|fixed|successful/.test(t) && !/not|no|still/.test(t)) { resolve(); return true; }
+      if (/^no\b|still|not resolved|not fixed|doesn.?t work|does not work|fails?|failed/.test(t)) {
+        add("ai", '<p><b>The issue is still present.</b> I’ll keep the current diagnostic context instead of starting over.</p><p>Send the exact result or error from the last check so I can choose the next evidence point.</p>');
+        return true;
+      }
+      add("ai", '<p>Tell me whether the original problem now works. If not, include the exact result or error from the last check.</p>');
       return true;
     }
     if (state.phase === "generic-evidence" || state.phase === "login-evidence" || state.phase === "performance-evidence") {
-      add("ai", '<p>Thanks — that result is now part of the diagnostic evidence.</p><p>I need the exact value/error rather than a generic “failed” response. Paste the result (remove passwords, tokens and sensitive company data), and I’ll interpret it before recommending the next step.</p>');
+      const hasFailure = /fail|failed|failure|timeout|timed out|no reply|no response|offline|error|denied|cannot|can't|not working/.test(t);
+      const hasSuccess = /works|working|success|successful|reply|connected|resolved|fixed/.test(t) && !/not|no|fail/.test(t);
+      if (hasFailure) {
+        add("ai", '<p><b>That check failed.</b> I’ve kept it as diagnostic evidence for <b>' + esc(state.domain || "this issue") + '</b>.</p><p>Send the exact error, code, or command output from that failed check. I’ll use that result before choosing the next action.</p>');
+      } else if (hasSuccess) {
+        add("ai", '<p><b>That check succeeded.</b> Now test the original problem again and tell me whether it is resolved.</p>' + choices(["Original problem is resolved", "Original problem still happens"]));
+        setState("verify", 4);
+        prog(4);
+      } else {
+        add("ai", '<p>Thanks. Paste the exact value, error, or command result from the last check (remove passwords, tokens, and sensitive company data). I’ll interpret that evidence before recommending the next step.</p>');
+      }
       return true;
     }
     return false;
@@ -639,8 +763,10 @@
 
   function resolve() {
     state.phase = "resolved";
+    state.step = 4;
     prog(4);
-    add("ai", '<p><b>Good — the original problem appears resolved.</b></p><p>Before closing a real help-desk ticket, verify the original user action one final time and document the symptom, evidence, root cause, fix and verification result.</p>');
+    add("ai", '<p><b>Resolved.</b> Verify the original user action once more. In a real support ticket, document the symptom, evidence, fix, and verification result.</p>');
+    persistChat();
   }
 
   function relevantSupportMatch(text) {
@@ -650,7 +776,7 @@
   }
 
   function focusedUnknown(text) {
-    add("ai", '<p><b>I need a more specific IT symptom.</b></p><p>Please include the affected system/device, what is failing, and the exact error or result if available. I’ll keep the response limited to the Stage 1 knowledge base instead of guessing or introducing unrelated solutions.</p>');
+    add("ai", '<p><b>I need one IT symptom to continue.</b></p><p>Tell me the device or service and what is failing — for example, “Wi-Fi connected but websites do not open” or “printer shows Offline.”</p>');
   }
 
   /* =======================================================
@@ -697,7 +823,11 @@
         }
 
         if (intent === "ACKNOWLEDGEMENT") {
-          add("ai", '<p>You’re welcome' +  + '. If the issue is still present, send me the latest result and I’ll continue from the current diagnostic state.</p>');
+          if (state.phase !== "idle" && state.phase !== "resolved") {
+            add("ai", '<p>Okay. Send me the result of the last check and I’ll continue from the same troubleshooting step.</p>');
+          } else {
+            add("ai", '<p>You’re welcome. Describe another IT problem whenever you’re ready.</p>');
+          }
           return;
         }
 
@@ -740,6 +870,7 @@
      STEP 10 — SIDEBAR / SEARCH
      ======================================================= */
   function renderTopics(query) {
+    if (!topics) return;
     const q = normalize(query);
     topics.innerHTML = "";
     TOPICS.filter(([domain, phrases]) => !q || normalize(domain).includes(q) || phrases.some((p) => normalize(p).includes(q))).forEach(([domain]) => {
@@ -846,8 +977,7 @@
   /* =======================================================
      STEP 13 — INITIALIZATION / QA METRICS
      ======================================================= */
-  const generatedScenarioCount = TOPICS.length * 24;
-  if (count) count.textContent = generatedScenarioCount.toLocaleString() + " troubleshooting scenarios";
+  if (count) count.textContent = SCENARIOS.length + " core guided flows";
   renderTopics();
   renderQuick();
   if (!restoreChat()) reset();

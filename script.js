@@ -1,4 +1,4 @@
-/* V3.9.3 — Theme boot: run before other UI work and never let theme errors break the site. */
+/* V4.0 — Theme boot: run before other UI work and never let theme errors break the site. */
 (function(){try{var r=document.documentElement,s=localStorage.getItem("portfolio-theme"),m=window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches;var t=s==="light"||s==="dark"?s:(m?"light":"dark");r.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();
 
 const data={
@@ -34,38 +34,61 @@ setTimeout(()=>document.getElementById("loader").classList.add("done"),1600);
 
 
 /* =========================================================
-   GLOBAL THEME CONTROLLER — V3.5
+   GLOBAL THEME CONTROLLER — V4.0 STABLE
    ========================================================= */
 (function initTheme(){
-  const root=document.documentElement;
-  const toggle=document.getElementById("themeToggle");
-  const saved=localStorage.getItem("portfolio-theme");
-  const system=window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
-  const initial=saved==="light" || saved==="dark" ? saved : system;
+  const root = document.documentElement;
+  const toggle = document.getElementById("themeToggle");
 
-  function applyTheme(theme, persist){
-    const safeTheme=theme==="light" ? "light" : "dark";
-    root.setAttribute("data-theme",safeTheme);
-    if(persist) localStorage.setItem("portfolio-theme",safeTheme);
-    if(!toggle) return;
-    const isLight=safeTheme==="light";
-    toggle.setAttribute("aria-pressed",String(isLight));
-    toggle.setAttribute("aria-label",isLight ? "Switch to dark theme" : "Switch to light theme");
-    const icon=toggle.querySelector(".theme-icon");
-    const label=toggle.querySelector(".theme-label");
-    if(icon) icon.textContent=isLight ? "☀" : "☾";
-    if(label) label.textContent=isLight ? "Light" : "Dark";
+  function readSavedTheme(){
+    try {
+      const value = localStorage.getItem("portfolio-theme");
+      return value === "light" || value === "dark" ? value : "";
+    } catch (error) {
+      return "";
+    }
   }
 
-  applyTheme(initial,false);
-  if(toggle) toggle.addEventListener("click",()=>{
-    applyTheme(root.getAttribute("data-theme")==="dark" ? "light" : "dark",true);
-  });
+  function saveTheme(theme){
+    try { localStorage.setItem("portfolio-theme", theme); } catch (error) {}
+  }
 
-  if(!saved && window.matchMedia){
-    const media=window.matchMedia("(prefers-color-scheme: light)");
-    const sync=e=>applyTheme(e.matches ? "light" : "dark",false);
-    if(media.addEventListener) media.addEventListener("change",sync);
-    else if(media.addListener) media.addListener(sync);
+  function systemTheme(){
+    try {
+      return window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+    } catch (error) {
+      return "dark";
+    }
+  }
+
+  function applyTheme(theme, persist){
+    const safeTheme = theme === "light" ? "light" : "dark";
+    root.setAttribute("data-theme", safeTheme);
+    if (persist) saveTheme(safeTheme);
+
+    if (!toggle) return;
+    const isLight = safeTheme === "light";
+    toggle.setAttribute("aria-pressed", String(isLight));
+    toggle.setAttribute("aria-label", isLight ? "Switch to dark theme" : "Switch to light theme");
+    const icon = toggle.querySelector(".theme-icon");
+    const label = toggle.querySelector(".theme-label");
+    if (icon) icon.textContent = isLight ? "☀" : "☾";
+    if (label) label.textContent = isLight ? "Light" : "Dark";
+  }
+
+  const saved = readSavedTheme();
+  applyTheme(saved || systemTheme(), false);
+
+  if (toggle) {
+    toggle.addEventListener("click", () => {
+      applyTheme(root.getAttribute("data-theme") === "dark" ? "light" : "dark", true);
+    });
+  }
+
+  if (!saved && window.matchMedia) {
+    const media = window.matchMedia("(prefers-color-scheme: light)");
+    const sync = (event) => applyTheme(event.matches ? "light" : "dark", false);
+    if (media.addEventListener) media.addEventListener("change", sync);
+    else if (media.addListener) media.addListener(sync);
   }
 })();

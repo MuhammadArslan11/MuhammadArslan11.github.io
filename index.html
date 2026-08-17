@@ -12,8 +12,8 @@
 
 
 <script>(function(){try{var t=localStorage.getItem("portfolio-theme");if(!t&&window.matchMedia)t=window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";document.documentElement.setAttribute("data-theme",t==="light"?"light":"dark")}catch(e){document.documentElement.setAttribute("data-theme","dark")}})();</script>
-<link rel="stylesheet" href="styles.css?v=3.9.3">
-  <link rel="stylesheet" href="ai-support.css?v=3.9.3">
+<link rel="stylesheet" href="styles.css?v=4.0.0">
+  <link rel="stylesheet" href="ai-support.css?v=4.0.0">
 <style>.ai-nav-link{white-space:nowrap}</style></head>
 <body>
 <div class="loader" id="loader"><div><span class="loader-name">MUHAMMAD ARSALAN</span><span class="loader-status">INITIALIZING PORTFOLIO</span><div class="loader-line"><i></i></div></div></div>
@@ -26,7 +26,8 @@
     <a href="#achievements">Achievements</a>
     <a href="#contact">Contact</a>
   
-<a href="#ai-support" class="ai-nav-link">AI SUPPORT</a></nav>
+<a href="#ai-support" class="ai-nav-link">AI SUPPORT</a>
+<a href="academy.html" class="ai-nav-link">ACADEMY</a></nav>
   <div class="top-actions">
     <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch theme" aria-pressed="false"><span class="theme-icon" aria-hidden="true">☾</span><span class="theme-label">Dark</span></button>
     <button id="mapToggle">Network</button>
@@ -179,7 +180,7 @@
 </div>
 
 <footer><span>MUHAMMAD ARSALAN</span><span>STATIC PORTFOLIO / GITHUB PAGES</span></footer>
-<script src="script.js?v=3.9.3"></script>
+<script src="script.js?v=4.0.0"></script>
 
 <!-- V3.5 AI IT SUPPORT ASSISTANT — STAGE 1 PROFESSIONAL -->
 <!-- AI IT SUPPORT — STEP 1: UI / STEP 2: CHAT / STEP 3: ROADMAP -->
@@ -191,31 +192,23 @@
         <h2 id="ai-support-title">IT Support AI Assistant</h2>
         <p class="ai-lead">Describe an IT problem and the assistant will guide you through structured, practical troubleshooting.</p>
       </div>
-      <span class="ai-status"><i></i> PROTOTYPE ONLINE</span>
+      <span class="ai-status"><i></i> STAGE 1 • ONLINE</span>
     </div>
 
     <div class="ai-workspace">
       <aside class="ai-panel ai-sidebar">
         <div class="ai-panel-title">SUPPORTED TOPICS</div>
-        <div class="ai-topic-list" id="aiTopicList">
-          <button class="ai-topic active" data-topic="network">Network & Internet</button>
-          <button class="ai-topic" data-topic="dns">DNS</button>
-          <button class="ai-topic" data-topic="dhcp">DHCP / IP</button>
-          <button class="ai-topic" data-topic="windows">Windows</button>
-          <button class="ai-topic" data-topic="active-directory">Active Directory</button>
-          <button class="ai-topic" data-topic="account">Accounts & Login</button>
-          <button class="ai-topic" data-topic="printer">Printers</button>
-          <button class="ai-topic" data-topic="email">Email / Outlook</button>
-          <button class="ai-topic" data-topic="hardware">Hardware</button>
-          <button class="ai-topic" data-topic="software">Software</button>
-        </div>
-        <div class="ai-coverage"><b id="aiScenarioCount">1,152 troubleshooting scenarios</b><span>Daily IT support knowledge base</span></div>
+        <div class="ai-topic-list" id="aiTopicList"></div>
+        <div class="ai-coverage"><b id="aiScenarioCount">Stage 1 knowledge base</b><span>Focused IT support troubleshooting</span></div>
       </aside>
 
       <main class="ai-panel ai-chat-panel">
         <div class="ai-chat-top">
           <div><strong>AI SUPPORT ENGINE</strong><span>Structured IT troubleshooting</span></div>
-          <button id="aiExport" class="ai-reset ai-export-btn" type="button" aria-label="Download chat as PDF">DOWNLOAD PDF</button><button id="aiReset" class="ai-reset" type="button">New issue</button>
+          <div class="ai-chat-actions">
+            <button id="aiReset" class="ai-reset" type="button">NEW ISSUE</button>
+            <button id="aiExport" class="ai-reset ai-export-btn" type="button" aria-label="Download chat as PDF">DOWNLOAD PDF</button>
+          </div>
         </div>
 
         <div id="aiChat" class="ai-chat" aria-live="polite"></div>
@@ -236,30 +229,9 @@
         <div class="ai-disclaimer">Stage 1 prototype • Responses are based on the current IT support knowledge base.</div>
       </main>
     </div>
-
-    <div class="ai-roadmap" aria-label="AI assistant development roadmap">
-      <div class="ai-roadmap-head">
-        <div class="ai-panel-title">DEVELOPMENT ROADMAP</div>
-        <span class="ai-roadmap-status">STAGE 01 ACTIVE</span>
-      </div>
-      <div class="ai-roadmap-grid">
-        <div class="ai-stage current">
-          <b>01</b><strong>Foundation</strong>
-          <span>1,152 troubleshooting scenarios across 48 daily-support domains, with guided step-by-step troubleshooting.</span>
-        </div>
-        <div class="ai-stage planned">
-          <b>02</b><strong>Smart Diagnosis</strong>
-          <span>Deeper decision trees, evidence capture, ticket context and more adaptive questioning.</span>
-        </div>
-        <div class="ai-stage planned">
-          <b>03</b><strong>AI Automation</strong>
-          <span>Optional AI model/API integration, live checks, conversation history and workflow automation.</span>
-        </div>
-      </div>
-    </div>
   </div>
 </section>
 
 
-<script src="https://cdn.jsdelivr.net/npm/jspdf@4.2.1/dist/jspdf.umd.min.js" defer></script>
-<script src="ai-support.js?v=3.9.3" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@4.2.1/dist/jspdf.umd.min.js" defer onerror="document.documentElement.dataset.pdfEngine='fallback'"></script>
+<script src="ai-support.js?v=4.0.0" defer></script>

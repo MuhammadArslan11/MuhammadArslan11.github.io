@@ -1316,3 +1316,13 @@ body,.topbar,.section,.network,footer,.panel,.systems,.terminal,.edu-grid>div,
 .button.primary{color:#fff;background:var(--theme-accent);border-color:var(--theme-accent);}
 .button.secondary{color:var(--theme-accent-2);background:var(--theme-bg);border-color:var(--theme-accent-2);}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important;}}
+
+
+/* V4.0 — stable theme finishing layer */
+html[data-theme="dark"],html[data-theme="light"]{background:var(--theme-bg);}
+body,.topbar,.section,.panel aside,.ai-support-section{
+  transition:background-color .18s ease,color .18s ease,border-color .18s ease;
+}
+@media(prefers-reduced-motion:reduce){
+  body,.topbar,.section,.panel aside,.ai-support-section{transition:none!important;}
+}

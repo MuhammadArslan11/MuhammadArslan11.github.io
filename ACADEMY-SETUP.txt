@@ -1,0 +1,35 @@
+MUHAMMAD ARSALAN — PRIVATE IT SUPPORT ACADEMY
+================================================
+
+Open:
+  academy.html
+
+Default access key:
+  ARSALAN2026
+
+The Academy remains fully static and works on GitHub Pages. Learning progress,
+quiz scores, exam scores, and notes are saved only in the current browser using
+localStorage. Closing the browser tab locks the Academy session.
+
+IMPORTANT STATIC-WEBSITE LIMITATION
+This access screen is suitable for personal convenience and discouraging normal
+visitors. A static GitHub Pages site cannot provide server-level authentication.
+Do not store confidential, regulated, or sensitive company information in it.
+
+Files added:
+  academy.html
+  academy.css
+  academy.js
+
+Portfolio integration:
+  An ACADEMY link was added to the existing desktop navigation in index.html.
+
+Changing the key:
+  1. Generate the SHA-256 hash of the new key.
+  2. Open academy.js.
+  3. Replace the PASS_HASH value near the top of the file.
+  4. The plain-text fallback at the end of the digest function is used only in
+     old/non-secure browser contexts. Replace ARSALAN2026 there as well.
+
+Version:
+  Portfolio V4.1 — Private Academy
