@@ -31,5 +31,10 @@ Changing the key:
   4. The plain-text fallback at the end of the digest function is used only in
      old/non-secure browser contexts. Replace ARSALAN2026 there as well.
 
+Academy V1.1 additions:
+  Multi-course library, six course paths, progress export/import, reset controls,
+  private no-index metadata, unified Inter/IBM Plex Mono typography and improved
+  mobile controls.
+
 Version:
-  Portfolio V4.1 — Private Academy
+  Portfolio V4.2 — Professional Projects and Academy

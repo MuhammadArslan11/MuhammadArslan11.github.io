@@ -1341,3 +1341,16 @@
   .ai-chat-actions .ai-reset{flex:1;}
   .ai-chat{height:350px;min-height:350px;}
 }
+
+/* V4.2 unified interaction states */
+.ai-support-section button{min-height:42px;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-weight:600;transition:transform .18s,background .18s,color .18s,border-color .18s,box-shadow .18s}
+.ai-support-section button:hover{transform:translateY(-2px);box-shadow:0 8px 22px var(--shadow)}
+.ai-support-section button:active{transform:none;box-shadow:none}
+.ai-support-section button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.ai-support-section button:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+.ai-support-section .ai-composer button{background:var(--green);border-color:var(--green);color:#101510}
+.ai-support-section .ai-export-btn{background:#a9443f!important;border-color:#d16a63!important;color:#fff!important}
+
+/* V4.2.1 heading scale */
+.ai-support-section h1,.ai-support-section h2,.ai-support-section h3{text-transform:uppercase}
+.ai-support-section .ai-support-header h2{font-size:clamp(34px,4.7vw,62px);line-height:1}

@@ -4,12 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Muhammad Arsalan's private IT Support Academy.">
+  <meta name="robots" content="noindex,nofollow,noarchive">
   <title>Private IT Support Academy — Muhammad Arsalan</title>
   <script>(function(){try{var t=localStorage.getItem('portfolio-theme')||'dark';document.documentElement.dataset.theme=t==='light'?'light':'dark'}catch(e){}})();</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="academy.css?v=1.0.0">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="academy.css?v=1.1.1">
 </head>
 <body>
   <section class="gate" id="gate" aria-labelledby="gateTitle">
@@ -40,20 +41,22 @@
     <aside class="academy-sidebar" id="sidebar">
       <div class="sidebar-progress"><div class="progress-ring" id="progressRing"><strong id="overallPercent">0%</strong></div><div><b>LEARNING PROGRESS</b><span id="completedLabel">0 of 16 items</span></div></div>
       <nav id="academyNav">
-        <button class="active" data-view="dashboard"><span>01</span> Dashboard</button>
-        <button data-view="roadmap"><span>02</span> Roadmap</button>
-        <button data-view="lessons"><span>03</span> Lessons</button>
-        <button data-view="labs"><span>04</span> Practice Labs</button>
-        <button data-view="quiz"><span>05</span> Knowledge Quiz</button>
-        <button data-view="exam"><span>06</span> Final Exam</button>
-        <button data-view="notes"><span>07</span> My Notes</button>
+        <button class="active" data-view="courses"><span>01</span> Course Library</button>
+        <button data-view="dashboard"><span>02</span> Dashboard</button>
+        <button data-view="roadmap"><span>03</span> Roadmap</button>
+        <button data-view="lessons"><span>04</span> Lessons</button>
+        <button data-view="labs"><span>05</span> Practice Labs</button>
+        <button data-view="quiz"><span>06</span> Knowledge Quiz</button>
+        <button data-view="exam"><span>07</span> Final Exam</button>
+        <button data-view="notes"><span>08</span> My Data & Notes</button>
       </nav>
       <div class="sidebar-foot"><b>BEGINNER PATH / V1.0</b><span>Learn → Practice → Verify</span></div>
     </aside>
 
     <main class="academy-main">
-      <section class="view active" id="view-dashboard">
-        <div class="welcome"><div><p class="kicker">PRIVATE WORKSPACE / STAGE 01</p><h1>Good to see you,<br><em>Muhammad Arsalan.</em></h1><p>Continue your IT Support path. Every lesson connects to a practical task you can perform in your own lab.</p><button class="primary-action" data-open="lesson-network">CONTINUE LEARNING →</button></div><div class="system-orbit"><div class="orbit orbit-1"></div><div class="orbit orbit-2"></div><div class="orbit-core">IT<span>CORE</span></div><small>LEARNING SYSTEM ONLINE</small></div></div>
+      <section class="view active" id="view-courses"><div class="page-head"><p class="kicker">01 / COURSE LIBRARY</p><h1>Choose a course.<br><em>Build one skill at a time.</em></h1><p>The Academy is now organized as a multi-course learning platform. IT Support Fundamentals is active; specialist paths will be added without changing the core system.</p></div><div class="course-catalog"><article class="course-card available"><div class="course-top"><span>ACTIVE COURSE / BEGINNER</span><b>01</b></div><h2>IT Support Fundamentals</h2><p>Hardware, Windows, networking, identity, Microsoft 365, troubleshooting, labs and assessments.</p><div class="course-stats"><span>12 LESSONS</span><span>4 LABS</span><span>2 ASSESSMENTS</span></div><button data-view-jump="dashboard">OPEN COURSE →</button></article><article class="course-card"><div class="course-top"><span>PLANNED PATH</span><b>02</b></div><h2>Windows Support</h2><p>Administration, diagnostic tools, recovery, performance and structured Windows troubleshooting.</p><small>COMING SOON</small></article><article class="course-card"><div class="course-top"><span>PLANNED PATH</span><b>03</b></div><h2>Networking Fundamentals</h2><p>TCP/IP, addressing, subnetting, DHCP, DNS, Wi-Fi, Packet Tracer and troubleshooting.</p><small>COMING SOON</small></article><article class="course-card"><div class="course-top"><span>PLANNED PATH</span><b>04</b></div><h2>Active Directory & Server</h2><p>AD DS, domains, users, groups, OUs, Group Policy, DNS and Windows Server labs.</p><small>COMING SOON</small></article><article class="course-card"><div class="course-top"><span>PLANNED PATH</span><b>05</b></div><h2>Microsoft 365 Support</h2><p>Accounts, licences, Outlook, Teams, OneDrive, MFA and service troubleshooting.</p><small>COMING SOON</small></article><article class="course-card"><div class="course-top"><span>PLANNED PATH</span><b>06</b></div><h2>Interview Preparation</h2><p>Technical questions, scenario answers, behavioural practice and support-ticket exercises.</p><small>COMING SOON</small></article></div></section>
+      <section class="view" id="view-dashboard">
+        <div class="welcome"><div><p class="kicker">PRIVATE WORKSPACE / STAGE 01</p><h1>Good to see you,<br><em>Muhammad Arsalan.</em></h1><p>Continue your IT Support path. Every lesson connects to a practical task you can perform in your own lab.</p><button class="primary-action" data-open="lesson-ip">CONTINUE LEARNING →</button></div><div class="system-orbit"><div class="orbit orbit-1"></div><div class="orbit orbit-2"></div><div class="orbit-core">IT<span>CORE</span></div><small>LEARNING SYSTEM ONLINE</small></div></div>
         <div class="stat-row"><article><span>COURSE PROGRESS</span><strong id="statProgress">0%</strong><small>Complete lessons and labs</small></article><article><span>LABS COMPLETED</span><strong id="statLabs">0 / 4</strong><small>Hands-on practice</small></article><article><span>BEST QUIZ SCORE</span><strong id="statQuiz">—</strong><small>Target: 80% or higher</small></article><article><span>LEARNING STREAK</span><strong id="statStreak">1 DAY</strong><small>Keep the system moving</small></article></div>
         <div class="dashboard-grid"><section><div class="section-title"><div><span>NEXT IN YOUR PATH</span><h2>Core learning modules</h2></div><button data-view-jump="roadmap">VIEW ROADMAP →</button></div><div class="module-cards" id="dashboardModules"></div></section><aside class="activity-panel"><div class="section-title"><div><span>QUICK ACCESS</span><h2>Your workspace</h2></div></div><button data-view-jump="labs"><i>⌘</i><span><b>OPEN PRACTICE LABS</b><small>Four guided simulations</small></span>→</button><button data-view-jump="quiz"><i>?</i><span><b>TAKE KNOWLEDGE QUIZ</b><small>Check your understanding</small></span>→</button><button data-view-jump="notes"><i>✎</i><span><b>REVIEW YOUR NOTES</b><small>Saved on this device</small></span>→</button><div class="tip"><span>FIELD NOTE / 01</span><p>A strong technician does not guess. Observe the symptom, collect evidence, test one change, and document the result.</p></div></aside></div>
       </section>
@@ -63,11 +66,11 @@
       <section class="view" id="view-labs"><div class="page-head"><p class="kicker">04 / PRACTICE</p><h1>Turn knowledge<br><em>into ability.</em></h1><p>Complete each lab on your computer or virtual machines. Mark it complete only after verifying the result.</p></div><div class="lab-list" id="labList"></div></section>
       <section class="view" id="view-quiz"><div class="page-head"><p class="kicker">05 / VERIFY</p><h1>Knowledge<br><em>checkpoint.</em></h1><p>Ten questions selected from the course. A score of 80% or higher passes.</p></div><div class="assessment" id="quizArea"></div></section>
       <section class="view" id="view-exam"><div class="page-head"><p class="kicker">06 / FINAL ASSESSMENT</p><h1>Prove the<br><em>complete workflow.</em></h1><p>A practical scenario exam. Read carefully and select the safest, most logical action.</p></div><div class="assessment" id="examArea"></div></section>
-      <section class="view" id="view-notes"><div class="page-head"><p class="kicker">07 / PERSONAL KNOWLEDGE</p><h1>Your technical<br><em>notebook.</em></h1><p>Write commands, troubleshooting discoveries, interview points, or questions to study later.</p></div><div class="notes-layout"><div class="notes-editor"><label for="notesText">MY NOTES</label><textarea id="notesText" placeholder="Start writing here…"></textarea><div><span id="notesStatus">Saved automatically</span><button id="exportNotes">DOWNLOAD NOTES</button></div></div><aside><span>NOTE-TAKING METHOD</span><ol><li>Write the symptom.</li><li>Record the evidence.</li><li>List the commands used.</li><li>Explain the root cause.</li><li>Write the verified fix.</li></ol></aside></div></section>
+      <section class="view" id="view-notes"><div class="page-head"><p class="kicker">08 / PERSONAL KNOWLEDGE</p><h1>Your technical<br><em>notebook and backup.</em></h1><p>Write commands, troubleshooting discoveries, interview points or questions, and protect your browser-saved progress with export and import.</p></div><div class="notes-layout"><div class="notes-editor"><label for="notesText">MY NOTES</label><textarea id="notesText" placeholder="Start writing here…"></textarea><div><span id="notesStatus">Saved automatically</span><button id="exportNotes">DOWNLOAD NOTES</button></div></div><aside><span>ACADEMY DATA</span><p class="data-copy">Progress is stored only in this browser. Export a backup before clearing browser data or changing devices.</p><div class="data-actions"><button id="exportProgress">EXPORT BACKUP</button><label for="importProgress">IMPORT BACKUP</label><input id="importProgress" type="file" accept="application/json"><button id="resetProgress" class="danger-action">RESET PROGRESS</button></div><span>NOTE-TAKING METHOD</span><ol><li>Write the symptom.</li><li>Record the evidence.</li><li>List the commands used.</li><li>Explain the root cause.</li><li>Write the verified fix.</li></ol></aside></div></section>
     </main>
   </div>
 
   <dialog id="contentDialog" class="content-dialog"><button class="dialog-close" id="dialogClose" aria-label="Close">×</button><div id="dialogBody"></div></dialog>
-  <script src="academy.js?v=1.0.0"></script>
+  <script src="academy.js?v=1.1.1"></script>
 </body>
 </html>
