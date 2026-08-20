@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Build a clean, ATS-friendly professional resume in your browser and export it as PDF.">
+  <meta name="theme-color" content="#0b0d0c">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="resume-builder.css?v=1.3.1">
+  <style id="printPageStyle">@page{size:A4;margin:0}</style>
+  <title>Resume Builder — Muhammad Arsalan</title>
+</head>
+<body>
+<a class="skip-link" href="#builderForm">Skip to editor</a>
+<header class="builder-topbar">
+  <a class="brand" href="index.html">MUHAMMAD ARSALAN</a>
+  <div class="module-title"><i></i> RESUME BUILDER / V1.3.1</div>
+  <div class="topbar-actions">
+    <button class="icon-button" id="themeMode" type="button" aria-label="Switch to light theme" title="Day / night theme">☀</button>
+    <span class="save-state" id="saveState" aria-live="polite">SAVED LOCALLY</span>
+    <a class="back-link" href="index.html">← PORTFOLIO</a>
+  </div>
+</header>
+
+<main class="builder-shell">
+  <section class="builder-intro">
+    <div><span class="kicker">FREE · PRIVATE · NO SIGN-UP</span><h1>Build your resume with confidence.</h1></div>
+    <p>Create, refine, and export an ATS-friendly resume at no cost. Your information stays securely in this browser.</p>
+  </section>
+
+  <div class="builder-toolbar" aria-label="Resume controls">
+    <div class="toolbar-group toolbar-design">
+    <label>Template<select id="templateStyle"><option value="classic">Classic ATS</option><option value="modern" selected>Modern Professional</option><option value="technical">Technical</option></select></label>
+    <label>Paper<select id="pageSize"><option value="a4">A4</option><option value="letter">US Letter</option></select></label>
+    <label>Spacing<select id="density"><option value="compact">Compact</option><option value="standard" selected>Standard</option><option value="spacious">Spacious</option></select></label>
+    <fieldset class="accent-picker"><legend>Accent color</legend><label aria-label="Navy accent"><input type="radio" name="accent" value="navy" checked><span class="navy" title="Navy"></span></label><label aria-label="Blue accent"><input type="radio" name="accent" value="blue"><span class="blue" title="Blue"></span></label><label aria-label="Teal accent"><input type="radio" name="accent" value="teal"><span class="teal" title="Teal"></span></label><label aria-label="Burgundy accent"><input type="radio" name="accent" value="burgundy"><span class="burgundy" title="Burgundy"></span></label><label aria-label="Charcoal accent"><input type="radio" name="accent" value="charcoal"><span class="charcoal" title="Charcoal"></span></label></fieldset>
+    <div class="zoom-control" aria-label="Preview zoom"><button type="button" id="zoomOut" aria-label="Zoom out">−</button><output id="zoomValue">FIT</output><button type="button" id="zoomIn" aria-label="Zoom in">+</button></div>
+    </div>
+    <button class="tool-button" id="mobileViewToggle" type="button" aria-pressed="false">Preview</button>
+    <button class="tool-button" id="loadDemo" type="button">Try demo</button>
+    <details class="toolbar-more"><summary>More</summary><div><button class="tool-button" id="exportDraft" type="button">Download draft</button><label class="tool-button import-button">Import draft<input id="importDraft" type="file" accept="application/json,.json"></label><button class="tool-button subtle" id="clearDraft" type="button">Clear resume</button></div></details>
+    <button class="tool-button primary" id="printResume" type="button">Export PDF ↗</button>
+  </div>
+
+  <div class="workspace" id="workspace">
+    <form class="editor" id="builderForm" novalidate>
+      <div class="editor-heading"><div><span>EDITOR</span><h2>Your information</h2></div><div class="score-ring" id="scoreRing"><b id="scoreValue">0</b><span>ATS SCORE</span></div></div>
+      <div id="qualityPanel" class="quality-panel" aria-live="polite"></div>
+
+      <details class="form-section" open><summary><span>01</span> Personal information</summary><div class="fields two-col">
+        <label>Full name *<input name="fullName" autocomplete="name" required placeholder="Your full name"></label>
+        <label>Professional title *<input name="jobTitle" required placeholder="IT Support Specialist"></label>
+        <label>Email *<input name="email" type="email" autocomplete="email" required placeholder="name@example.com"></label>
+        <label>Phone *<input name="phone" type="tel" autocomplete="tel" required placeholder="+966 00 000 0000"></label>
+        <label>WhatsApp <input name="whatsapp" type="tel" placeholder="Optional"></label>
+        <label>Address <input name="address" autocomplete="street-address" placeholder="Street or district"></label>
+        <label>City <input name="city" autocomplete="address-level2" placeholder="Riyadh"></label>
+        <label>Country <input name="country" autocomplete="country-name" placeholder="Saudi Arabia"></label>
+        <label>LinkedIn URL <input name="linkedin" type="url" placeholder="https://linkedin.com/in/..."></label>
+        <label>GitHub URL <input name="github" type="url" placeholder="https://github.com/..."></label>
+        <label>Portfolio URL <input name="portfolio" type="url" placeholder="https://..."></label>
+        <div class="photo-field"><label class="file-label">Profile photo <input name="photo" id="photoInput" type="file" accept="image/png,image/jpeg,image/webp"><span>CHOOSE IMAGE</span></label><label class="toggle"><input name="includePhoto" type="checkbox"><span></span> Include in resume</label></div>
+      </div></details>
+
+      <details class="form-section" open><summary><span>02</span> Professional summary</summary><div class="fields"><label>Summary *<textarea name="summary" rows="8" maxlength="2000" required placeholder="Write a focused overview of your experience, strengths, industries, tools and target role. Aim for 60–120 words."></textarea><small><b id="summaryCount">0</b> / 2,000 characters</small></label></div></details>
+
+      <details class="form-section" open><summary><span>03</span> Experience</summary><div class="repeat-list" id="experienceList"></div><button class="add-button" type="button" data-add="experience">+ ADD EXPERIENCE</button></details>
+      <details class="form-section"><summary><span>04</span> Education</summary><div class="repeat-list" id="educationList"></div><button class="add-button" type="button" data-add="education">+ ADD EDUCATION</button></details>
+      <details class="form-section"><summary><span>05</span> Skills</summary><div class="fields"><label>Skills *<textarea name="skills" rows="4" required placeholder="Active Directory, Microsoft 365, Windows, TCP/IP, troubleshooting"></textarea><small>Separate skills with commas or new lines.</small></label></div></details>
+      <details class="form-section"><summary><span>06</span> Certifications</summary><div class="repeat-list" id="certificationList"></div><button class="add-button" type="button" data-add="certification">+ ADD CERTIFICATION</button></details>
+      <details class="form-section"><summary><span>07</span> Projects</summary><div class="repeat-list" id="projectList"></div><button class="add-button" type="button" data-add="project">+ ADD PROJECT</button></details>
+      <details class="form-section"><summary><span>08</span> Languages</summary><div class="repeat-list" id="languageList"></div><button class="add-button" type="button" data-add="language">+ ADD LANGUAGE</button></details>
+      <details class="form-section"><summary><span>09</span> Custom section</summary><div class="fields"><label>Section title<input name="customTitle" placeholder="Volunteer Experience"></label><label>Content<textarea name="customContent" rows="5" placeholder="Add one item per line."></textarea></label></div></details>
+
+      <details class="form-section order-section"><summary><span>10</span> Section visibility & order</summary><p class="helper">Show or hide sections and use the arrow buttons to arrange them.</p><ol id="sectionOrder" class="section-order"></ol></details>
+      <aside class="privacy-note"><strong>YOUR DATA STAYS PRIVATE</strong><p>This builder runs entirely in your browser. Your resume is saved only in local browser storage and is never uploaded to a server.</p></aside>
+    </form>
+
+    <section class="preview-pane" id="previewPane" aria-label="Resume preview">
+      <div class="preview-bar"><span>LIVE PREVIEW</span><div><b id="pageStatus">1 PAGE</b><small id="overflowStatus">Ready to print</small></div></div>
+      <div class="preview-stage" id="previewStage"><div class="page-guides" id="pageGuides" aria-hidden="true"></div><article class="resume-page size-a4 density-standard accent-navy template-modern" id="resumePreview">
+        <header class="resume-header">
+          <div class="resume-identity"><h1 id="pName">YOUR NAME</h1><p id="pTitle">PROFESSIONAL TITLE</p><div class="resume-contact" id="pContact"></div></div>
+          <img id="pPhoto" class="resume-photo" alt="Profile portrait">
+        </header>
+        <div id="resumeSections"></div>
+      </article></div>
+    </section>
+  </div>
+</main>
+
+<template id="experienceTemplate"><article class="repeat-card" data-type="experience"><div class="card-head"><strong>EXPERIENCE <b class="item-number"></b></strong><div><button type="button" data-duplicate>DUPLICATE</button><button type="button" data-remove aria-label="Remove experience">REMOVE ×</button></div></div><div class="fields two-col"><label>Job title *<input data-field="role" required></label><label>Company *<input data-field="company" required></label><label>Location<input data-field="location"></label><label class="toggle current-toggle"><input data-field="current" type="checkbox"><span></span> Current job</label><fieldset class="date-select"><legend>Start date *</legend><select data-field="startMonth" aria-label="Start month" required></select><select data-field="startYear" aria-label="Start year" required></select></fieldset><fieldset class="date-select"><legend>End date *</legend><select data-field="endMonth" aria-label="End month" required></select><select data-field="endYear" aria-label="End year" required></select></fieldset><label class="full">Role summary<textarea data-field="summary" rows="4" placeholder="Briefly explain your role, scope and main responsibilities."></textarea></label><label class="full">Key achievements<textarea data-field="bullets" rows="6" placeholder="One achievement per line. Start with an action verb and add a measurable result where possible."></textarea><small>Each new line becomes a bullet in the resume.</small></label></div></article></template>
+<template id="educationTemplate"><article class="repeat-card" data-type="education"><div class="card-head"><strong>EDUCATION <b class="item-number"></b></strong><div><button type="button" data-duplicate>DUPLICATE</button><button type="button" data-remove>REMOVE ×</button></div></div><div class="fields two-col"><label>Degree / qualification *<input data-field="degree" required></label><label>Institution *<input data-field="institution" required></label><label>Location<input data-field="location"></label><fieldset class="date-select"><legend>Graduation date *</legend><select data-field="dateMonth" aria-label="Graduation month" required></select><select data-field="dateYear" aria-label="Graduation year" required></select></fieldset><label class="full">Details<input data-field="details" placeholder="GPA, honors or relevant study"></label></div></article></template>
+<template id="certificationTemplate"><article class="repeat-card" data-type="certification"><div class="card-head"><strong>CERTIFICATION <b class="item-number"></b></strong><div><button type="button" data-duplicate>DUPLICATE</button><button type="button" data-remove>REMOVE ×</button></div></div><div class="fields two-col"><label>Name *<input data-field="name" required></label><label>Issuer<input data-field="issuer"></label><fieldset class="date-select"><legend>Date</legend><select data-field="dateMonth" aria-label="Certification month"></select><select data-field="dateYear" aria-label="Certification year"></select></fieldset><label>Credential ID<input data-field="credentialId"></label><label class="full">Credential URL<input data-field="url" type="url" placeholder="https://..."></label></div></article></template>
+<template id="projectTemplate"><article class="repeat-card" data-type="project"><div class="card-head"><strong>PROJECT <b class="item-number"></b></strong><div><button type="button" data-duplicate>DUPLICATE</button><button type="button" data-remove>REMOVE ×</button></div></div><div class="fields two-col"><label>Project name *<input data-field="name" required></label><label>Technologies<input data-field="tech"></label><label>Project URL<input data-field="url" type="url" placeholder="https://..."></label><label>GitHub URL<input data-field="github" type="url" placeholder="https://github.com/..."></label><label class="full">Description<textarea data-field="description" rows="4"></textarea></label></div></article></template>
+<template id="languageTemplate"><article class="repeat-card" data-type="language"><div class="card-head"><strong>LANGUAGE <b class="item-number"></b></strong><div><button type="button" data-duplicate>DUPLICATE</button><button type="button" data-remove>REMOVE ×</button></div></div><div class="fields two-col"><label>Language *<input data-field="name" required></label><label>Proficiency<select data-field="level"><option>Native</option><option>Fluent</option><option>Professional</option><option>Intermediate</option><option>Basic</option></select></label></div></article></template>
+
+<nav class="mobile-action-bar" aria-label="Mobile resume actions"><button class="active" type="button" data-mobile-action="edit" aria-pressed="true">Edit</button><button type="button" data-mobile-action="preview" aria-pressed="false">Preview</button><button type="button" data-mobile-action="save">Save</button><button type="button" data-mobile-action="export">Export</button></nav>
+<dialog class="export-dialog" id="exportDialog"><form method="dialog"><span class="dialog-kicker">PDF CHECKLIST</span><h2>Ready to export</h2><p>Your resume will automatically continue onto additional pages when needed.</p><ol><li>Choose <strong>Save as PDF</strong> in the print window.</li><li>Turn off <strong>Print headers and footers</strong> to remove the date, page URL and browser title.</li><li>Keep scale at 100% and use the selected paper size.</li></ol><div><button value="cancel" class="tool-button">CANCEL</button><button value="print" class="tool-button primary">OPEN PRINT WINDOW ↗</button></div></form></dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="resume-builder.js?v=1.3.1" defer></script>
+</body>
+</html>
