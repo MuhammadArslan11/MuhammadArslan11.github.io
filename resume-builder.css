@@ -107,3 +107,16 @@ body[data-ui-theme="light"] .toolbar-design{background:#f8fafc}body[data-ui-them
 .privacy-note{display:flex;align-items:center;justify-content:space-between;gap:18px}.privacy-note>div{min-width:0}.autosave-control{display:flex!important;align-items:center;gap:8px;flex:0 0 auto;cursor:pointer;color:var(--ink)!important}.autosave-control input{position:absolute;opacity:0;pointer-events:none}.autosave-control span{width:34px;height:20px;border:1px solid var(--line);border-radius:999px;background:var(--field);position:relative;transition:.18s}.autosave-control span::after{content:"";position:absolute;width:12px;height:12px;left:3px;top:3px;border-radius:50%;background:var(--muted);transition:.18s}.autosave-control input:checked+span{background:color-mix(in srgb,var(--signal) 18%,transparent);border-color:var(--signal)}.autosave-control input:checked+span::after{left:17px;background:var(--signal)}.autosave-control b{font:600 11px var(--sans)}
 @media(max-width:900px){.mobile-action-bar{grid-template-columns:repeat(6,minmax(0,1fr))}.mobile-action-bar button b{font-size:9px}.mobile-action-bar button span{font-size:15px}.mobile-action-bar .mobile-export span{font-size:16px}}
 @media(max-width:600px){.privacy-note{align-items:flex-start;flex-direction:column}.autosave-control{align-self:stretch;justify-content:space-between}.mobile-action-bar button b{font-size:8.5px}.mobile-action-bar button span{font-size:14px}}
+
+/* V1.4.1 — final mobile-safe print rules must remain after all responsive rules */
+@media print{
+  @page{margin:0}
+  html,body{width:auto!important;height:auto!important;min-height:0!important;margin:0!important;padding:0!important;overflow:visible!important;background:#fff!important}
+  .skip-link,.builder-topbar,.builder-intro,.builder-toolbar,.editor,.preview-bar,.mobile-action-bar,.export-dialog,.toast,.page-guides{display:none!important}
+  .builder-shell,.workspace,.preview-pane,.preview-stage{display:block!important;position:static!important;width:auto!important;height:auto!important;min-height:0!important;margin:0!important;padding:0!important;overflow:visible!important;background:#fff!important}
+  .preview-stage .resume-page,.resume-page{position:static!important;left:auto!important;top:auto!important;width:210mm!important;min-height:0!important;margin:0!important;transform:none!important;transform-origin:initial!important;box-shadow:none!important;overflow:visible!important;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+  .preview-stage .resume-page.size-letter,.resume-page.size-letter{width:8.5in!important}
+  .resume-section{break-inside:auto!important;page-break-inside:auto!important}
+  .resume-section h2{break-after:avoid!important;page-break-after:avoid!important}
+  .resume-item{break-inside:avoid!important;page-break-inside:avoid!important}
+}
