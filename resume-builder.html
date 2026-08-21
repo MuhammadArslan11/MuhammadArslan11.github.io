@@ -5,11 +5,16 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Build a clean, ATS-friendly professional resume in your browser and export it as PDF.">
   <meta name="theme-color" content="#0b0d0c">
+  <link rel="canonical" href="https://muhammadarslan11.github.io/resume-builder.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Free ATS Resume Builder — Muhammad Arsalan">
+  <meta property="og:description" content="Create, preview and export an ATS-friendly resume directly in your browser.">
+  <meta property="og:url" content="https://muhammadarslan11.github.io/resume-builder.html">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="resume-builder.css?v=1.3.2">
+  <link rel="stylesheet" href="resume-builder.css?v=1.4.0">
   <style id="printPageStyle">@page{size:A4;margin:0}</style>
   <title>Resume Builder — Muhammad Arsalan</title>
 </head>
@@ -17,7 +22,7 @@
 <a class="skip-link" href="#builderForm">Skip to editor</a>
 <header class="builder-topbar">
   <a class="brand" href="index.html">MUHAMMAD ARSALAN</a>
-  <div class="module-title"><i></i> RESUME BUILDER / V1.3.2</div>
+  <div class="module-title"><i></i> RESUME BUILDER / V1.4</div>
   <div class="topbar-actions">
     <button class="icon-button" id="themeMode" type="button" aria-label="Switch to light theme" title="Day / night theme">☀</button>
     <span class="save-state" id="saveState" aria-live="polite">SAVED LOCALLY</span>
@@ -28,7 +33,7 @@
 <main class="builder-shell">
   <section class="builder-intro">
     <div><span class="kicker">FREE · PRIVATE · NO SIGN-UP</span><h1>Build your resume with confidence.</h1></div>
-    <p>Create, refine, and export an ATS-friendly resume at no cost. Your information stays securely in this browser.</p>
+    <p>Create, refine, and export an ATS-friendly resume at no cost. Your information stays locally in this browser unless you download a draft or PDF.</p>
   </section>
 
   <div class="builder-toolbar" aria-label="Resume controls">
@@ -76,7 +81,7 @@
       <details class="form-section"><summary><span>09</span> Custom section</summary><div class="fields"><label>Section title<input name="customTitle" placeholder="Volunteer Experience"></label><label>Content<textarea name="customContent" rows="5" placeholder="Add one item per line."></textarea></label></div></details>
 
       <details class="form-section order-section"><summary><span>10</span> Section visibility & order</summary><p class="helper">Show or hide sections and use the arrow buttons to arrange them.</p><ol id="sectionOrder" class="section-order"></ol></details>
-      <aside class="privacy-note"><strong>YOUR DATA STAYS PRIVATE</strong><p>This builder runs entirely in your browser. Your resume is saved only in local browser storage and is never uploaded to a server.</p></aside>
+      <aside class="privacy-note"><div><strong>LOCAL BROWSER STORAGE</strong><p>Your resume is not submitted to a server, but browser storage is not encrypted. Clear your resume after use on a shared device.</p></div><label class="autosave-control"><input id="autosaveToggle" type="checkbox" checked><span></span><b>Autosave</b></label></aside>
     </form>
 
     <section class="preview-pane" id="previewPane" aria-label="Resume preview">
@@ -98,9 +103,9 @@
 <template id="projectTemplate"><article class="repeat-card" data-type="project"><div class="card-head"><strong>PROJECT <b class="item-number"></b></strong><div><button type="button" data-duplicate>DUPLICATE</button><button type="button" data-remove>REMOVE ×</button></div></div><div class="fields two-col"><label>Project name *<input data-field="name" required></label><label>Technologies<input data-field="tech"></label><label>Project URL<input data-field="url" type="url" placeholder="https://..."></label><label>GitHub URL<input data-field="github" type="url" placeholder="https://github.com/..."></label><label class="full">Description<textarea data-field="description" rows="4"></textarea></label></div></article></template>
 <template id="languageTemplate"><article class="repeat-card" data-type="language"><div class="card-head"><strong>LANGUAGE <b class="item-number"></b></strong><div><button type="button" data-duplicate>DUPLICATE</button><button type="button" data-remove>REMOVE ×</button></div></div><div class="fields two-col"><label>Language *<input data-field="name" required></label><label>Proficiency<select data-field="level"><option>Native</option><option>Fluent</option><option>Professional</option><option>Intermediate</option><option>Basic</option></select></label></div></article></template>
 
-<nav class="mobile-action-bar" aria-label="Mobile resume actions"><button class="active" type="button" data-mobile-action="edit" aria-pressed="true"><span aria-hidden="true">✎</span><b>Edit</b></button><button type="button" data-mobile-action="preview" aria-pressed="false"><span aria-hidden="true">▣</span><b>Preview</b></button><button type="button" data-mobile-action="save"><span aria-hidden="true">✓</span><b>Save</b></button><button class="mobile-export" type="button" data-mobile-action="export"><span aria-hidden="true">↗</span><b>Export</b></button></nav>
+<nav class="mobile-action-bar" aria-label="Mobile resume actions"><button class="active" type="button" data-mobile-action="edit" aria-pressed="true"><span aria-hidden="true">✎</span><b>Edit</b></button><button type="button" data-mobile-action="preview" aria-pressed="false"><span aria-hidden="true">▣</span><b>Preview</b></button><button type="button" data-mobile-action="demo"><span aria-hidden="true">✦</span><b>Demo</b></button><button type="button" data-mobile-action="save"><span aria-hidden="true">✓</span><b>Save</b></button><button type="button" data-mobile-action="clear"><span aria-hidden="true">×</span><b>Clear</b></button><button class="mobile-export" type="button" data-mobile-action="export"><span aria-hidden="true">↗</span><b>Export</b></button></nav>
 <dialog class="export-dialog" id="exportDialog"><form method="dialog"><span class="dialog-kicker">PDF CHECKLIST</span><h2>Ready to export</h2><p>Your resume will automatically continue onto additional pages when needed.</p><ol><li>Choose <strong>Save as PDF</strong> in the print window.</li><li>Turn off <strong>Print headers and footers</strong> to remove the date, page URL and browser title.</li><li>Keep scale at 100% and use the selected paper size.</li></ol><div><button value="cancel" class="tool-button">CANCEL</button><button value="print" class="tool-button primary">OPEN PRINT WINDOW ↗</button></div></form></dialog>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
-<script src="resume-builder.js?v=1.3.2" defer></script>
+<script src="resume-builder.js?v=1.4.0" defer></script>
 </body>
 </html>

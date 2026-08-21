@@ -198,7 +198,15 @@
     }
   }
 
-  function exportChat() {
+  let pdfEnginePromise;
+  function loadPdfEngine(){
+    if(window.jspdf&&typeof window.jspdf.jsPDF==='function')return Promise.resolve();
+    if(pdfEnginePromise)return pdfEnginePromise;
+    pdfEnginePromise=new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='assets/vendor/jspdf.umd.min.js';script.async=true;script.onload=()=>window.jspdf&&typeof window.jspdf.jsPDF==='function'?resolve():reject(new Error('PDF engine unavailable'));script.onerror=()=>reject(new Error('PDF engine unavailable'));document.head.appendChild(script);});
+    return pdfEnginePromise;
+  }
+
+  async function exportChat() {
     const nodes = Array.from(chat.querySelectorAll(".ai-msg")).filter((el) => !el.querySelector(".ai-typing"));
     if (!nodes.length) {
       alert("Start a conversation before downloading the chat PDF.");
@@ -262,6 +270,7 @@
     }
 
     try {
+      await loadPdfEngine();
       if (!window.jspdf || typeof window.jspdf.jsPDF !== "function") {
         printableFallback();
         return;

@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /academy.html
 
 Sitemap: https://muhammadarslan11.github.io/sitemap.xml
