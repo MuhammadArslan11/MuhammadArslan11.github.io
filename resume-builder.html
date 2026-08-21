@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="resume-builder.css?v=1.3.1">
+  <link rel="stylesheet" href="resume-builder.css?v=1.3.2">
   <style id="printPageStyle">@page{size:A4;margin:0}</style>
   <title>Resume Builder — Muhammad Arsalan</title>
 </head>
@@ -17,7 +17,7 @@
 <a class="skip-link" href="#builderForm">Skip to editor</a>
 <header class="builder-topbar">
   <a class="brand" href="index.html">MUHAMMAD ARSALAN</a>
-  <div class="module-title"><i></i> RESUME BUILDER / V1.3.1</div>
+  <div class="module-title"><i></i> RESUME BUILDER / V1.3.2</div>
   <div class="topbar-actions">
     <button class="icon-button" id="themeMode" type="button" aria-label="Switch to light theme" title="Day / night theme">☀</button>
     <span class="save-state" id="saveState" aria-live="polite">SAVED LOCALLY</span>
@@ -40,7 +40,7 @@
     <div class="zoom-control" aria-label="Preview zoom"><button type="button" id="zoomOut" aria-label="Zoom out">−</button><output id="zoomValue">FIT</output><button type="button" id="zoomIn" aria-label="Zoom in">+</button></div>
     </div>
     <button class="tool-button" id="mobileViewToggle" type="button" aria-pressed="false">Preview</button>
-    <button class="tool-button" id="loadDemo" type="button">Try demo</button>
+    <button class="tool-button demo-button" id="loadDemo" type="button"><span aria-hidden="true">✦</span> Sample data</button>
     <details class="toolbar-more"><summary>More</summary><div><button class="tool-button" id="exportDraft" type="button">Download draft</button><label class="tool-button import-button">Import draft<input id="importDraft" type="file" accept="application/json,.json"></label><button class="tool-button subtle" id="clearDraft" type="button">Clear resume</button></div></details>
     <button class="tool-button primary" id="printResume" type="button">Export PDF ↗</button>
   </div>
@@ -98,9 +98,9 @@
 <template id="projectTemplate"><article class="repeat-card" data-type="project"><div class="card-head"><strong>PROJECT <b class="item-number"></b></strong><div><button type="button" data-duplicate>DUPLICATE</button><button type="button" data-remove>REMOVE ×</button></div></div><div class="fields two-col"><label>Project name *<input data-field="name" required></label><label>Technologies<input data-field="tech"></label><label>Project URL<input data-field="url" type="url" placeholder="https://..."></label><label>GitHub URL<input data-field="github" type="url" placeholder="https://github.com/..."></label><label class="full">Description<textarea data-field="description" rows="4"></textarea></label></div></article></template>
 <template id="languageTemplate"><article class="repeat-card" data-type="language"><div class="card-head"><strong>LANGUAGE <b class="item-number"></b></strong><div><button type="button" data-duplicate>DUPLICATE</button><button type="button" data-remove>REMOVE ×</button></div></div><div class="fields two-col"><label>Language *<input data-field="name" required></label><label>Proficiency<select data-field="level"><option>Native</option><option>Fluent</option><option>Professional</option><option>Intermediate</option><option>Basic</option></select></label></div></article></template>
 
-<nav class="mobile-action-bar" aria-label="Mobile resume actions"><button class="active" type="button" data-mobile-action="edit" aria-pressed="true">Edit</button><button type="button" data-mobile-action="preview" aria-pressed="false">Preview</button><button type="button" data-mobile-action="save">Save</button><button type="button" data-mobile-action="export">Export</button></nav>
+<nav class="mobile-action-bar" aria-label="Mobile resume actions"><button class="active" type="button" data-mobile-action="edit" aria-pressed="true"><span aria-hidden="true">✎</span><b>Edit</b></button><button type="button" data-mobile-action="preview" aria-pressed="false"><span aria-hidden="true">▣</span><b>Preview</b></button><button type="button" data-mobile-action="save"><span aria-hidden="true">✓</span><b>Save</b></button><button class="mobile-export" type="button" data-mobile-action="export"><span aria-hidden="true">↗</span><b>Export</b></button></nav>
 <dialog class="export-dialog" id="exportDialog"><form method="dialog"><span class="dialog-kicker">PDF CHECKLIST</span><h2>Ready to export</h2><p>Your resume will automatically continue onto additional pages when needed.</p><ol><li>Choose <strong>Save as PDF</strong> in the print window.</li><li>Turn off <strong>Print headers and footers</strong> to remove the date, page URL and browser title.</li><li>Keep scale at 100% and use the selected paper size.</li></ol><div><button value="cancel" class="tool-button">CANCEL</button><button value="print" class="tool-button primary">OPEN PRINT WINDOW ↗</button></div></form></dialog>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
-<script src="resume-builder.js?v=1.3.1" defer></script>
+<script src="resume-builder.js?v=1.3.2" defer></script>
 </body>
 </html>
