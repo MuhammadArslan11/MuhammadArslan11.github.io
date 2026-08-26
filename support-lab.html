@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="A browser-based IT Support troubleshooting assistant by Muhammad Arsalan.">
+  <meta name="theme-color" content="#f4f2ed">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <title>IT Support Assistant — Muhammad Arsalan</title>
+  <script>try{const t=localStorage.getItem('portfolio-theme');document.documentElement.dataset.theme=t==='dark'||t==='light'?t:(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light')}catch(e){document.documentElement.dataset.theme='light'}</script>
+  <link rel="stylesheet" href="styles.css?v=7.0.1">
+  <link rel="stylesheet" href="support-lab.css?v=1.1.0">
+</head>
+<body class="lab-page">
+<a class="skip-link" href="#mainContent">Skip to assistant</a>
+<div class="lab-frame">
+  <header class="lab-header" id="siteHeader">
+    <a class="brand" href="index.html" aria-label="Muhammad Arsalan home"><img src="assets/ma-logo.svg" alt="" width="48" height="39"></a>
+    <a class="lab-back" href="index.html#current"><span aria-hidden="true">←</span> Back to portfolio</a>
+    <button class="theme-switch" id="themeToggle" type="button" aria-label="Switch to dark theme" aria-pressed="false"><span aria-hidden="true"></span><b>Theme</b></button>
+  </header>
+
+  <main class="lab-main" id="mainContent">
+    <section class="lab-intro">
+      <div>
+        <p class="eyebrow">GUIDED SUPPORT</p>
+        <h1>IT Support Assistant</h1>
+      </div>
+      <p>Describe one clear technical problem. The assistant will ask for evidence, guide the next safe check and help you record what happened.</p>
+    </section>
+
+    <div class="lab-notice" role="note"><strong>Local browser project</strong><span>This is a knowledge-based troubleshooting guide, not a live AI service. It does not replace your organization’s IT or security procedures.</span></div>
+
+    <section class="ai-workspace" aria-label="IT Support Assistant">
+      <aside class="ai-sidebar" aria-label="Support topics">
+        <label for="aiKbSearch">Find a topic</label>
+        <input id="aiKbSearch" type="search" placeholder="Wi-Fi, Outlook, printer">
+        <div class="ai-sidebar-meta"><span>Support library</span><b id="aiScenarioCount">Loading</b></div>
+        <div class="ai-topics" id="aiTopicList"></div>
+      </aside>
+
+      <div class="ai-panel">
+        <div class="ai-panel-head">
+          <div><span class="status-dot" aria-hidden="true"></span><div><b>Guided troubleshooting</b><small>Evidence before action</small></div></div>
+          <div class="ai-panel-actions"><button id="aiExport" type="button">Export</button><button id="aiReset" type="button">New session</button></div>
+        </div>
+        <div class="ai-progress" id="aiProgress" aria-label="Troubleshooting progress"></div>
+        <div class="ai-chat" id="aiChat" aria-live="polite" aria-label="Support conversation"></div>
+        <div class="ai-quick" id="aiQuick" aria-label="Example problems"></div>
+        <form class="ai-composer" id="aiForm">
+          <label class="sr-only" for="aiMessage">Describe your IT problem</label>
+          <textarea id="aiMessage" rows="1" placeholder="Describe the exact problem and any error message" required></textarea>
+          <button type="submit">Send</button>
+        </form>
+        <p class="ai-disclaimer">Do not share passwords, verification codes, personal data or confidential company information.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="lab-footer"><p>Muhammad Arsalan · IT Support Specialist</p><a href="index.html#contact">Contact</a></footer>
+</div>
+<script src="script.js?v=7.0.0"></script>
+<script src="ai-support.js?v=4.3.0"></script>
+</body>
+</html>
