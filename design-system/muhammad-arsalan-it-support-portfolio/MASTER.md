@@ -54,7 +54,7 @@ Dark theme:
 - A separate glass utility dock provides Projects, CV, Learn and theme shortcuts
 - The dock fades during active scrolling and returns when scrolling stops or it receives focus
 - The hero balances the name and introduction with Muhammad's illustrated portrait
-- Portrait, background shape and technical nodes move as separate depth layers
+- Portrait and compact network-diagnostic command cards move as separate depth layers
 - The MA badge uses a dark or light field with cream, copper, blue and green details
 - Work uses two substantial project cards rather than many small destinations
 - Experience and tools use compact rows for faster scanning
