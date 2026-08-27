@@ -8,11 +8,11 @@
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
   <title>IT Support Assistant — Muhammad Arsalan</title>
   <script>try{const t=localStorage.getItem('portfolio-theme');document.documentElement.dataset.theme=t==='dark'||t==='light'?t:(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light')}catch(e){document.documentElement.dataset.theme='light'}</script>
   <link rel="stylesheet" href="styles.css?v=7.1.0">
-  <link rel="stylesheet" href="support-lab.css?v=1.1.0">
+  <link rel="stylesheet" href="support-lab.css?v=2.0.0">
 </head>
 <body class="lab-page">
 <a class="skip-link" href="#mainContent">Skip to assistant</a>
@@ -24,38 +24,41 @@
   </header>
 
   <main class="lab-main" id="mainContent">
-    <section class="lab-intro">
-      <div>
+    <section class="assistant-shell" aria-labelledby="assistantTitle">
+      <div class="assistant-heading">
         <p class="eyebrow">GUIDED SUPPORT</p>
-        <h1>IT Support Assistant</h1>
+        <h1 id="assistantTitle">How can I help?</h1>
+        <p>Describe one technical problem. I’ll guide you through the safest next check.</p>
       </div>
-      <p>Describe one clear technical problem. The assistant will ask for evidence, guide the next safe check and help you record what happened.</p>
-    </section>
 
-    <div class="lab-notice" role="note"><strong>Local browser project</strong><span>This is a knowledge-based troubleshooting guide, not a live AI service. It does not replace your organization’s IT or security procedures.</span></div>
-
-    <section class="ai-workspace" aria-label="IT Support Assistant">
-      <aside class="ai-sidebar" aria-label="Support topics">
-        <label for="aiKbSearch">Find a topic</label>
-        <input id="aiKbSearch" type="search" placeholder="Wi-Fi, Outlook, printer">
-        <div class="ai-sidebar-meta"><span>Support library</span><b id="aiScenarioCount">Loading</b></div>
-        <div class="ai-topics" id="aiTopicList"></div>
-      </aside>
-
-      <div class="ai-panel">
-        <div class="ai-panel-head">
-          <div><span class="status-dot" aria-hidden="true"></span><div><b>Guided troubleshooting</b><small>Evidence before action</small></div></div>
-          <div class="ai-panel-actions"><button id="aiExport" type="button">Export</button><button id="aiReset" type="button">New session</button></div>
-        </div>
+      <div class="ai-workspace" aria-label="IT Support Assistant">
+        <div class="ai-panel">
+          <div class="ai-panel-head">
+            <div class="assistant-identity"><span class="status-dot" aria-hidden="true"></span><div><b>IT Support Assistant</b><small>Local guided troubleshooting</small></div></div>
+            <div class="ai-panel-actions">
+              <details class="topic-drawer">
+                <summary><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg><span>Topics</span></summary>
+                <aside class="ai-sidebar" aria-label="Support topics">
+                  <div class="topic-search-head"><label for="aiKbSearch">Find a topic</label><span>Optional</span></div>
+                  <div class="topic-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg><input id="aiKbSearch" type="search" placeholder="Wi-Fi, Outlook, printer"></div>
+                  <div class="ai-topics" id="aiTopicList"></div>
+                  <button class="topic-toggle" id="aiTopicToggle" type="button" aria-expanded="false">Show all topics</button>
+                </aside>
+              </details>
+              <button id="aiExport" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 20h14"/></svg><span>Export</span></button>
+              <button id="aiReset" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.3-5.7L4 8.6M4 4v4.6h4.6"/></svg><span>New chat</span></button>
+            </div>
+          </div>
         <div class="ai-progress" id="aiProgress" aria-label="Troubleshooting progress"></div>
         <div class="ai-chat" id="aiChat" aria-live="polite" aria-label="Support conversation"></div>
         <div class="ai-quick" id="aiQuick" aria-label="Example problems"></div>
         <form class="ai-composer" id="aiForm">
-          <label class="sr-only" for="aiMessage">Describe your IT problem</label>
-          <textarea id="aiMessage" rows="1" placeholder="Describe the exact problem and any error message" required></textarea>
-          <button type="submit">Send</button>
+          <label class="ai-composer-label" for="aiMessage">Describe the problem</label>
+          <textarea id="aiMessage" rows="1" placeholder="Include the symptom or error message…" required></textarea>
+          <button type="submit" aria-label="Send message" title="Send message"><span>Send</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 4 17 8-17 8 3-8zM7 12h14"/></svg></button>
         </form>
-        <p class="ai-disclaimer">Do not share passwords, verification codes, personal data or confidential company information.</p>
+          <p class="ai-disclaimer">Keep passwords, verification codes and personal data private. This is a local knowledge guide, not a live AI service.</p>
+        </div>
       </div>
     </section>
   </main>
@@ -63,6 +66,6 @@
   <footer class="lab-footer"><p>Muhammad Arsalan · IT Support Specialist</p><a href="index.html#contact">Contact</a></footer>
 </div>
 <script src="script.js?v=7.0.0"></script>
-<script src="ai-support.js?v=4.3.0"></script>
+<script src="ai-support.js?v=5.0.0"></script>
 </body>
 </html>

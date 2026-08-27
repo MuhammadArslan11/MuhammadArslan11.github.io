@@ -1,6 +1,6 @@
 /* =========================================================
    AI IT SUPPORT ASSISTANT
-   V4.0 — STABLE / CONTEXT-AWARE / LOCAL CHAT + PDF
+   V5.0 — MINIMAL CHAT UI / CONTEXT-AWARE / LOCAL CHAT + PDF
 
    STAGE 1 — Evidence-based conversational diagnostic engine
    Static GitHub Pages implementation; no external AI API.
@@ -20,6 +20,9 @@
   const topics = $("aiTopicList");
   const search = $("aiKbSearch");
   const count = $("aiScenarioCount");
+  const topicToggle = $("aiTopicToggle");
+  const topicSidebar = document.querySelector(".ai-sidebar");
+  const topicDrawer = document.querySelector(".topic-drawer");
   const progress = $("aiProgress");
 
   if (!chat || !form || !input) {
@@ -462,6 +465,7 @@
     el.className = "ai-msg " + role;
     el.innerHTML = '<div class="ai-avatar">' + (role === "ai" ? "AI" : "YOU") + '</div><div class="ai-bubble">' + html + "</div>";
     chat.appendChild(el);
+    if (role === "user") document.querySelector(".ai-panel")?.classList.add("has-user-message");
     chat.scrollTop = chat.scrollHeight;
     if (persist) persistChat();
     return el;
@@ -483,7 +487,8 @@
 
   function prog(index) {
     if (!progress) return;
-    progress.innerHTML = STAGES.map((name, i) => '<span class="' + (i <= index ? "done" : "") + '">' + String(i + 1).padStart(2, "0") + " " + name + "</span>" + (i < STAGES.length - 1 ? "<i></i>" : "")).join("");
+    const safeIndex = Math.max(0, Math.min(index, STAGES.length - 1));
+    progress.innerHTML = '<div class="ai-progress-current"><b>' + String(safeIndex + 1).padStart(2, "0") + '</b><span>' + esc(STAGES[safeIndex]) + '</span></div><small>Step ' + (safeIndex + 1) + " of " + STAGES.length + "</small>";
   }
 
   function rememberEvidence(text) {
@@ -881,6 +886,7 @@
   function renderTopics(query) {
     if (!topics) return;
     const q = normalize(query);
+    topicSidebar?.classList.toggle("searching", Boolean(q));
     topics.innerHTML = "";
     TOPICS.filter(([domain, phrases]) => !q || normalize(domain).includes(q) || phrases.some((p) => normalize(p).includes(q))).forEach(([domain]) => {
       const button = document.createElement("button");
@@ -897,10 +903,13 @@
         button.classList.add("active");
         button.scrollIntoView({ block: "nearest", behavior: "smooth" });
         add("ai", '<p><b>' + esc(domain) + '</b> selected.</p><p>Describe the exact symptom. I’ll ask the minimum questions needed before recommending a fix.</p>');
+        if (topicDrawer) topicDrawer.open = false;
         input.focus();
       });
       topics.appendChild(button);
     });
+    if (!topics.children.length) topics.innerHTML = '<p class="ai-topic-empty">No matching topic. Describe the problem in the chat instead.</p>';
+    if (topicToggle) topicToggle.hidden = Boolean(q) || topics.querySelectorAll(".ai-topic").length <= 6;
   }
 
   /* =======================================================
@@ -908,6 +917,7 @@
      ======================================================= */
   function reset() {
     chat.innerHTML = "";
+    document.querySelector(".ai-panel")?.classList.remove("has-user-message");
     try { localStorage.removeItem(CHAT_STORE_KEY); } catch (e) {}
     state.domain = "";
     state.problem = "";
@@ -925,11 +935,9 @@
     if (!quick) return;
     quick.innerHTML = "";
     [
-      "My Wi-Fi is connected but the internet is not working.",
-      "My computer has no internet and ipconfig shows 169.254.22.15.",
-      "The printer shows Offline.",
-      "Outlook is not sending emails.",
-      "My Windows computer is very slow."
+      "Wi-Fi connected, but no internet",
+      "Printer shows Offline",
+      "Outlook will not send email"
     ].forEach((example) => {
       const button = document.createElement("button");
       button.type = "button";
@@ -969,6 +977,20 @@
   const exportBtn = $("aiExport");
   if (exportBtn) exportBtn.addEventListener("click", exportChat);
   if (search) search.addEventListener("input", () => renderTopics(search.value));
+  if (topicToggle) topicToggle.addEventListener("click", () => {
+    const expanded = topicSidebar?.classList.toggle("show-all") || false;
+    topicToggle.setAttribute("aria-expanded", String(expanded));
+    topicToggle.textContent = expanded ? "Show fewer topics" : "Show all topics";
+  });
+  document.addEventListener("click", (event) => {
+    if (topicDrawer?.open && !topicDrawer.contains(event.target)) topicDrawer.open = false;
+  });
+  topicDrawer?.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      topicDrawer.open = false;
+      topicDrawer.querySelector("summary")?.focus();
+    }
+  });
 
   chat.addEventListener("click", (event) => {
     const copy = event.target.closest("[data-copy]");

@@ -77,12 +77,14 @@ const utilityDock=document.getElementById('utilityDock');
 let scrollStopTimer=0;
 function syncHeader(){
   header?.classList.toggle('scrolled',scrollY>18);
+  utilityDock?.classList.toggle('header-scrolled',scrollY>18);
   if(!utilityDock||matchMedia('(prefers-reduced-motion:reduce)').matches)return;
   utilityDock.classList.add('is-scrolling');
   clearTimeout(scrollStopTimer);
-  scrollStopTimer=window.setTimeout(()=>utilityDock.classList.remove('is-scrolling'),170);
+  scrollStopTimer=window.setTimeout(()=>utilityDock.classList.remove('is-scrolling'),60);
 }
 header?.classList.toggle('scrolled',scrollY>18);
+utilityDock?.classList.toggle('header-scrolled',scrollY>18);
 addEventListener('scroll',syncHeader,{passive:true});
 
 const portraitStage=document.getElementById('heroPortrait');

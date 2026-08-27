@@ -16,7 +16,7 @@
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&family=Roboto:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <title>Muhammad Arsalan — IT Support Specialist in Saudi Arabia</title>
   <script>try{const t=localStorage.getItem('portfolio-theme');document.documentElement.dataset.theme=t==='dark'||t==='light'?t:(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light')}catch(e){document.documentElement.dataset.theme='light'}</script>
   <link rel="stylesheet" href="styles.css?v=7.1.0">
@@ -41,7 +41,8 @@
 
   <nav class="utility-dock" id="utilityDock" aria-label="Portfolio shortcuts">
     <a href="#work"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M14 17.5h7M17.5 14v7"/></svg><span>Projects</span></a>
-    <a href="assets/Muhammad_Arsalan_Resume.pdf" download><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h10l4 4v14H5zM15 3v5h4"/><circle cx="10" cy="12" r="2"/><path d="M7 18c.5-3 5.5-3 6 0"/></svg><span>CV</span></a>
+    <a href="#current"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5.5l4 4M12 8l4-4 4 4-4 4M4 20l7.5-7.5M3 21l4-1-3-3z"/></svg><span>Building</span></a>
+    <a class="resume-download" href="assets/Muhammad_Arsalan_Resume.pdf?v=20260827" download aria-label="Download CV PDF" title="Download CV PDF"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h9l4 4v5M14 3v5h4M8 11h5M8 15h3M15 14v7M12.5 18.5 15 21l2.5-2.5"/></svg><span>CV</span></a>
     <a href="academy.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5c4-1 7 0 9 2v14c-2-2-5-3-9-2zM21 5c-4-1-7 0-9 2v14c2-2 5-3 9-2z"/></svg><span>Learn</span></a>
     <span class="dock-divider" aria-hidden="true"></span>
     <button class="dock-theme" data-theme-toggle type="button" aria-label="Switch to dark theme" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><span>Mode</span></button>
@@ -50,7 +51,7 @@
   <div class="mobile-nav" id="mobileNav" aria-hidden="true">
     <div class="mobile-nav-head"><img src="assets/ma-logo.svg" alt="" width="60" height="40"><button id="mobileMenuClose" type="button">Close</button></div>
     <nav aria-label="Mobile navigation"><a href="#home">Home</a><a href="#work">Projects</a><a href="#experience">Experience</a><a href="#tools">Tools</a><a href="#current">Current work</a><a href="#about">About</a><a href="#contact">Contact</a></nav>
-    <div class="mobile-links"><a href="assets/Muhammad_Arsalan_Resume.pdf" download>Download résumé</a><a href="resume-builder.html">Resume Builder</a><a href="academy.html">Learning Lab</a></div>
+    <div class="mobile-links"><a href="assets/Muhammad_Arsalan_Resume.pdf?v=20260827" download>Download résumé</a><a href="resume-builder.html">Resume Builder</a><a href="academy.html">Learning Lab</a></div>
   </div>
 
   <main id="mainContent">
@@ -64,6 +65,13 @@
       </div>
       <div class="hero-portrait reveal" id="heroPortrait" data-delay="1">
         <div class="portrait-person" data-portrait-depth="0.42"><img src="assets/hero-muhammad.png" alt="Illustrated portrait of Muhammad Arsalan in graduation attire" width="1122" height="1402" fetchpriority="high"></div>
+        <div class="hero-signature" role="img" aria-label="Signed Muhammad Arsalan" data-portrait-depth="0.3">
+          <svg viewBox="0 0 300 68" aria-hidden="true">
+            <text class="signature-text" x="4" y="46">Muhammad Arsalan</text>
+            <path class="signature-flourish" pathLength="1" d="M89 55c49 9 119 7 190-6-25 9-47 11-67 9"/>
+            <g class="signature-pen"><path d="M0 0 5-8l4 4-8 5z"/><path d="m5-8 2-3 4 4-2 3z"/></g>
+          </svg>
+        </div>
         <div class="command-card command-ip" data-portrait-depth="0.68" aria-hidden="true"><span>NETWORK</span><code><b>C:\&gt;</b> ipconfig</code><small>IPv4 192.168.10.24</small></div>
         <div class="command-card command-test" data-portrait-depth="0.55" aria-hidden="true"><span>CONNECTIVITY</span><code><b>PS&gt;</b> Test-NetConnection</code><small>TcpTestSucceeded True</small></div>
         <div class="command-card command-ping" data-portrait-depth="0.74" aria-hidden="true"><span>GATEWAY</span><code><b>C:\&gt;</b> ping 192.168.10.1</code><small>Reply time 3ms</small></div>
@@ -86,7 +94,7 @@
         <article class="experience-row reveal"><time>2023 — 2024</time><div><h3>IT Support Officer</h3><p>Technic Mentor Soft Solution · Pakistan</p></div><p>Level 1 and Level 2 support across Windows, Microsoft 365, Active Directory, printers, networks and remote-support tools.</p></article>
         <article class="experience-row reveal"><time>2021 — 2023</time><div><h3>ICT Teacher</h3><p>The City School and IISAT · Pakistan</p></div><p>Practical ICT education, classroom technology support, Microsoft Office, HTML, CSS and programming fundamentals.</p></article>
       </div>
-      <a class="simple-link" href="assets/Muhammad_Arsalan_Resume.pdf" download>Full experience in my résumé <span aria-hidden="true">↗</span></a>
+      <a class="simple-link" href="assets/Muhammad_Arsalan_Resume.pdf?v=20260827" download>Full experience in my résumé <span aria-hidden="true">↗</span></a>
     </section>
 
     <section class="tools section" id="tools">
