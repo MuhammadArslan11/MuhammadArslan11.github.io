@@ -18,6 +18,13 @@ function applyTheme(theme,persist=false){
 applyTheme(root.dataset.theme);
 themeToggles.forEach(toggle=>toggle.addEventListener('click',()=>applyTheme(root.dataset.theme==='dark'?'light':'dark',true)));
 
+// Keep the theme in sync when another page changes it in a different tab.
+window.addEventListener('storage',event=>{
+  if(event.key==='portfolio-theme'&&(event.newValue==='light'||event.newValue==='dark')){
+    applyTheme(event.newValue);
+  }
+});
+
 try{
   if(!localStorage.getItem('portfolio-theme')){
     const media=matchMedia('(prefers-color-scheme:dark)');

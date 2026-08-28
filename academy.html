@@ -8,11 +8,12 @@
   <link rel="canonical" href="https://muhammadarslan11.github.io/academy.html">
   <title>IT Support Learning Lab — Muhammad Arsalan</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <script>(function(){try{var t=localStorage.getItem('portfolio-theme')||'dark';document.documentElement.dataset.theme=t==='light'?'light':'dark'}catch(e){}})();</script>
+  <script>try{const t=localStorage.getItem('portfolio-theme');document.documentElement.dataset.theme=t==='dark'||t==='light'?t:(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light')}catch(e){document.documentElement.dataset.theme='light'}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="academy.css?v=2.3.0">
+  <link rel="stylesheet" href="theme-control.css?v=1.0.0">
 </head>
 <body>
   <div class="academy-app" id="academyApp">
@@ -20,7 +21,7 @@
       <button class="mobile-menu" id="mobileMenu" aria-label="Open menu">☰</button>
       <a href="index.html" class="academy-name">IT SUPPORT LAB <span>/ M. ARSALAN</span></a>
       <div class="top-search"><span>⌕</span><input id="searchInput" type="search" placeholder="Search the Knowledge Library…"><kbd>⌘ K</kbd></div>
-      <div class="top-controls"><button id="themeButton" aria-label="Change theme">☾</button><a class="portfolio-back" href="index.html" aria-label="Back to portfolio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span>BACK TO PORTFOLIO</span></a></div>
+      <div class="top-controls"><button class="site-theme-switch" id="themeButton" type="button" aria-label="Switch to light theme" aria-pressed="true"><span aria-hidden="true"></span><b>Theme</b></button><a class="portfolio-back" href="index.html" aria-label="Back to portfolio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span>BACK TO PORTFOLIO</span></a></div>
     </header>
 
     <aside class="academy-sidebar" id="sidebar">
@@ -59,6 +60,6 @@
   </div>
 
   <dialog id="contentDialog" class="content-dialog"><button class="dialog-close" id="dialogClose" aria-label="Close">×</button><div id="dialogBody"></div></dialog>
-  <script src="academy.js?v=2.3.0"></script>
+  <script src="academy.js?v=2.4.0"></script>
 </body>
 </html>

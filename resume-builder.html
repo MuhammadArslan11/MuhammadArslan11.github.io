@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -15,16 +15,20 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="resume-builder.css?v=1.4.1">
+  <link rel="stylesheet" href="resume-builder-v2.css?v=2.3.0">
+  <link rel="stylesheet" href="theme-control.css?v=1.0.0">
   <style id="printPageStyle">@page{size:A4;margin:0}</style>
   <title>Resume Builder — Muhammad Arsalan</title>
+  <script>try{const t=localStorage.getItem('portfolio-theme');document.documentElement.dataset.theme=t==='dark'||t==='light'?t:(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light')}catch(e){document.documentElement.dataset.theme='light'}</script>
 </head>
-<body>
+<body data-ui-theme="dark">
+<script>document.body.dataset.uiTheme=document.documentElement.dataset.theme</script>
 <a class="skip-link" href="#builderForm">Skip to editor</a>
 <header class="builder-topbar">
   <a class="brand" href="index.html">MUHAMMAD ARSALAN</a>
-  <div class="module-title"><i></i> RESUME BUILDER / V1.4</div>
+  <div class="module-title"><i></i> RESUME BUILDER / V2.0</div>
   <div class="topbar-actions">
-    <button class="icon-button" id="themeMode" type="button" aria-label="Switch to light theme" title="Day / night theme">☀</button>
+    <button class="site-theme-switch" id="themeMode" type="button" aria-label="Switch to light theme" aria-pressed="true" title="Day / night theme"><span aria-hidden="true"></span><b>Theme</b></button>
     <span class="save-state" id="saveState" aria-live="polite">SAVED LOCALLY</span>
     <a class="back-link" href="index.html">← PORTFOLIO</a>
   </div>
@@ -32,27 +36,27 @@
 
 <main class="builder-shell">
   <section class="builder-intro">
-    <div><span class="kicker">FREE · PRIVATE · NO SIGN-UP</span><h1>Build your resume with confidence.</h1></div>
-    <p>Create, refine, and export an ATS-friendly resume at no cost. Your information stays locally in this browser unless you download a draft or PDF.</p>
+    <div><span class="kicker">SMART · PRIVATE · BUILT FOR YOUR NEXT ROLE</span><h1>Build a resume that gets you noticed.</h1></div>
+    <p>Turn your experience into a clear, professional resume. Follow the guided steps, strengthen your achievements, check ATS readiness, and export a polished application—all while your information stays on your device.</p>
   </section>
 
   <div class="builder-toolbar" aria-label="Resume controls">
     <div class="toolbar-group toolbar-design">
-    <label>Template<select id="templateStyle"><option value="classic">Classic ATS</option><option value="modern" selected>Modern Professional</option><option value="technical">Technical</option></select></label>
+    <label>Template<select id="templateStyle"><option value="classic">Classic ATS</option><option value="modern" selected>Modern Professional</option><option value="technical">Technical</option><option value="executive">Executive Advanced</option></select></label>
     <label>Paper<select id="pageSize"><option value="a4">A4</option><option value="letter">US Letter</option></select></label>
     <label>Spacing<select id="density"><option value="compact">Compact</option><option value="standard" selected>Standard</option><option value="spacious">Spacious</option></select></label>
     <fieldset class="accent-picker"><legend>Accent color</legend><label aria-label="Navy accent"><input type="radio" name="accent" value="navy" checked><span class="navy" title="Navy"></span></label><label aria-label="Blue accent"><input type="radio" name="accent" value="blue"><span class="blue" title="Blue"></span></label><label aria-label="Teal accent"><input type="radio" name="accent" value="teal"><span class="teal" title="Teal"></span></label><label aria-label="Burgundy accent"><input type="radio" name="accent" value="burgundy"><span class="burgundy" title="Burgundy"></span></label><label aria-label="Charcoal accent"><input type="radio" name="accent" value="charcoal"><span class="charcoal" title="Charcoal"></span></label></fieldset>
     <div class="zoom-control" aria-label="Preview zoom"><button type="button" id="zoomOut" aria-label="Zoom out">−</button><output id="zoomValue">FIT</output><button type="button" id="zoomIn" aria-label="Zoom in">+</button></div>
     </div>
-    <button class="tool-button" id="mobileViewToggle" type="button" aria-pressed="false">Preview</button>
     <button class="tool-button demo-button" id="loadDemo" type="button"><span aria-hidden="true">✦</span> Sample data</button>
-    <details class="toolbar-more"><summary>More</summary><div><button class="tool-button" id="exportDraft" type="button">Download draft</button><label class="tool-button import-button">Import draft<input id="importDraft" type="file" accept="application/json,.json"></label><button class="tool-button subtle" id="clearDraft" type="button">Clear resume</button></div></details>
+    <details class="toolbar-more"><summary><span>More</span><small>Actions</small></summary><div class="more-menu"><label class="tool-button import-button"><span>Import existing resume</span><small>Auto-fill from PDF, DOCX, TXT, or JSON</small><input id="importResume" type="file" accept=".pdf,.docx,.txt,.json,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain,application/json"></label><button class="tool-button" id="historyButton" type="button"><span>Version history</span><small>Restore an earlier autosave</small></button><button class="tool-button" id="exportDraft" type="button"><span>Download draft</span><small>Save an editable JSON backup</small></button><label class="tool-button import-button"><span>Import draft</span><small>Restore a Resume Builder backup</small><input id="importDraft" type="file" accept="application/json,.json"></label><button class="tool-button subtle" id="loadDemoMenu" type="button"><span>Load sample resume</span><small>Explore the builder with example content</small></button><button class="tool-button danger-menu" id="clearDraft" type="button"><span>Clear resume</span><small>Remove all information from this draft</small></button></div></details>
     <button class="tool-button primary" id="printResume" type="button">Export PDF ↗</button>
   </div>
 
   <div class="workspace" id="workspace">
     <form class="editor" id="builderForm" novalidate>
-      <div class="editor-heading"><div><span>EDITOR</span><h2>Your information</h2></div><div class="score-ring" id="scoreRing"><b id="scoreValue">0</b><span>ATS SCORE</span></div></div>
+      <div class="editor-heading"><div><span>GUIDED RESUME BUILDER</span><h2>Tell your professional story</h2><p>Complete one focused step at a time. Your progress saves automatically.</p></div><div class="score-ring" id="scoreRing"><b id="scoreValue">0</b><span>ATS SCORE</span></div></div>
+      <nav class="stepper" id="builderStepper" aria-label="Resume building steps"></nav>
       <div id="qualityPanel" class="quality-panel" aria-live="polite"></div>
 
       <details class="form-section" open><summary><span>01</span> Personal information</summary><div class="fields two-col">
@@ -81,7 +85,8 @@
       <details class="form-section"><summary><span>09</span> Custom section</summary><div class="fields"><label>Section title<input name="customTitle" placeholder="Volunteer Experience"></label><label>Content<textarea name="customContent" rows="5" placeholder="Add one item per line."></textarea></label></div></details>
 
       <details class="form-section order-section"><summary><span>10</span> Section visibility & order</summary><p class="helper">Show or hide sections and use the arrow buttons to arrange them.</p><ol id="sectionOrder" class="section-order"></ol></details>
-      <aside class="privacy-note"><div><strong>LOCAL BROWSER STORAGE</strong><p>Your resume is not submitted to a server, but browser storage is not encrypted. Clear your resume after use on a shared device.</p></div><label class="autosave-control"><input id="autosaveToggle" type="checkbox" checked><span></span><b>Autosave</b></label></aside>
+      <aside class="privacy-note"><div><strong>YOUR WORK SAVES ON THIS DEVICE</strong><p>Your draft and recovery history stay in this browser. If you are using a shared device, download a backup and clear the resume when you finish.</p></div><label class="autosave-control"><input id="autosaveToggle" type="checkbox" checked><span></span><b>Autosave</b></label></aside>
+      <div class="step-actions"><button class="tool-button" id="stepBack" type="button">← Back</button><span id="stepStatus" aria-live="polite"></span><button class="tool-button primary" id="stepNext" type="button">Next →</button></div>
     </form>
 
     <section class="preview-pane" id="previewPane" aria-label="Resume preview">
@@ -103,9 +108,13 @@
 <template id="projectTemplate"><article class="repeat-card" data-type="project"><div class="card-head"><strong>PROJECT <b class="item-number"></b></strong><div><button type="button" data-duplicate>DUPLICATE</button><button type="button" data-remove>REMOVE ×</button></div></div><div class="fields two-col"><label>Project name *<input data-field="name" required></label><label>Technologies<input data-field="tech"></label><label>Project URL<input data-field="url" type="url" placeholder="https://..."></label><label>GitHub URL<input data-field="github" type="url" placeholder="https://github.com/..."></label><label class="full">Description<textarea data-field="description" rows="4"></textarea></label></div></article></template>
 <template id="languageTemplate"><article class="repeat-card" data-type="language"><div class="card-head"><strong>LANGUAGE <b class="item-number"></b></strong><div><button type="button" data-duplicate>DUPLICATE</button><button type="button" data-remove>REMOVE ×</button></div></div><div class="fields two-col"><label>Language *<input data-field="name" required></label><label>Proficiency<select data-field="level"><option>Native</option><option>Fluent</option><option>Professional</option><option>Intermediate</option><option>Basic</option></select></label></div></article></template>
 
-<nav class="mobile-action-bar" aria-label="Mobile resume actions"><button class="active" type="button" data-mobile-action="edit" aria-pressed="true"><span aria-hidden="true">✎</span><b>Edit</b></button><button type="button" data-mobile-action="preview" aria-pressed="false"><span aria-hidden="true">▣</span><b>Preview</b></button><button type="button" data-mobile-action="demo"><span aria-hidden="true">✦</span><b>Demo</b></button><button type="button" data-mobile-action="save"><span aria-hidden="true">✓</span><b>Save</b></button><button type="button" data-mobile-action="clear"><span aria-hidden="true">×</span><b>Clear</b></button><button class="mobile-export" type="button" data-mobile-action="export"><span aria-hidden="true">↗</span><b>Export</b></button></nav>
-<dialog class="export-dialog" id="exportDialog"><form method="dialog"><span class="dialog-kicker">PDF CHECKLIST</span><h2>Ready to export</h2><p>Your resume will automatically continue onto additional pages when needed.</p><ol><li>Choose <strong>Save as PDF</strong> in the print window.</li><li>Turn off <strong>Print headers and footers</strong> to remove the date, page URL and browser title.</li><li>Keep scale at 100% and use the selected paper size.</li></ol><div><button value="cancel" class="tool-button">CANCEL</button><button value="print" class="tool-button primary">OPEN PRINT WINDOW ↗</button></div></form></dialog>
+<nav class="mobile-action-bar" aria-label="Mobile resume actions"><button class="active" type="button" data-mobile-action="edit" aria-pressed="true"><span aria-hidden="true">✎</span><b>Edit</b></button><button type="button" data-mobile-action="preview" aria-pressed="false"><span aria-hidden="true">▣</span><b>Preview</b></button><button type="button" data-mobile-action="more" aria-expanded="false"><span aria-hidden="true">•••</span><b>More</b></button><button class="mobile-export" type="button" data-mobile-action="export"><span aria-hidden="true">↗</span><b>Export</b></button></nav>
+<dialog class="export-dialog v2-dialog" id="exportDialog"><form method="dialog"><span class="dialog-kicker">PDF EXPORT</span><h2>Export a polished PDF</h2><div class="export-summary" id="exportSummary"></div><label>File name<input id="pdfFileName" maxlength="80" placeholder="Your-Name-Resume"></label><div class="dialog-grid"><label>Paper size<select id="exportPageSize"><option value="a4">A4</option><option value="letter">US Letter</option></select></label><label>Spacing<select id="exportDensity"><option value="compact">Compact</option><option value="standard">Standard</option><option value="spacious">Spacious</option></select></label></div><label class="export-check"><input id="exportConfirm" type="checkbox"> I reviewed the preview, page count, contact details, and dates.</label><p class="export-note">The browser print window opens next. Select “Save as PDF”, disable browser headers and footers, and keep scale at 100%.</p><div><button value="cancel" class="tool-button">Cancel</button><button value="print" class="tool-button primary" id="confirmPdfExport" disabled>Open PDF export ↗</button></div></form></dialog>
+<dialog class="v2-dialog" id="bulletDialog"><form method="dialog" id="bulletForm"><span class="dialog-kicker">ACHIEVEMENT BUILDER</span><h2>Turn your work into a strong bullet</h2><input id="bulletCardIndex" type="hidden"><label>What did you do?<input id="bulletAction" required placeholder="Resolved recurring account lockouts"></label><label>How did you do it?<input id="bulletMethod" required placeholder="by analysing logs and updating the support checklist"></label><label>What improved?<input id="bulletResult" required placeholder="reducing repeat tickets by 30%"></label><label>Preferred action verb<select id="bulletVerb"><option>Improved</option><option>Resolved</option><option>Reduced</option><option>Delivered</option><option>Automated</option><option>Coordinated</option><option>Implemented</option></select></label><div class="generated-bullet" id="bulletPreview" aria-live="polite"></div><div><button value="cancel" class="tool-button">Cancel</button><button value="insert" class="tool-button primary">Add achievement</button></div></form></dialog>
+<dialog class="v2-dialog history-dialog" id="historyDialog"><form method="dialog"><span class="dialog-kicker">AUTOSAVE HISTORY</span><h2>Restore an earlier version</h2><p>Up to 12 local recovery points are kept on this device.</p><div id="historyList" class="history-list"></div><div><button value="cancel" class="tool-button">Close</button></div></form></dialog>
+<dialog class="v2-dialog import-dialog" id="importReviewDialog"><form method="dialog"><span class="dialog-kicker">SMART RESUME IMPORT</span><h2>Review detected information</h2><p id="importSummary"></p><div id="importReview" class="import-review"></div><label class="export-check"><input id="importReplace" type="checkbox"> Replace my current resume after creating a recovery point.</label><div><button value="cancel" class="tool-button">Cancel</button><button value="apply" class="tool-button primary" id="applyResumeImport" disabled>Apply imported resume</button></div></form></dialog>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
-<script src="resume-builder.js?v=1.4.0" defer></script>
+<script src="resume-builder.js?v=2.3.0" defer></script>
+<script src="resume-builder-v2.js?v=2.3.0" defer></script>
 </body>
 </html>
