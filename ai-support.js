@@ -150,6 +150,26 @@
      Chat state is stored locally so troubleshooting can continue after refresh.
      ======================================================= */
   const CHAT_STORE_KEY = "muhammadArsalanAiSupportChatV1";
+    const API_BASE_URL = "https://portfolio-api.m-arslanrafaqat.workers.dev";
+  const SESSION_ID_KEY = "muhammadArsalanAiSupportSessionIdV1";
+
+  let backendSyncTimer = null;
+
+  function getSessionId() {
+    try {
+      let sessionId = localStorage.getItem(SESSION_ID_KEY);
+
+      if (!sessionId) {
+        sessionId = crypto.randomUUID();
+        localStorage.setItem(SESSION_ID_KEY, sessionId);
+      }
+
+      return sessionId;
+    } catch (error) {
+      console.warn("AI Support: session ID unavailable.", error);
+      return null;
+    }
+  }
 
   function chatSnapshot() {
     return {
