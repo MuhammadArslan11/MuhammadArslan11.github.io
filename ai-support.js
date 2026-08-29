@@ -230,21 +230,23 @@
     const generation = restoreGeneration;
     const id = getSessionId();
 
-    if (!id) return "missing";
+    if (!id) return "no-session-id";
 
     try {
       const response = await fetch(`${API_BASE_URL}/assistant/session/${encodeURIComponent(id)}`);
       if (generation !== restoreGeneration || !isInitializing || getSessionId() !== id) {
         return "superseded";
       }
-      if (response.status === 404) return "missing";
+      if (response.status === 404) return "not-found";
       if (!response.ok) {
         throw new Error(`Backend restore failed with status ${response.status}.`);
       }
 
-      const session = await response.json();
-      const saved = session?.snapshot;
-      if (!saved || !Array.isArray(saved.messages)) return "missing";
+      const data = await response.json();
+      const saved = data?.session?.snapshot;
+      if (!saved || !Array.isArray(saved.messages)) {
+        throw new Error("Backend restore returned an invalid session snapshot.");
+      }
       if (generation !== restoreGeneration || !isInitializing || getSessionId() !== id) {
         return "superseded";
       }
@@ -1107,13 +1109,12 @@
     const restoreResult = await restoreChat();
     if (restoreResult === "restored" || restoreResult === "superseded") return;
 
-    if (restoreResult === "missing") {
-      const storedSessionId = getSessionId();
-      const sessionId = storedSessionId || createSessionId();
+    if (restoreResult === "no-session-id" || restoreResult === "not-found") {
+      const sessionId = createSessionId();
       activeSessionId = sessionId;
       backendPersistenceEnabled = Boolean(sessionId);
       isInitializing = false;
-      greeting();
+      greeting(false);
       return;
     }
 
