@@ -144,26 +144,31 @@
   };
 
   /* =======================================================
-     PERSISTENT STATIC CHAT LOG
-     GitHub Pages cannot write a server-side file, so the assistant
-     stores session history locally in the visitor's browser.
-     Chat state is stored locally so troubleshooting can continue after refresh.
+     CLOUDFLARE D1 CHAT SESSION
+     Only the session locator is stored in the visitor's browser.
      ======================================================= */
-  const CHAT_STORE_KEY = "muhammadArsalanAiSupportChatV1";
-    const API_BASE_URL = "https://portfolio-api.m-arslanrafaqat.workers.dev";
+  const API_BASE_URL = "https://portfolio-api.m-arslanrafaqat.workers.dev";
   const SESSION_ID_KEY = "muhammadArsalanAiSupportSessionIdV1";
 
   let backendSyncTimer = null;
+  let isInitializing = true;
+  let restoreGeneration = 0;
+  let backendPersistenceEnabled = false;
+  let activeSessionId = null;
 
   function getSessionId() {
     try {
-      let sessionId = localStorage.getItem(SESSION_ID_KEY);
+      return localStorage.getItem(SESSION_ID_KEY);
+    } catch (error) {
+      console.warn("AI Support: session ID unavailable.", error);
+      return null;
+    }
+  }
 
-      if (!sessionId) {
-        sessionId = crypto.randomUUID();
-        localStorage.setItem(SESSION_ID_KEY, sessionId);
-      }
-
+  function createSessionId() {
+    try {
+      const sessionId = crypto.randomUUID();
+      localStorage.setItem(SESSION_ID_KEY, sessionId);
       return sessionId;
     } catch (error) {
       console.warn("AI Support: session ID unavailable.", error);
@@ -190,11 +195,15 @@
   }
 
   function scheduleBackendSync() {
+    if (isInitializing || !backendPersistenceEnabled || !activeSessionId) return;
+
     clearTimeout(backendSyncTimer);
     backendSyncTimer = setTimeout(async () => {
       backendSyncTimer = null;
-      const id = getSessionId();
-      if (!id) return;
+      if (isInitializing || !backendPersistenceEnabled || !activeSessionId) return;
+
+      const id = activeSessionId;
+      if (getSessionId() !== id) return;
 
       try {
         const snapshot = chatSnapshot();
@@ -214,21 +223,32 @@
   }
 
   function persistChat() {
-    try {
-      localStorage.setItem(CHAT_STORE_KEY, JSON.stringify(chatSnapshot()));
-    } catch (error) {
-      console.warn("AI Support: local chat storage unavailable.", error);
-    }
-
     scheduleBackendSync();
   }
 
-  function restoreChat() {
+  async function restoreChat() {
+    const generation = restoreGeneration;
+    const id = getSessionId();
+
+    if (!id) return "missing";
+
     try {
-      const raw = localStorage.getItem(CHAT_STORE_KEY);
-      if (!raw) return false;
-      const saved = JSON.parse(raw);
-      if (!saved || !Array.isArray(saved.messages) || !saved.messages.length) return false;
+      const response = await fetch(`${API_BASE_URL}/assistant/session/${encodeURIComponent(id)}`);
+      if (generation !== restoreGeneration || !isInitializing || getSessionId() !== id) {
+        return "superseded";
+      }
+      if (response.status === 404) return "missing";
+      if (!response.ok) {
+        throw new Error(`Backend restore failed with status ${response.status}.`);
+      }
+
+      const session = await response.json();
+      const saved = session?.snapshot;
+      if (!saved || !Array.isArray(saved.messages)) return "missing";
+      if (generation !== restoreGeneration || !isInitializing || getSessionId() !== id) {
+        return "superseded";
+      }
+
       saved.messages.slice(-80).forEach((m) => {
         if (!m || !m.text) return;
         add(m.role === "user" ? "user" : "ai", "<p>" + esc(m.text).replace(/\\n/g, "<br>") + "</p>", false);
@@ -240,10 +260,16 @@
       state.originalMessage = saved.originalMessage || "";
       state.evidence = Array.isArray(saved.evidence) ? saved.evidence.slice(-12) : [];
       state.scenario = SCENARIOS.find((item) => item.id === saved.scenarioId) || null;
-      return true;
+      activeSessionId = id;
+      backendPersistenceEnabled = true;
+      isInitializing = false;
+      return "restored";
     } catch (error) {
-      localStorage.removeItem(CHAT_STORE_KEY);
-      return false;
+      if (generation !== restoreGeneration || !isInitializing || getSessionId() !== id) {
+        return "superseded";
+      }
+      console.warn("AI Support: backend chat restore unavailable.", error);
+      return "error";
     }
   }
 
@@ -548,8 +574,8 @@
     persistChat();
   }
 
-  function greeting() {
-    add("ai", '<p><b>IT Support AI Assistant</b></p><p>Describe the problem or paste the exact error. I’ll troubleshoot it step-by-step and stay inside the current Stage 1 knowledge base.</p>');
+  function greeting(persist = true) {
+    add("ai", '<p><b>IT Support AI Assistant</b></p><p>Describe the problem or paste the exact error. I’ll troubleshoot it step-by-step and stay inside the current Stage 1 knowledge base.</p>', persist);
   }
 
   function outOfScope() {
@@ -941,6 +967,7 @@
       const scenarioCount = SCENARIOS.filter((s) => s.domain === domain).length;
       button.innerHTML = "<span>" + esc(domain) + "</span><small>" + (scenarioCount ? scenarioCount + "+" : "Support") + "</small>";
       button.addEventListener("click", () => {
+        if (isInitializing) return;
         state.domain = domain;
         state.phase = "idle";
         state.scenario = null;
@@ -962,9 +989,19 @@
      STEP 11 — RESET / SESSION
      ======================================================= */
   function reset() {
+    restoreGeneration += 1;
+    isInitializing = false;
+    backendPersistenceEnabled = false;
+    activeSessionId = null;
+    clearTimeout(backendSyncTimer);
+    backendSyncTimer = null;
+    const newSessionId = createSessionId();
+    if (newSessionId) {
+      activeSessionId = newSessionId;
+      backendPersistenceEnabled = true;
+    }
     chat.innerHTML = "";
     document.querySelector(".ai-panel")?.classList.remove("has-user-message");
-    try { localStorage.removeItem(CHAT_STORE_KEY); } catch (e) {}
     state.domain = "";
     state.problem = "";
     state.scenario = null;
@@ -988,7 +1025,11 @@
       const button = document.createElement("button");
       button.type = "button";
       button.textContent = example;
-      button.addEventListener("click", () => { input.value = example; form.requestSubmit(); });
+      button.addEventListener("click", () => {
+        if (isInitializing) return;
+        input.value = example;
+        form.requestSubmit();
+      });
       quick.appendChild(button);
     });
   }
@@ -996,7 +1037,11 @@
   /* =======================================================
      STEP 12 — EVENT HANDLERS / ERROR SAFETY
      ======================================================= */
-  form.addEventListener("submit", (event) => { event.preventDefault(); send(input.value); });
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (isInitializing) return;
+    send(input.value);
+  });
   input.addEventListener("keydown", (event) => {
     if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); form.requestSubmit(); }
   });
@@ -1048,7 +1093,7 @@
       return;
     }
     const answer = event.target.closest("[data-answer]");
-    if (answer) { input.value = answer.dataset.answer; form.requestSubmit(); }
+    if (answer && !isInitializing) { input.value = answer.dataset.answer; form.requestSubmit(); }
   });
 
   /* =======================================================
@@ -1057,7 +1102,28 @@
   if (count) count.textContent = SCENARIOS.length + " core guided flows";
   renderTopics();
   renderQuick();
-  if (!restoreChat()) reset();
+
+  async function initializeChat() {
+    const restoreResult = await restoreChat();
+    if (restoreResult === "restored" || restoreResult === "superseded") return;
+
+    if (restoreResult === "missing") {
+      const storedSessionId = getSessionId();
+      const sessionId = storedSessionId || createSessionId();
+      activeSessionId = sessionId;
+      backendPersistenceEnabled = Boolean(sessionId);
+      isInitializing = false;
+      greeting();
+      return;
+    }
+
+    activeSessionId = null;
+    backendPersistenceEnabled = false;
+    isInitializing = false;
+    greeting(false);
+  }
+
+  initializeChat();
 })();
 
 function escapeHtml(value) {
