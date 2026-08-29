@@ -189,12 +189,38 @@
     };
   }
 
+  function scheduleBackendSync() {
+    clearTimeout(backendSyncTimer);
+    backendSyncTimer = setTimeout(async () => {
+      backendSyncTimer = null;
+      const id = getSessionId();
+      if (!id) return;
+
+      try {
+        const snapshot = chatSnapshot();
+        const response = await fetch(`${API_BASE_URL}/assistant/session`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id, snapshot })
+        });
+
+        if (!response.ok) {
+          throw new Error(`Backend sync failed with status ${response.status}.`);
+        }
+      } catch (error) {
+        console.warn("AI Support: backend chat sync unavailable.", error);
+      }
+    }, 800);
+  }
+
   function persistChat() {
     try {
       localStorage.setItem(CHAT_STORE_KEY, JSON.stringify(chatSnapshot()));
     } catch (error) {
       console.warn("AI Support: local chat storage unavailable.", error);
     }
+
+    scheduleBackendSync();
   }
 
   function restoreChat() {

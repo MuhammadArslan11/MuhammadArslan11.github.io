@@ -86,4 +86,4 @@ Dark theme:
 
 ## Protected surfaces
 
-The Resume Builder remains unchanged with its own HTML, CSS and JavaScript. The Learning Lab also keeps its independent styling and behavior. Homepage styling is scoped so it does not cascade into those pages.
+The Resume Builder remains unchanged with its own HTML, CSS and JavaScript. Academy OS keeps its independent styling and behavior. Its static learning UI uses the restrained portfolio palette while adding data-driven course, topic, mastery, and performance views. Homepage styling is scoped so it does not cascade into those pages.
