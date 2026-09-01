@@ -25,11 +25,12 @@ Static GitHub Pages frontend built with semantic HTML, CSS and vanilla JavaScrip
 Set the API origin with the `portfolio-api-base` meta tag on each lab page. The frontend expects JSON at:
 
 - `GET|PUT /academy/progress/:deviceId` — `{ progress }`
-- `GET|PUT /academy/library` — `{ version, courses }` (PUT requires admin authentication)
+- `GET /academy/library` — public learner library
+- `GET /admin/session` and `PUT /admin/library` — Cloudflare Access-protected Admin session and publishing
 - `GET|PUT /resume/draft/:deviceId` — `{ draft }`
 - `GET /assistant/session/:id` and `POST /assistant/session` — support chat persistence
 
-Allow only the portfolio origin through CORS. Support `GET, PUT, POST, OPTIONS`, `Content-Type`, and credentials if admin authentication uses a secure cookie. Device IDs are sync locators, not authentication; use real accounts before storing private user data in production.
+Allow only the portfolio origin through CORS. Protect `/admin/*` with a Cloudflare Access Allow policy containing only the owner's exact email address. Device IDs are sync locators, not authentication; use real accounts before storing private user data in production.
 - The Admin Dashboard is available at `admin.html`. Use **Apply to draft** for the open form, then **Publish changes** to persist the full content library. Export JSON backups regularly.
 - The isolated admin supports create, update, duplicate, reorder, publish/unpublish, delete, and undo-delete operations for courses, modules, topics, content blocks, practical tasks, prerequisites, and quiz questions.
 - Topic editing uses guided content-block, practical-activity, and quiz builders; authors do not need to write JSON. Use **Apply to draft** while editing and **Publish changes** when the library is ready. `Ctrl/Cmd + S` also publishes after validation.

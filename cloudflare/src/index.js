@@ -23,6 +23,19 @@ function canWrite(request, env) {
   return Boolean(request.headers.get('Cf-Access-Jwt-Assertion'));
 }
 
+function adminIdentity(request) {
+  return request.headers.get('Cf-Access-Authenticated-User-Email') || null;
+}
+
+function safeReturnUrl(value, env) {
+  try {
+    const url = new URL(value);
+    return url.origin === env.ALLOWED_ORIGIN ? url.href : null;
+  } catch {
+    return null;
+  }
+}
+
 async function body(request) {
   if (!request.headers.get('Content-Type')?.includes('application/json')) throw new Error('JSON_REQUIRED');
   const value = await request.json();
@@ -75,7 +88,16 @@ export default {
       if (url.pathname === '/health' && request.method === 'GET') return json({ ok: true, storage: 'd1' }, 200, headers);
       if (url.pathname === '/academy/library') {
         if (request.method === 'GET') return getDocument(env, 'academy-library', headers);
-        if (request.method === 'PUT') return canWrite(request, env) ? putLibrary(request, env, headers) : json({ error: 'Admin authentication required.' }, 401, headers);
+        if (request.method === 'PUT') return json({ error: 'Publish through the protected Admin endpoint.' }, 405, headers);
+      }
+      if (url.pathname === '/admin/session' && request.method === 'GET') {
+        if (!canWrite(request, env)) return json({ error: 'Admin authentication required.' }, 401, headers);
+        const returnTo = safeReturnUrl(url.searchParams.get('return'), env);
+        if (returnTo) return Response.redirect(returnTo, 302);
+        return json({ authenticated: true, email: adminIdentity(request) }, 200, headers);
+      }
+      if (url.pathname === '/admin/library' && request.method === 'PUT') {
+        return canWrite(request, env) ? putLibrary(request, env, headers) : json({ error: 'Admin authentication required.' }, 401, headers);
       }
       const progress = url.pathname.match(/^\/academy\/progress\/([^/]+)$/);
       if (progress && ['GET', 'PUT'].includes(request.method)) return deviceRoute(request, env, headers, 'academy-progress', decodeURIComponent(progress[1]));
@@ -89,4 +111,3 @@ export default {
     }
   }
 };
-
