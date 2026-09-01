@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="portfolio-api-base" content="https://portfolio-api.m-arslanrafaqat.workers.dev">
   <meta name="description" content="A browser-based IT Support troubleshooting assistant by Muhammad Arsalan.">
   <meta name="theme-color" content="#f4f2ed">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
@@ -12,7 +13,7 @@
   <title>IT Support Assistant — Muhammad Arsalan</title>
   <script>try{const t=localStorage.getItem('portfolio-theme');document.documentElement.dataset.theme=t==='dark'||t==='light'?t:(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light')}catch(e){document.documentElement.dataset.theme='light'}</script>
   <link rel="stylesheet" href="styles.css?v=7.2.0">
-  <link rel="stylesheet" href="support-lab.css?v=2.0.0">
+  <link rel="stylesheet" href="support-lab.css?v=3.0.0">
   <link rel="stylesheet" href="theme-control.css?v=1.0.0">
 </head>
 <body class="lab-page">
@@ -26,16 +27,24 @@
 
   <main class="lab-main" id="mainContent">
     <section class="assistant-shell" aria-labelledby="assistantTitle">
-      <div class="assistant-heading">
-        <p class="eyebrow">GUIDED SUPPORT</p>
-        <h1 id="assistantTitle">How can I help?</h1>
-        <p>Describe one technical problem. I’ll guide you through the safest next check.</p>
-      </div>
+      <aside class="assistant-intro">
+        <div class="assistant-heading">
+          <p class="eyebrow">IT SUPPORT LAB</p>
+          <h1 id="assistantTitle">Find the fault.<br><em>Fix it safely.</em></h1>
+          <p>Describe the symptom in plain language. The assistant will narrow the problem, suggest a safe check, and help you verify the result.</p>
+        </div>
+        <div class="lab-guide" aria-label="How the support lab works">
+          <article><span>01</span><div><strong>Report</strong><p>Share the exact symptom, error message, and who is affected.</p></div></article>
+          <article><span>02</span><div><strong>Check</strong><p>Follow one low-risk diagnostic step at a time.</p></div></article>
+          <article><span>03</span><div><strong>Verify</strong><p>Confirm the service works and record useful evidence.</p></div></article>
+        </div>
+        <div class="privacy-note"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 4.6 2.8 8.2 7 10 4.2-1.8 7-5.4 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></svg><p><strong>Protect your information</strong><br>Never share passwords, MFA codes, recovery keys, or personal data.</p></div>
+      </aside>
 
       <div class="ai-workspace" aria-label="IT Support Assistant">
         <div class="ai-panel">
           <div class="ai-panel-head">
-            <div class="assistant-identity"><span class="status-dot" aria-hidden="true"></span><div><b>IT Support Assistant</b><small>Local guided troubleshooting</small></div></div>
+            <div class="assistant-identity"><span class="assistant-mark" aria-hidden="true">MA</span><div><b>Support Assistant</b><small><span class="status-dot" aria-hidden="true"></span> Guided diagnostic session</small></div></div>
             <div class="ai-panel-actions">
               <details class="topic-drawer">
                 <summary><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg><span>Topics</span></summary>
@@ -58,7 +67,7 @@
           <textarea id="aiMessage" rows="1" placeholder="Include the symptom or error message…" required></textarea>
           <button type="submit" aria-label="Send message" title="Send message"><span>Send</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 4 17 8-17 8 3-8zM7 12h14"/></svg></button>
         </form>
-          <p class="ai-disclaimer">Keep passwords, verification codes and personal data private. This is a local knowledge guide, not a live AI service.</p>
+          <p class="ai-disclaimer">Evidence-based guidance only. Review workplace policy before making system changes.</p>
         </div>
       </div>
     </section>
@@ -67,6 +76,7 @@
   <footer class="lab-footer"><p>Muhammad Arsalan · IT Support Specialist</p><a href="index.html#contact">Contact</a></footer>
 </div>
 <script src="script.js?v=7.3.0"></script>
-<script src="ai-support.js?v=5.0.0"></script>
+<script src="backend-client.js?v=1.0.0"></script>
+<script src="ai-support.js?v=5.2.0"></script>
 </body>
 </html>

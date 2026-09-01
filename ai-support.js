@@ -147,7 +147,7 @@
      CLOUDFLARE D1 CHAT SESSION
      Only the session locator is stored in the visitor's browser.
      ======================================================= */
-  const API_BASE_URL = "https://portfolio-api.m-arslanrafaqat.workers.dev";
+  const API_BASE_URL = window.PortfolioAPI?.baseUrl || "https://portfolio-api.m-arslanrafaqat.workers.dev";
   const SESSION_ID_KEY = "muhammadArsalanAiSupportSessionIdV1";
 
   let backendSyncTimer = null;

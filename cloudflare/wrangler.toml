@@ -1,0 +1,14 @@
+name = "portfolio-api"
+main = "src/index.js"
+compatibility_date = "2026-08-25"
+
+[vars]
+ALLOWED_ORIGIN = "https://muhammadarslan11.github.io"
+REQUIRE_ACCESS = "true"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "portfolio-content"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+migrations_dir = "migrations"
+

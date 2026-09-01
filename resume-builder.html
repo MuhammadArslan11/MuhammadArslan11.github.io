@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="portfolio-api-base" content="https://portfolio-api.m-arslanrafaqat.workers.dev">
   <meta name="description" content="Build a clean, ATS-friendly professional resume in your browser and export it as PDF.">
   <meta name="theme-color" content="#0b0d0c">
   <link rel="canonical" href="https://muhammadarslan11.github.io/resume-builder.html">
@@ -114,7 +115,8 @@
 <dialog class="v2-dialog history-dialog" id="historyDialog"><form method="dialog"><span class="dialog-kicker">AUTOSAVE HISTORY</span><h2>Restore an earlier version</h2><p>Up to 12 local recovery points are kept on this device.</p><div id="historyList" class="history-list"></div><div><button value="cancel" class="tool-button">Close</button></div></form></dialog>
 <dialog class="v2-dialog import-dialog" id="importReviewDialog"><form method="dialog"><span class="dialog-kicker">SMART RESUME IMPORT</span><h2>Review detected information</h2><p id="importSummary"></p><div id="importReview" class="import-review"></div><label class="export-check"><input id="importReplace" type="checkbox"> Replace my current resume after creating a recovery point.</label><div><button value="cancel" class="tool-button">Cancel</button><button value="apply" class="tool-button primary" id="applyResumeImport" disabled>Apply imported resume</button></div></form></dialog>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
-<script src="resume-builder.js?v=2.3.0" defer></script>
+<script src="backend-client.js?v=1.0.0" defer></script>
+<script src="resume-builder.js?v=2.4.0" defer></script>
 <script src="resume-builder-v2.js?v=2.3.0" defer></script>
 </body>
 </html>

@@ -1,0 +1,16 @@
+{
+  "name": "portfolio-api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:create": "wrangler d1 create portfolio-content",
+    "db:migrate:local": "wrangler d1 migrations apply portfolio-content --local",
+    "db:migrate": "wrangler d1 migrations apply portfolio-content --remote"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}
+
