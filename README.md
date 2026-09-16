@@ -9,6 +9,7 @@ Static GitHub Pages frontend built with semantic HTML, CSS and vanilla JavaScrip
 - `academy.html`, `academy.css`, `academy.js`, `academy-data.js` — static Academy OS learning platform
 - `admin.html`, `admin.css`, `admin.js` — isolated local Admin Dashboard and course CRUD
 - `resume-builder.html`, `resume-builder.css`, `resume-builder-v2.css`, `resume-builder.js`, `resume-builder-v2.js` — résumé editor and PDF export
+- `pdf-tools.js`, `pdf-tools.css`, `pdf-tools-core.js`, `pdf-tools-worker.js` — local PDF utilities opened from the resume toolbar or More menu; merge, extract, rotate, remove pages, images to PDF, and lossless optimization
 - `backend-client.js` — shared browser-to-API adapter with offline-safe behavior
 - `cloudflare/` — Cloudflare Worker and D1 backend implementation
 - `assets/` — production images, diagrams, résumé PDF, and the PDF export library
@@ -42,3 +43,10 @@ Allow only the portfolio origin through CORS. Protect `/admin/*` with a Cloudfla
 Keep the site framework-free and compatible with GitHub Pages. Reuse the design tokens at the top of `styles.css`, keep page-specific styles isolated, and update stylesheet or script version parameters in HTML after visible changes so browsers do not serve stale files.
 
 The Resume Builder is an independent protected tool. Avoid applying homepage styles or scripts to it.
+
+PDF Tools uses the vendored, MIT-licensed pdf-lib 1.17.1 in `vendor/pdf-tools/`.
+Files are processed in a disposable Web Worker and never uploaded or saved to browser storage.
+Limits are 20 files, 50 MB total, and 500 PDF pages. JPG/PNG conversion fits each image on an A4 or Letter page.
+Optimization uses PDF object streams without rasterizing text or reducing image quality; when it cannot reduce the size, the original bytes are offered instead.
+Password-protected and signed PDFs are rejected. Interactive forms may be rotated or optimized, but page-copy operations require a flattened input to avoid losing form fields.
+Run the PDF-operation regression checks with `node --test tests/pdf-tools.test.cjs`.

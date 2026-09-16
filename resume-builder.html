@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="resume-builder.css?v=1.4.2">
   <link rel="stylesheet" href="resume-builder-v2.css?v=2.4.1">
   <link rel="stylesheet" href="theme-control.css?v=1.0.0">
+  <link rel="stylesheet" href="pdf-tools.css?v=1.0.0">
   <style id="printPageStyle">@page{size:A4;margin:0}</style>
   <title>Resume Builder — Muhammad Arsalan</title>
   <script>try{const t=localStorage.getItem('portfolio-theme');document.documentElement.dataset.theme=t==='dark'||t==='light'?t:(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light')}catch(e){document.documentElement.dataset.theme='light'}</script>
@@ -49,8 +50,9 @@
     <fieldset class="accent-picker"><legend>Accent color</legend><label aria-label="Navy accent"><input type="radio" name="accent" value="navy" checked><span class="navy" title="Navy"></span></label><label aria-label="Blue accent"><input type="radio" name="accent" value="blue"><span class="blue" title="Blue"></span></label><label aria-label="Teal accent"><input type="radio" name="accent" value="teal"><span class="teal" title="Teal"></span></label><label aria-label="Burgundy accent"><input type="radio" name="accent" value="burgundy"><span class="burgundy" title="Burgundy"></span></label><label aria-label="Charcoal accent"><input type="radio" name="accent" value="charcoal"><span class="charcoal" title="Charcoal"></span></label></fieldset>
     <div class="zoom-control" aria-label="Preview zoom"><button type="button" id="zoomOut" aria-label="Zoom out">−</button><output id="zoomValue">FIT</output><button type="button" id="zoomIn" aria-label="Zoom in">+</button></div>
     </div>
+    <button class="tool-button pdf-tools-trigger" type="button" data-open-pdf-tools aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8M8 17h5"/></svg> PDF Tools</button>
     <button class="tool-button demo-button" id="loadDemo" type="button"><span aria-hidden="true">✦</span> Sample data</button>
-    <details class="toolbar-more"><summary><span>More</span><small>Actions</small></summary><div class="more-menu"><label class="tool-button import-button"><span>Import existing resume</span><small>Auto-fill from PDF, DOCX, TXT, or JSON</small><input id="importResume" type="file" accept=".pdf,.docx,.txt,.json,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain,application/json"></label><button class="tool-button" id="historyButton" type="button"><span>Version history</span><small>Restore an earlier autosave</small></button><button class="tool-button" id="exportDraft" type="button"><span>Download draft</span><small>Save an editable JSON backup</small></button><label class="tool-button import-button"><span>Import draft</span><small>Restore a Resume Builder backup</small><input id="importDraft" type="file" accept="application/json,.json"></label><button class="tool-button subtle" id="loadDemoMenu" type="button"><span>Load sample resume</span><small>Explore the builder with example content</small></button><button class="tool-button danger-menu" id="clearDraft" type="button"><span>Clear resume</span><small>Remove all information from this draft</small></button></div></details>
+    <details class="toolbar-more"><summary><span>More</span><small>Actions</small></summary><div class="more-menu"><button class="tool-button" type="button" data-open-pdf-tools aria-haspopup="dialog"><span>PDF Tools</span><small>Merge, split, rotate, optimize, and more</small></button><label class="tool-button import-button"><span>Import existing resume</span><small>Auto-fill from PDF, DOCX, TXT, or JSON</small><input id="importResume" type="file" accept=".pdf,.docx,.txt,.json,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain,application/json"></label><button class="tool-button" id="historyButton" type="button"><span>Version history</span><small>Restore an earlier autosave</small></button><button class="tool-button" id="exportDraft" type="button"><span>Download draft</span><small>Save an editable JSON backup</small></button><label class="tool-button import-button"><span>Import draft</span><small>Restore a Resume Builder backup</small><input id="importDraft" type="file" accept="application/json,.json"></label><button class="tool-button subtle" id="loadDemoMenu" type="button"><span>Load sample resume</span><small>Explore the builder with example content</small></button><button class="tool-button danger-menu" id="clearDraft" type="button"><span>Clear resume</span><small>Remove all information from this draft</small></button></div></details>
     <button class="tool-button primary" id="printResume" type="button">Export PDF ↗</button>
   </div>
 
@@ -119,5 +121,7 @@
 <script src="resume-builder.js?v=2.5.0" defer></script>
 <script src="resume-builder-v2.js?v=2.4.0" defer></script>
 <script src="resume-builder-pdf.js?v=1.0.1" defer></script>
+<script src="pdf-tools-core.js?v=1.0.0" defer></script>
+<script src="pdf-tools.js?v=1.0.0" defer></script>
 </body>
 </html>
