@@ -6,7 +6,7 @@
   const MAX_PAGES = 500;
 
   function parsePages(value, count, allowAll = false) {
-    const text = String(value || '').trim();
+    const text = String(value || '').trim().replace(/[–—]/g, '-');
     if (!text && allowAll) return Array.from({length: count}, (_, i) => i);
     if (!text) throw new Error('Enter the page numbers you want, for example 1, 3-5.');
     const pages = new Set();
@@ -143,7 +143,60 @@
     return {bytes, pages: output.getPageCount(), originalSize, unchanged};
   }
 
-  const api = {parsePages, validateFiles, inspect, process};
+  async function workspace(files, options, lib) {
+    validateFiles(files, 'merge');
+    if (!options.pages?.length || options.pages.length > MAX_PAGES) throw new Error('Export between 1 and 500 pages.');
+    const output = await lib.PDFDocument.create();
+    const documents = new Map();
+    for (const item of options.pages) {
+      if (!Number.isInteger(item.source) || !files[item.source]) throw new Error('Missing source document.');
+      if (!documents.has(item.source)) {
+        const loaded = await loadPDF(files[item.source], lib);
+        if (loaded.hasForm) throw new Error('Use a flattened copy of interactive forms before arranging pages.');
+        documents.set(item.source, loaded.doc);
+      }
+      const source = documents.get(item.source);
+      if (!Number.isInteger(item.index) || item.index < 0 || item.index >= source.getPageCount()) throw new Error('Invalid source page.');
+      if (![0, 90, 180, 270].includes(item.rotation)) throw new Error('Invalid page rotation.');
+      const [page] = await output.copyPages(source, [item.index]);
+      const rotation = ((page.getRotation().angle + item.rotation) % 360 + 360) % 360;
+      if (![0,90,180,270].includes(rotation)) throw new Error('This source page has an unsupported rotation.');
+      page.setRotation(lib.degrees(rotation));
+      if (!options.paper || options.paper === 'original') {
+        output.addPage(page);
+      } else {
+        if (!['a4', 'letter', 'legal'].includes(options.paper)) throw new Error('Choose a supported paper size.');
+        if (page.node.Annots()?.size()) throw new Error('For annotated PDFs, keep Original page sizes or choose an image quality preset to resize their visible appearance.');
+        const crop = page.getCropBox(), media = page.getMediaBox();
+        const left = Math.max(crop.x, media.x), bottom = Math.max(crop.y, media.y);
+        const right = Math.min(crop.x + crop.width, media.x + media.width), top = Math.min(crop.y + crop.height, media.y + media.height);
+        const box = {x:left, y:bottom, width:right - left, height:top - bottom};
+        if (![box.x,box.y,box.width,box.height].every(Number.isFinite) || box.width <= 0 || box.height <= 0) throw new Error('This source page has invalid crop dimensions.');
+        const angle = page.getRotation().angle;
+        const w = angle % 180 ? box.height : box.width, h = angle % 180 ? box.width : box.height;
+        const size = options.paper === 'a4' ? lib.PageSizes.A4 : options.paper === 'legal' ? lib.PageSizes.Legal : lib.PageSizes.Letter;
+        const sheet = output.addPage(size);
+        const scale = Math.min(size[0] / w, size[1] / h);
+        let x = (size[0] - w * scale) / 2, y = (size[1] - h * scale) / 2;
+        if (angle === 90) y += box.width * scale;
+        if (angle === 180) { x += box.width * scale; y += box.height * scale; }
+        if (angle === 270) x += box.height * scale;
+        // Blank PDF pages may have no /Contents stream; preserve them as blank paper.
+        const contents = page.node.Contents();
+        if (contents && (!(contents instanceof lib.PDFArray) || contents.size() > 0)) {
+          const embedded = await output.embedPage(page, {left:box.x,bottom:box.y,right:box.x + box.width,top:box.y + box.height});
+          sheet.drawPage(embedded, {x, y, xScale: scale, yScale: scale, rotate: lib.degrees(-angle)});
+        }
+      }
+    }
+    output.setCreator('PDF Workspace');
+    const bytes = await output.save({useObjectStreams: true});
+    const verified = await lib.PDFDocument.load(bytes);
+    if (verified.getPageCount() !== options.pages.length) throw new Error('Export verification failed. Try again.');
+    return {bytes, pages: verified.getPageCount()};
+  }
+
+  const api = {parsePages, validateFiles, inspect, process, workspace};
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.ResumePDFToolsCore = api;
 })(globalThis);
